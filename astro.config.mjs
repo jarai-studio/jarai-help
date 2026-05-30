@@ -30,13 +30,9 @@ export default defineConfig({
       },
       favicon: '/favicon.svg',
       customCss: ['./src/styles/brand-tokens.css', './src/styles/starlight-overrides.css'],
-      social: [
-        {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/jarai-studio',
-        },
-      ],
+      social: {
+        github: 'https://github.com/jarai-studio',
+      },
       editLink: {
         baseUrl: 'https://github.com/jarai-studio/jarai-help/edit/main/',
       },
