@@ -1,0 +1,75 @@
+/* Map JARAI brand tokens onto Starlight's CSS variable surface so the docs
+ * theme uses our palette + fonts instead of the default cobalt/Atkinson stack.
+ * Reference: https://starlight.astro.build/guides/css-and-tailwind/#css-variables
+ *
+ * Order: light theme first, dark theme overrides below.
+ */
+
+:root {
+  /* Starlight accent scale — built from --color-accent-1 (#d97757 — JARAI orange).
+   * Generated via Starlight's recommended approach: high == darkest, low == lightest. */
+  --sl-color-accent-low: #f6d9ce;
+  --sl-color-accent: #d97757;
+  --sl-color-accent-high: #8a3d24;
+
+  /* Greyscale tied to JARAI foundation palette */
+  --sl-color-white: var(--color-light);    /* #faf9f5 */
+  --sl-color-gray-1: #ebe9df;
+  --sl-color-gray-2: #d6d3c5;
+  --sl-color-gray-3: var(--color-subtle);  /* #e8e6dc */
+  --sl-color-gray-4: var(--color-mid);     /* #b0aea5 */
+  --sl-color-gray-5: #6a695f;
+  --sl-color-gray-6: #3a3935;
+  --sl-color-black: var(--color-dark);     /* #141413 */
+
+  /* Background + text */
+  --sl-color-bg: var(--color-light);
+  --sl-color-bg-nav: var(--color-light);
+  --sl-color-bg-sidebar: var(--color-subtle);
+  --sl-color-text: var(--color-dark);
+  --sl-color-text-accent: var(--color-accent-1);
+
+  /* Fonts */
+  --sl-font: var(--font-body);
+  --sl-font-system: var(--font-body);
+  --sl-font-mono: var(--font-mono);
+}
+
+/* Dark mode — invert the foundation pair, dim the accents */
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #2a1208;
+  --sl-color-accent: #e89478;
+  --sl-color-accent-high: #f6d9ce;
+
+  --sl-color-white: var(--color-dark);
+  --sl-color-gray-1: #1f1e1c;
+  --sl-color-gray-2: #2b2a27;
+  --sl-color-gray-3: #3a3935;
+  --sl-color-gray-4: #6a695f;
+  --sl-color-gray-5: var(--color-mid);
+  --sl-color-gray-6: #d6d3c5;
+  --sl-color-black: var(--color-light);
+
+  --sl-color-bg: #1a1916;
+  --sl-color-bg-nav: #211f1c;
+  --sl-color-bg-sidebar: #181715;
+  --sl-color-text: #ebe9df;
+  --sl-color-text-accent: #e89478;
+}
+
+/* Apply heading font from the brand */
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4,
+.sl-markdown-content h5,
+.sl-markdown-content h6,
+.site-title {
+  font-family: var(--font-heading);
+}
+
+/* Slightly tighter card radii to match brand --radius-card (8px) */
+.sl-card,
+.sl-link-card {
+  border-radius: var(--radius-card);
+}

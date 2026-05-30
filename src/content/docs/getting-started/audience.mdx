@@ -1,0 +1,26 @@
+---
+title: Which audience are you?
+description: Find the right help section depending on whether you're using JARAI Studio as an operator or a customer.
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+JARAI Studio has two user types. Pick the one that fits you to jump to the right section of this help centre.
+
+<CardGrid>
+  <Card title="Operator" icon="laptop">
+    You log in to the **Studio Console** at the operator-facing URL. You produce content, manage avatars and voice variants, configure pipeline steps, and oversee distribution. Your account role is `AccountOperator`, `PlatformAdministrator`, or similar. [Go to operator help →](/operators/)
+  </Card>
+  <Card title="Customer" icon="user">
+    You log in to the **Client Portal** at the customer-facing URL. You review productions JARAI generates for you, approve or reject content, manage your subscription, and exercise your data rights. Your account role is `CustomerAdministrator` or `CustomerViewer`. [Go to customer help →](/customers/)
+  </Card>
+</CardGrid>
+
+## Not sure which you are?
+
+- If you **invited yourself** to JARAI by signing up to produce content for an organisation you manage, you're an **operator**.
+- If you were **invited by an operator** to review and approve content they've produced for you, you're a **customer**.
+- If you log in via a URL starting with `studio.` or `console.`, you're an operator.
+- If you log in via a URL starting with `portal.` or `client.`, you're a customer.
+
+Still unsure? [Contact support](/general/contact-support/) and tell us your email — we'll point you to the right login.

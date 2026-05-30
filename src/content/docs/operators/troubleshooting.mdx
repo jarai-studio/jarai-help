@@ -1,0 +1,31 @@
+---
+title: Operator troubleshooting
+description: Common failure modes in the Studio Console and how to recover.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page is being built. Common failure modes you'll encounter:
+
+## Step failures
+
+- **Failed** status on a step → click **Retry step** on the production detail page. Recoverable: AI provider 5xx, timeouts, transient SQL errors.
+- **Dead-lettered** → the step exhausted retries. Investigate the error code in the step's `ValidationErrorDetail` JSON, then either retry or override.
+
+## Approved-with-warnings (Step 6 outputs)
+
+When an image carries `WarningFlags` (low safety score, high copyright risk, attribution required), the asset proceeds but the operator must acknowledge before publishing via the Pre-Publish Rights Review drawer.
+
+## Missing assets
+
+If Step 7's per-scene image count is below the brief's planned scene count, the production stalls at Step 11 (PlatformVariantProducer). Check Step 7's output on the production detail page — re-run if needed.
+
+## Provider outages
+
+If an AI provider (OpenAI, ElevenLabs, etc.) is in an outage, the affected steps will exhaust retries. Check [Status](/general/status/) for current incident status.
+
+<Aside type="caution">
+Don't manually edit the database or blob storage to "fix" a failed brief — JARAI's reconciliation engine will detect drift and may revert your changes. Always use the Console's retry / override actions.
+</Aside>
+
+For specific error codes, see [FAQ](/general/faq/) or [Contact support](/general/contact-support/).

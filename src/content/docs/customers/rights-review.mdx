@@ -1,0 +1,53 @@
+---
+title: Approval and rights review
+description: What the Pre-Publish Rights Review screen means and how to decide.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Before any production is published, JARAI shows you a **Rights Review** screen with a list of potential risks JARAI's analysis surfaced. **You decide whether to publish** — JARAI doesn't block you.
+
+This is by design: JARAI is an **informer**, not a blocker. Our analysis surfaces things that *might* matter; you, as the publisher, decide whether to proceed.
+
+<Aside type="caution" title="Why this matters legally">
+Under UK and EU law, the **publisher** of a piece of content bears primary civil liability for what it contains (copyright, right of publicity, defamation). When you click **Publish**, you confirm that you have the rights to use the content. Our Terms of Service include a clause that shifts this liability to you — that's the standard model used by Midjourney, Runway, Pika, ElevenLabs, and most other generative AI tools.
+</Aside>
+
+## What you'll see
+
+Per platform (LinkedIn, TikTok, etc.), the Rights Review screen lists every warning flag the production carries:
+
+| Flag | What it means | What to do |
+|---|---|---|
+| **ContentSafetyBelowFloor** | Our analyser scored an image below the per-account safety threshold (e.g., possibly suggestive composition, possibly violent visual). | Look at the image. If it's fine for your audience, proceed. If not, replace the image (regen) or reject the production. |
+| **CommercialUseDisallowed** | An asset (usually a stock image) was flagged as not licensed for commercial use. | Either find a different image or accept the legal risk of publishing anyway. |
+| **CopyrightRiskHigh** | An image visually resembles known copyrighted material. | If you have rights to use it (e.g., you own the source), proceed. Otherwise, reject. |
+| **AttributionRequired** | A stock image needs to credit the photographer. | Click **Add attribution** to type in the credit text; or proceed acknowledging you'll add it externally. |
+| **IdentityLabelsPresent** | The image appears to depict an identifiable person. | If you have a release form, proceed. If it's a public figure where editorial use applies, proceed. If unsure, reject. |
+| **PromptAlignmentLow** | The generated image doesn't closely match the scene's image prompt. | Often cosmetic; preview it. If it works for the scene, proceed. Otherwise regenerate. |
+| **QualityScoreLow** | The image's overall quality score from our analyser is below the threshold. | Usually a soft signal; preview, then decide. |
+
+## How to decide
+
+1. **Click each warning** to see the underlying observation values (the actual safety score, the resemblance match, etc.).
+2. **Tick the "I understand and accept" box** per platform you want to publish to. Unticked platforms are skipped.
+3. **Click "Dispatch to platforms"** when you're ready.
+
+Your acknowledgement is logged with a timestamp. JARAI keeps this log for audit (and as evidence under our ToS that you reviewed the risks).
+
+## What JARAI WILL block
+
+A very small set of content categories triggers a **hard block** that you cannot override:
+
+- CSAM (child sexual abuse material) — detected by an independent classifier
+- NCII (non-consensual intimate imagery)
+- Terrorist content
+- Content targeting specific real children
+
+These categories are illegal under criminal law in essentially every jurisdiction. JARAI's provider liability for facilitating them is non-delegable.
+
+## See also
+
+- [Your privacy rights (GDPR)](/customers/privacy-rights/) — distinct from rights review; covers personal data
+- [Submit a takedown notice](/general/takedown-notice/) — if you believe content JARAI produced infringes your rights
+- [Legal](/general/legal/) — Terms of Service, Privacy Notice, Acceptable Use Policy

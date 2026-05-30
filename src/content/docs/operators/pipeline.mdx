@@ -1,0 +1,27 @@
+---
+title: Production pipeline (Steps 1–15)
+description: Reference for every step in the JARAI production pipeline.
+---
+
+This page is being built. While we fill it in, the brief version:
+
+| Step | Name | What it does |
+|---|---|---|
+| 1 | ProductionBriefGenerator | Picks subject + duration + structure |
+| 2 | NarrativeGenerator | Generates per-Act narrative |
+| 3 | SequenceBeatGenerator | Per-beat outlines |
+| 4 | SceneScriptGenerator | Per-scene VO + image-prompt + FX cues |
+| 5/5b/5c | Image acquisition (stock + AI + operator-supplied) | Sources images per scene |
+| 6 | ImageAnalyser | Safety + copyright + commercial-use evaluation |
+| 7 | ImageProducer | Picks the winning image per scene |
+| 8 | VoiceoverProducer | Per-scene TTS via ElevenLabs / OpenAI / Polly / Azure / etc. |
+| 9 | SoundtrackProducer | Background music + ambience |
+| 10/10b/10c/10d | Video composition (Shotstack / Creatomate / Cloudinary / Mux / TalksVideoComposer / AvatarAnimator) | Per-scene videos |
+| 11 | PlatformVariantProducer | Per-platform aspect-ratio + duration variants |
+| 12 | SEOGenerator | Per-platform titles / descriptions / hashtags |
+| 13 | AttributionPackager | License + credits + rights aggregation |
+| 14 | DeliverablePackager | Final per-platform deliverables |
+| 14a | TranscriptGenerator | Captions / subtitles |
+| 15 | GateEvaluator | Gate checks before Loop 2 dispatch |
+
+[Troubleshooting](/operators/troubleshooting/) covers per-step failure recovery.

@@ -1,0 +1,38 @@
+---
+title: What is JARAI Studio?
+description: A short overview of what JARAI Studio does, how the production pipeline works, and how operators and customers interact with it.
+---
+
+JARAI Studio is an **autonomous content production pipeline** that uses generative AI to produce video, audio, image, and text content end-to-end. It's built for organisations that want to produce branded content at scale without managing the AI provider stack themselves.
+
+## What it produces
+
+- **Short-form video** for social platforms (TikTok, Instagram Reels, YouTube Shorts, LinkedIn)
+- **Long-form video** for podcast-style episodes and educational content
+- **Audio-only** for podcast feeds + audiobook chapters
+- **Image stills** for stock-marketplace listings and editorial use
+- **Article + book manuscripts** with derivative formats (audiobook, e-pub, print)
+
+Every production runs through a multi-step pipeline (Steps 1-15) covering brief generation → narrative → scene scripting → image acquisition → voiceover → soundtrack → video composition → platform-variant rendering → SEO metadata → attribution → quality gates → distribution.
+
+## The two surfaces
+
+| Surface | URL | Audience | What they do |
+|---|---|---|---|
+| **Studio Console** | `studio.jarai.studio` | Operators | Configure pipelines, manage avatars, monitor productions, distribute deliverables |
+| **Client Portal** | `portal.jarai.studio` | Customers | Review productions, approve or reject content, manage subscriptions, exercise privacy rights |
+
+## How content gets produced
+
+1. **Operator triggers** a production from the Studio Console (manually, on a schedule, or from a content brief).
+2. **JARAI's pipeline** runs Steps 1-15 autonomously, calling AI providers (OpenAI, Anthropic, ElevenLabs, etc.) per step.
+3. **Customer reviews** the resulting production in the Client Portal — approves it (publishes), rejects it (deletes), or requests changes.
+4. **Distribution** ships the approved content to the customer's chosen platforms (Loop 2 of the pipeline).
+5. **Performance summarisation** (Loop 3-4) tracks engagement and feeds it back into future productions.
+
+## Where to learn more
+
+- [First production walkthrough](/operators/first-production/) — operators' getting-started guide
+- [Onboarding to the Client Portal](/customers/onboarding/) — customers' getting-started guide
+- [Glossary](/general/glossary/) — definitions for the terms used throughout this help centre
+- [FAQ](/general/faq/) — common questions for both audiences

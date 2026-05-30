@@ -1,0 +1,18 @@
+---
+title: Status and incident history
+description: Current platform status and recent incidents.
+---
+
+For real-time platform status, watch this page. (Status integration coming — for now, [contact support](/general/contact-support/) if you suspect an outage.)
+
+## Known dependencies
+
+JARAI's pipeline depends on third-party AI providers + cloud services:
+
+- **Azure** (compute, storage, SQL, Service Bus) — see [status.azure.com](https://status.azure.com)
+- **OpenAI** (text generation, image generation, TTS) — see [status.openai.com](https://status.openai.com)
+- **Anthropic** (text generation) — see [status.anthropic.com](https://status.anthropic.com)
+- **ElevenLabs** (TTS) — see [status.elevenlabs.io](https://status.elevenlabs.io)
+- **Shotstack** (video composition) — see [status.shotstack.io](https://status.shotstack.io)
+
+If one provider is down, JARAI's per-step fallback chain switches to alternatives where configured. See [Operator troubleshooting](/operators/troubleshooting/) for what happens.

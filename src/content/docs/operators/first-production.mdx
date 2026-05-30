@@ -1,0 +1,79 @@
+---
+title: First production walkthrough
+description: Step-by-step guide to creating your first JARAI production, from brief to delivered video.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+This walkthrough takes you from a logged-in Studio Console to a finished, downloadable video. Plan for about 15–20 minutes of clock time (most of it waiting on the AI pipeline to run).
+
+<Aside type="tip" title="Prerequisites">
+- You're logged in to Studio Console with `AccountOperator` or higher role.
+- Your account has at least one **Avatar** configured. If not, see [Managing avatars](/operators/avatars/) first.
+- Your account has token allowance remaining (visible in the top-right billing banner).
+</Aside>
+
+## The walkthrough
+
+<Steps>
+
+1. **Open the New Production page.**
+
+   From the left sidebar, click **Productions** → **New Production**. You'll land on a form titled "Create a new production".
+
+2. **Pick a content theme + project type.**
+
+   - **Project type** (e.g., "Short-form video", "Podcast episode", "Book chapter") sets the pipeline shape: which Steps activate, what AI providers are called, what the final deliverable looks like.
+   - **Content theme** (e.g., "Tech news", "Recipes", "Historical events") narrows the brief generator's subject space.
+
+3. **Pick an avatar (or two).**
+
+   For solo productions, pick a single avatar — that voice + face will narrate. For dialogue formats, pick **Character 1** + **Character 2** avatars and the script generator will produce alternating-speaker scripts.
+
+4. **(Optional) Override the subject.**
+
+   The brief generator picks a topic for you within the content theme. To force a specific topic, type it into **Subject override** (e.g., "How do solar panels work in winter?"). Otherwise leave blank and JARAI invents one.
+
+5. **Click "Start production".**
+
+   The production lands in your queue with `Status = Queued`. Within a minute, Step 1 (ProductionBriefGenerator) starts and you can watch progress on the **Production detail** page.
+
+6. **Watch the pipeline run.**
+
+   The production detail page shows each pipeline step with a live status badge:
+   - **Pending** (waiting for upstream)
+   - **InProgress** (pulsing — running now)
+   - **Complete** ✅
+   - **Failed** ❌ (with retry button)
+   - **PendingReview** (gated on operator decision)
+
+   Steps 1–4 (text generation) take ~1–2 min total. Steps 5–6 (image acquisition + analysis) ~3–5 min. Steps 7–11 (image/voice/video production) ~5–10 min depending on length. Steps 12–15 (variants, attribution, gates) ~1–2 min.
+
+7. **Review the result.**
+
+   When **Step 14 (DeliverablePackager)** completes, the brief enters `Status = Awaiting publish`. You can:
+   - Preview every asset inline (thumbnails, audio players, video posters) on the Story tab.
+   - Download individual assets or all assets as a zip.
+   - **Approve to publish** (sends to Loop 2 distribution) or **Reject** (deletes the deliverables).
+
+8. **(Optional) Approve to publish.**
+
+   If you chose target platforms in step 2, hitting **Publish** triggers Loop 2 (DistributionOrchestrator) which dispatches the platform-variant videos to LinkedIn, TikTok, etc. Each platform shows a publication status badge after dispatch.
+
+</Steps>
+
+## What you'll see at each stage
+
+| Stage | What's happening | What you can do |
+|---|---|---|
+| **Steps 1–4** | Brief → Narrative → Beats → Scenes (text generation) | Read the generated story on the Story tab; cancel if it's wrong |
+| **Steps 5–6** | Image acquisition (Pexels / Pixabay / Wikimedia) + analysis | Review per-scene image candidates; override the chosen image if you want |
+| **Steps 7–10** | Per-scene image production + voiceover TTS + scene-video composition | Preview audio + video stills on the Story tab |
+| **Steps 11** | Platform variants (16:9 / 9:16 / 1:1) rendered | Preview each variant inline |
+| **Steps 12–14** | SEO metadata + attribution + final packaging | Approve to publish, or download for manual upload |
+
+## Where to learn more
+
+- [Production pipeline (Steps 1–15)](/operators/pipeline/) — full reference for what each step does
+- [Troubleshooting](/operators/troubleshooting/) — what to do when a step fails
+- [Distribution and publishing](/operators/distribution/) — platform-specific publishing details

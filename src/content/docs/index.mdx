@@ -1,0 +1,45 @@
+---
+title: Welcome to JARAI Help
+description: Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.
+template: splash
+hero:
+  tagline: Help and documentation for everyone using JARAI Studio.
+  actions:
+    - text: For operators
+      link: /operators/
+      icon: right-arrow
+      variant: primary
+    - text: For customers
+      link: /customers/
+      icon: right-arrow
+    - text: FAQ
+      link: /general/faq/
+      icon: open-book
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Find what you need
+
+<CardGrid stagger>
+  <Card title="Are you an operator?" icon="laptop">
+    You use the **Studio Console** to produce content, manage avatars, configure pipelines, and oversee deliveries. [Start here →](/operators/)
+  </Card>
+  <Card title="Are you a customer?" icon="user">
+    You use the **Client Portal** to review productions, approve or reject content, manage subscriptions, and exercise your privacy rights. [Start here →](/customers/)
+  </Card>
+  <Card title="Looking for something general?" icon="open-book">
+    FAQs, glossary, status updates, takedown notices, legal information — [browse the general section →](/general/faq/)
+  </Card>
+  <Card title="Building on JARAI's API?" icon="setting">
+    For Partner API reference and developer integration, see the [Developer Portal](https://developer.jarai.studio).
+  </Card>
+</CardGrid>
+
+## Quick links
+
+- [What is JARAI Studio?](/getting-started/what-is-jarai/)
+- [First production walkthrough (operators)](/operators/first-production/)
+- [Onboarding to the Client Portal (customers)](/customers/onboarding/)
+- [Submit a takedown notice](/general/takedown-notice/)
+- [Contact support](/general/contact-support/)

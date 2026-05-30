@@ -1,0 +1,52 @@
+/* JARAI Studio — Brand tokens for jarai-help
+ *
+ * SOURCE OF TRUTH: jarai-brand-guidelines-SKILL.md
+ * MUST stay byte-identical to the same block in:
+ *   - jarai-website/src/styles/global.css        (marketing)
+ *   - jarai-developer-portal/src/styles/global.css (API docs)
+ *   - JARAI/src/studio-console/src/styles/*       (operator app)
+ *   - JARAI/client-portal/src/styles/*            (customer app)
+ *
+ * If you change a token here without updating the others, brand drift creeps in.
+ * Follow-up plan: extract to a published @jarai-studio/brand npm package so all
+ * five surfaces import the same file (single source of truth, no copy/paste).
+ */
+
+:root {
+  /* Foundation colours */
+  --color-dark: #141413;
+  --color-light: #faf9f5;
+  --color-mid: #b0aea5;
+  --color-subtle: #e8e6dc;
+
+  /* Accent colours */
+  --color-accent-1: #d97757;
+  --color-accent-2: #6a9bcc;
+  --color-accent-3: #788c5d;
+  --color-accent-1-hover: #c4684a;
+  --color-accent-1-active: #b8593e;
+
+  /* Typography */
+  --font-heading: 'Poppins', Arial, sans-serif;
+  --font-body: 'Lora', Georgia, serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  /* Spacing (8px grid) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* Radii */
+  --radius-card: 8px;
+  --radius-button: 6px;
+  --radius-badge: 4px;
+  --radius-pill: 9999px;
+}
+
+/* Self-host the brand fonts via Google Fonts for parity with jarai-website.
+ * If we later move to fully self-hosted woff2 files in public/fonts/, mirror
+ * the change across all five surfaces in the same PR. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');

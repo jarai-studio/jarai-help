@@ -1,0 +1,43 @@
+---
+title: Customer overview
+description: Help index for customers — start here if you log in to the Client Portal to review productions.
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Welcome. You're using the **JARAI Client Portal** to review productions that an operator has produced for you, approve or reject them, manage your subscription, and exercise your privacy rights.
+
+## Where to start
+
+<LinkCard
+  title="Onboarding to the Client Portal"
+  description="First time signing in? Set your password, link your Google account if you prefer, and see your first production."
+  href="/customers/onboarding/"
+/>
+
+<LinkCard
+  title="Approval and rights review"
+  description="Before publishing a production, JARAI shows you a Rights Review screen with any warnings (copyright risk, identity labels, attribution gaps). Here's what those mean and how to decide."
+  href="/customers/rights-review/"
+/>
+
+## Common tasks
+
+<CardGrid>
+  <Card title="Reviewing productions" icon="approve-check">
+    How to preview a production, watch each step's output, and approve or reject.
+    [Read more →](/customers/reviewing-productions/)
+  </Card>
+  <Card title="Billing and subscriptions" icon="document">
+    Subscription tiers, token allowances, top-ups, invoices.
+    [Read more →](/customers/billing/)
+  </Card>
+  <Card title="Your privacy rights (GDPR)" icon="warning">
+    Access, rectification, erasure, portability, restriction, objection, and more. JARAI processes these per ICO/EDPB guidelines.
+    [Read more →](/customers/privacy-rights/)
+  </Card>
+  <Card title="Troubleshooting" icon="error">
+    Can't log in? Missing a production? Subscription issue? Start here.
+    [Read more →](/customers/troubleshooting/)
+  </Card>
+</CardGrid>

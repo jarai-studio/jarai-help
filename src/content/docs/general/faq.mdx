@@ -1,0 +1,64 @@
+---
+title: Frequently asked questions
+description: Common questions answered for both operators and customers.
+---
+
+## General
+
+### What does JARAI Studio do, exactly?
+
+It's an autonomous content production pipeline. You give it a topic and an avatar; it produces a finished video / podcast / book / image set by chaining ~15 pipeline steps that each call AI providers (OpenAI, Anthropic, ElevenLabs, etc.). See [What is JARAI Studio?](/getting-started/what-is-jarai/) for the longer answer.
+
+### Is the content JARAI produces unique?
+
+Yes. Every production is generated fresh — JARAI doesn't republish or remix existing content. Two operators triggering the "same" topic will get different outputs (different scene structures, different image picks, different VO performances).
+
+### Is JARAI used for deepfakes?
+
+No. JARAI can clone voices (with explicit speaker-consent attestation) and generate AI imagery, but it does not produce deepfake video impersonations of real people without consent. Our [Acceptable Use Policy](/general/legal/) explicitly prohibits CSAM, NCII, terrorist content, and targeting of specific real children.
+
+## For operators
+
+### How long does a production take end-to-end?
+
+Typically 15–30 minutes for a short-form video, depending on length + how many AI calls are needed. Long-form (15+ min videos, podcast episodes, book chapters) takes 1–3 hours.
+
+### What happens if an AI provider goes down mid-production?
+
+Each pipeline step retries on transient failures (5xx, timeouts). If retries exhaust, the step dead-letters and you'll see a Failed badge with an error code. Most steps have a fallback chain (e.g., voiceover falls through 6 TTS providers). See [Troubleshooting](/operators/troubleshooting/).
+
+### Can I edit the script before voiceover?
+
+Yes — productions pause at editable boundaries if you've enabled review gates. Otherwise, you can retry a step with an override.
+
+## For customers
+
+### Why does JARAI show me warnings about copyright / safety / attribution?
+
+JARAI's analysis flags potential risks for your awareness but doesn't block you. You, as publisher, decide whether to proceed. See [Approval and rights review](/customers/rights-review/) for the full explanation.
+
+### Can I refuse a production?
+
+Yes. Click **Reject** on any production you don't want published — it'll never go to any platform. You can also request a different topic, avatar, or platform mix via your operator.
+
+### What about my data — is JARAI GDPR compliant?
+
+Yes. See [Your privacy rights](/customers/privacy-rights/) for the eight data-subject rights and how to exercise them.
+
+## Billing
+
+### How is usage billed?
+
+Token allowance per month based on your subscription tier. Each AI call (image gen, TTS, video composition, etc.) consumes a budgeted number of tokens. Operators can buy top-ups when allowance runs low.
+
+### What happens at end of billing cycle?
+
+Unused allowance does NOT roll over by default. Top-up packs (one-time purchases) do roll over.
+
+### Can I cancel mid-cycle?
+
+Yes. Cancellation takes effect at the next renewal — you keep service for the remainder of the paid period.
+
+## Still have a question?
+
+[Contact support](/general/contact-support/) — we typically reply within 24 hours.

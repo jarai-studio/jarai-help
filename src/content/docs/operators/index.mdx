@@ -1,0 +1,43 @@
+---
+title: Operator overview
+description: Help index for JARAI Studio operators — start here if you log in to the Studio Console.
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Welcome, operator. You're using **JARAI Studio Console** to produce content, manage configuration, and oversee deliveries to your customers.
+
+## Where to start
+
+<LinkCard
+  title="First production walkthrough"
+  description="Step-by-step: create your first Production Brief, watch it run through the pipeline, and download the result."
+  href="/operators/first-production/"
+/>
+
+<LinkCard
+  title="Production pipeline (Steps 1–15)"
+  description="What each pipeline step does, what it consumes, and what it produces."
+  href="/operators/pipeline/"
+/>
+
+## Common tasks
+
+<CardGrid>
+  <Card title="Managing avatars" icon="user">
+    Add new avatars, configure their voice variants, set production preferences, and assign them to recurring schedules. [Read more →](/operators/avatars/)
+  </Card>
+  <Card title="Voice variants" icon="comment">
+    Browse the voice variant catalogue across all TTS providers (ElevenLabs, OpenAI, Azure, AWS Polly, etc.), generate samples, and request new accents. [Read more →](/operators/voice-variants/)
+  </Card>
+  <Card title="Distribution and publishing" icon="rocket">
+    Configure which platforms (TikTok, LinkedIn, YouTube, podcast feeds, etc.) each production ships to. [Read more →](/operators/distribution/)
+  </Card>
+  <Card title="Billing and usage" icon="document">
+    Subscription tiers, token allowances, usage banners, top-up purchases. [Read more →](/operators/billing/)
+  </Card>
+</CardGrid>
+
+## When something goes wrong
+
+[Troubleshooting →](/operators/troubleshooting/) covers the failure modes you'll encounter most often — step failures, missing assets, dead-lettered messages, AI provider outages, and how to retry or override.
