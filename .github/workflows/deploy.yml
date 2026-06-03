@@ -5,14 +5,14 @@ name: Deploy help.jarai.studio
 # - pull_request: builds + deploys a preview environment (closed when PR merges/closes)
 # - workflow_dispatch: manual rebuild
 #
-# Runner policy (2026-06-04): build_and_deploy runs on GitHub-hosted ubuntu-latest.
-# help.jarai.studio is a PRODUCTION SWA, and per the org runner policy (JAR_Deploy.md)
-# PRD deploy jobs deliberately stay on ubuntu-latest so a release never depends on the
-# self-hosted runner being online. The 2026-06-01 move to [self-hosted, Linux, X64] broke
-# this: jarai-help isn't granted access in the org self-hosted runner group, so every main
-# deploy queued for a runner that never picked it up and was cancelled. Reverted to hosted.
-# The @azure/static-web-apps-cli deploy step runs fine on ubuntu-latest (Docker not needed
-# for the CLI; ubuntu-latest has it anyway). close_pull_request was already ubuntu-latest.
+# Runner policy (2026-06-04, rev 2): build_and_deploy runs on the org self-hosted runner
+# pool ([self-hosted, Linux, X64]). The operator granted the org self-hosted runner group
+# repository access to jarai-help on 2026-06-04 — the missing grant was why the 2026-06-01
+# self-hosted move queued forever + got cancelled (fixed temporarily by reverting to hosted
+# in PR #2). With access granted, build_and_deploy is back on self-hosted to avoid hosted
+# minute costs, uploading pre-built dist/ via @azure/static-web-apps-cli (no Docker needed).
+# close_pull_request stays on GitHub-hosted: the SWA `action: close` mode needs the
+# Docker-based action, which the self-hosted runner has no Docker for. Tiny, rare job.
 
 on:
   push:
@@ -29,7 +29,7 @@ permissions:
 jobs:
   build_and_deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     name: Build and deploy
     steps:
       - uses: actions/checkout@v4
