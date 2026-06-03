@@ -5,14 +5,16 @@ name: Deploy help.jarai.studio
 # - pull_request: builds + deploys a preview environment (closed when PR merges/closes)
 # - workflow_dispatch: manual rebuild
 #
-# Runner policy (2026-06-04, rev 2): build_and_deploy runs on the org self-hosted runner
-# pool ([self-hosted, Linux, X64]). The operator granted the org self-hosted runner group
-# repository access to jarai-help on 2026-06-04 — the missing grant was why the 2026-06-01
-# self-hosted move queued forever + got cancelled (fixed temporarily by reverting to hosted
-# in PR #2). With access granted, build_and_deploy is back on self-hosted to avoid hosted
-# minute costs, uploading pre-built dist/ via @azure/static-web-apps-cli (no Docker needed).
-# close_pull_request stays on GitHub-hosted: the SWA `action: close` mode needs the
-# Docker-based action, which the self-hosted runner has no Docker for. Tiny, rare job.
+# Runner policy (2026-06-04, rev 3): build_and_deploy runs on GitHub-hosted ubuntu-latest.
+# This is the correct steady state anyway — help.jarai.studio is a PRODUCTION SWA and the
+# org policy (JAR_Deploy.md) keeps PRD deploys on hosted so a release never depends on the
+# self-hosted runner being online. History: 2026-06-01 moved this to self-hosted → every
+# deploy queued + cancelled (PR #2 reverted to hosted). 2026-06-04 the operator granted the
+# org runner group access to jarai-help and we retried self-hosted (PR #3) — the job STILL
+# sat queued ~3 min on idle runners and never got picked up (runner offline, or the grant
+# landed on a different group than the one holding the runner — needs org-admin to confirm),
+# so reverted to hosted again. The @azure/static-web-apps-cli deploy step runs fine here.
+# close_pull_request was already ubuntu-latest.
 
 on:
   push:
@@ -29,7 +31,7 @@ permissions:
 jobs:
   build_and_deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: ubuntu-latest
     name: Build and deploy
     steps:
       - uses: actions/checkout@v4
