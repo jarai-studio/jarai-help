@@ -1,6 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64">
-  <rect width="64" height="64" rx="12" fill="#d97757"/>
-  <text x="32" y="44" font-family="Poppins, Arial, sans-serif" font-size="32" font-weight="700" text-anchor="middle" fill="#faf9f5">J</text>
-  <text x="80" y="36" font-family="Poppins, Arial, sans-serif" font-size="22" font-weight="600" fill="#141413">JARAI</text>
-  <text x="80" y="56" font-family="Lora, Georgia, serif" font-size="14" fill="#6a695f">Help</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" role="img" aria-label="JARAI Help">
+  <!-- Bloom-on-Terracotta tile (matches favicon.svg, rx 23%) -->
+  <rect width="64" height="64" rx="14.72" fill="#d97757"/>
+  <g fill="#faf9f5" transform="translate(32 32) scale(0.512) translate(-50 -50)">
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z"/>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(72 50 50)"/>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(144 50 50)"/>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(216 50 50)"/>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(288 50 50)"/>
+  </g>
+  <!-- Wordmark: Bloom + JARAI Poppins 700 caps, small-size fallback form -->
+  <text x="80" y="36" font-family="Poppins, sans-serif" font-size="22" font-weight="700" letter-spacing="1.76" fill="#141413">JARAI</text>
+  <text x="80" y="55" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="13" font-weight="400" fill="#6a695f">Help</text>
 </svg>

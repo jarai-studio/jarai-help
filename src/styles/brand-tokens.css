@@ -1,17 +1,91 @@
 /* JARAI Studio — Brand tokens for jarai-help
  *
- * SOURCE OF TRUTH: jarai-brand-guidelines-SKILL.md
- * MUST stay byte-identical to the same block in:
+ * SOURCE OF TRUTH: JARAI/design/skills/jarai-brand-guidelines-SKILL.md
+ *
+ * The "BRAND BLOCK" region below (between the BEGIN/END markers) MUST stay
+ * byte-identical to the same region in:
  *   - jarai-website/src/styles/global.css        (marketing)
  *   - jarai-developer-portal/src/styles/global.css (API docs)
- *   - JARAI/src/studio-console/src/styles/*       (operator app)
- *   - JARAI/client-portal/src/styles/*            (customer app)
+ *   - JARAI/src/studio-console/src/styles/tokens.css (operator app)
+ *   - JARAI/client-portal/src/index.css            (customer app)
  *
- * If you change a token here without updating the others, brand drift creeps in.
- * Follow-up plan: extract to a published @jarai-studio/brand npm package so all
- * five surfaces import the same file (single source of truth, no copy/paste).
+ * Long-term: extract to a published @jarai-studio/brand npm package so all
+ * five surfaces consume the same source of truth.
+ *
+ * Fonts are self-hosted in /public/fonts/ (UK GDPR — no third-country IP
+ * leak via Google Fonts CDN). The woff2 files come from the
+ * @fontsource/{poppins,ibm-plex-sans,jetbrains-mono} packages; regenerate via
+ *   cp node_modules/@fontsource/<family>/files/<family>-latin-*-normal.woff2 \
+ *      public/fonts/
  */
 
+/* === Self-hosted webfonts ====================================== */
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* === BEGIN BRAND BLOCK (byte-identical across all five surfaces) === */
 :root {
   /* Foundation colours */
   --color-dark: #141413;
@@ -19,19 +93,38 @@
   --color-mid: #b0aea5;
   --color-subtle: #e8e6dc;
 
-  /* Accent colours */
+  /* Brand accents */
   --color-accent-1: #d97757;
-  --color-accent-2: #6a9bcc;
-  --color-accent-3: #788c5d;
   --color-accent-1-hover: #c4684a;
   --color-accent-1-active: #b8593e;
+  --color-accent-2: #6a9bcc;
+  --color-accent-3: #788c5d;
+
+  /* Status accents (semantic, NOT brand) */
+  --color-success: #788c5d;
+  --color-info: #6a9bcc;
+  --color-warning: #c4922f;
+  --color-warning-ink: #8a6d1a;
+  --color-danger: #b0462f;
+  --color-danger-ink: #9a3a25;
+
+  /* Status tints (badge bg / text) */
+  --tint-success: #e8eedf;  --on-success: #5d7048;
+  --tint-info:    #ddeaf5;  --on-info:    #4a7aab;
+  --tint-warning: #f7eccd;  --on-warning: #8a6d1a;
+  --tint-danger:  #f5ddd5;  --on-danger:  #9a3a25;
+  --tint-neutral: #e8e6dc;  --on-neutral: #b0aea5;
+
+  /* Light-section accessibility variants (WCAG AA on Cream) */
+  --color-mid-accessible: #6b6860;
+  --color-accent-1-on-light: #ae5538;
 
   /* Typography */
   --font-heading: 'Poppins', Arial, sans-serif;
-  --font-body: 'Lora', Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, monospace;
 
-  /* Spacing (8px grid) */
+  /* Spacing — 8px grid */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -46,7 +139,21 @@
   --radius-pill: 9999px;
 }
 
-/* Self-host the brand fonts via Google Fonts for parity with jarai-website.
- * If we later move to fully self-hosted woff2 files in public/fonts/, mirror
- * the change across all five surfaces in the same PR. */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+[data-theme="dark"] {
+  --color-accent-1: #e89478;
+  --color-accent-1-hover: #ef9f84;
+  --color-accent-1-active: #d97757;
+  --color-accent-2: #8fb4d8;
+  --color-accent-3: #9aac82;
+  --color-warning: #d8a949;  --color-warning-ink: #d8a949;
+  --color-danger: #d97a62;   --color-danger-ink: #d97a62;
+  --color-success: #9aac82;
+  --color-info: #8fb4d8;
+
+  --tint-success: #20271a;  --on-success: #9aac82;
+  --tint-info:    #1b2530;  --on-info:    #8fb4d8;
+  --tint-warning: #2c2310;  --on-warning: #d8a949;
+  --tint-danger:  #2e1712;  --on-danger:  #d97a62;
+  --tint-neutral: #2b2a27;  --on-neutral: #b0aea5;
+}
+/* === END BRAND BLOCK === */

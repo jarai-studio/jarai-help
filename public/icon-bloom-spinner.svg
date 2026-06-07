@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Loading">
+  
+  <g fill="#d97757">
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z"></path>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(72 50 50)" opacity="0.8"></path>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(144 50 50)" opacity="0.6"></path>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(216 50 50)" opacity="0.4"></path>
+    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(288 50 50)" opacity="0.25"></path>
+    
+  </g>
+</svg>
