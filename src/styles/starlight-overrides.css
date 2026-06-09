@@ -6,21 +6,21 @@
  */
 
 :root {
-  /* Starlight accent scale — built from --color-accent-1 (#d97757 — JARAI orange).
+  /* Starlight accent scale — built from --color-accent-1 (#0F766E — JARAI teal).
    * Generated via Starlight's recommended approach: high == darkest, low == lightest. */
-  --sl-color-accent-low: #f6d9ce;
-  --sl-color-accent: #d97757;
-  --sl-color-accent-high: #8a3d24;
+  --sl-color-accent-low: #CDE7E3;
+  --sl-color-accent: #0F766E;
+  --sl-color-accent-high: #0A514B;
 
-  /* Greyscale tied to JARAI foundation palette */
-  --sl-color-white: var(--color-light);    /* #faf9f5 */
-  --sl-color-gray-1: #ebe9df;
-  --sl-color-gray-2: #d6d3c5;
-  --sl-color-gray-3: var(--color-subtle);  /* #e8e6dc */
-  --sl-color-gray-4: var(--color-mid);     /* #b0aea5 */
-  --sl-color-gray-5: #6a695f;
-  --sl-color-gray-6: #3a3935;
-  --sl-color-black: var(--color-dark);     /* #141413 */
+  /* Greyscale tied to JARAI foundation palette (cool) */
+  --sl-color-white: var(--color-light);    /* #FBFCFD */
+  --sl-color-gray-1: #EAEFEE;
+  --sl-color-gray-2: #D5DCDB;
+  --sl-color-gray-3: var(--color-subtle);  /* #E7ECEC */
+  --sl-color-gray-4: var(--color-mid);     /* #A6B2AF */
+  --sl-color-gray-5: #5B6B68;
+  --sl-color-gray-6: #2A3331;
+  --sl-color-black: var(--color-dark);     /* #0E1B19 */
 
   /* Background + text */
   --sl-color-bg: var(--color-light);
@@ -37,24 +37,24 @@
 
 /* Dark mode — invert the foundation pair, dim the accents */
 :root[data-theme='dark'] {
-  --sl-color-accent-low: #2a1208;
-  --sl-color-accent: #e89478;
-  --sl-color-accent-high: #f6d9ce;
+  --sl-color-accent-low: #07221F;
+  --sl-color-accent: #2FC2AD;
+  --sl-color-accent-high: #CDE7E3;
 
   --sl-color-white: var(--color-dark);
-  --sl-color-gray-1: #1f1e1c;
-  --sl-color-gray-2: #2b2a27;
-  --sl-color-gray-3: #3a3935;
-  --sl-color-gray-4: #6a695f;
+  --sl-color-gray-1: #14201E;
+  --sl-color-gray-2: #1C2524;
+  --sl-color-gray-3: #2A3331;
+  --sl-color-gray-4: #4A5654;
   --sl-color-gray-5: var(--color-mid);
-  --sl-color-gray-6: #d6d3c5;
+  --sl-color-gray-6: #C7D2CF;
   --sl-color-black: var(--color-light);
 
-  --sl-color-bg: #1a1916;
-  --sl-color-bg-nav: #211f1c;
-  --sl-color-bg-sidebar: #181715;
-  --sl-color-text: #ebe9df;
-  --sl-color-text-accent: #e89478;
+  --sl-color-bg: #0E1413;
+  --sl-color-bg-nav: #161D1C;
+  --sl-color-bg-sidebar: #1C2524;
+  --sl-color-text: #EEF3F1;
+  --sl-color-text-accent: #2FC2AD;
 }
 
 /* Apply heading font from the brand */
