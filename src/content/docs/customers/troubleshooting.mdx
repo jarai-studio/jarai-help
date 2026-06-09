@@ -3,21 +3,50 @@ title: Customer troubleshooting
 description: Common issues with the Client Portal and how to resolve them.
 ---
 
-This page is being built. While we fill it in, common issues:
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Most Client Portal issues come down to sign-in, a production you can't find, or
+billing. Here's how to clear each — and when to involve your operator vs support.
+
+<VideoHelper title="Fix common Client Portal issues" duration="60 sec">
+
+1. **Can't sign in?** Use reset-password / magic-link, and check your email matches the invite.
+2. **Missing a production?** Confirm your operator ran it for your account.
+3. **It's there but not live?** It may be waiting for your **approval**.
+4. **Billing?** Check the Billing area, then contact support.
+
+</VideoHelper>
 
 ## Can't log in
 
-- **Forgot password** → use the "Reset password" link on the sign-in page
-- **Sign-in link expired** → ask your operator to resend the invite
-- **Google sign-in not working** → check that your Google account email matches the one your operator invited; if not, contact your operator
+- **Forgot password** → use the **Reset password** link on the sign-in page.
+- **Sign-in / invite link expired** → ask your operator to resend the invite.
+- **Google sign-in not working** → make sure the Google account email **matches** the one your operator invited. If it doesn't, ask your operator to invite the right address.
+- **Locked out entirely** → if the last administrator on your account is unavailable, [contact support](/general/contact-support/).
 
 ## Missing a production
 
-- Productions appear in the Client Portal when an operator runs them for your account. If you expected one and don't see it, ask your operator to confirm it ran.
-- If it's there but not approved/published, you may need to **approve** it via the [rights review screen](/customers/rights-review/).
+- Productions appear in the portal when an **operator runs one for your account**. If you expected one and don't see it, ask your operator to confirm it ran.
+- If it's listed but not published, it may be **waiting for your approval** — open it and review (see [Reviewing productions](/customers/reviewing-productions/)).
 
-## Subscription issue
+## A production won't publish after I approved it
 
-- See [Billing](/customers/billing/) or [Contact support](/general/contact-support/).
+- A connected channel may have **disconnected** (token expired/revoked) on the operator's side. Your operator reconnects it — see the operator [Connected platforms](/operators/connected-platforms/) guide.
+- Some platforms require approval before posting; content for those is held rather than failing.
 
-For anything else, [contact support](/general/contact-support/).
+## Notifications not arriving
+
+- Check your **contact email** is correct in [Account settings](/customers/account-settings/), and that notifications are enabled.
+- For push, install the portal as an app and allow device notifications.
+
+## Subscription / billing issue
+
+See [Billing and subscriptions](/customers/billing/), or [Contact support](/general/contact-support/) for payment problems.
+
+<Aside type="tip">
+**Rule of thumb:** content/production questions → your **operator** (they run
+productions for you); access, billing, and bugs → **support**.
+</Aside>
+
+Anything else? [Contact support](/general/contact-support/).

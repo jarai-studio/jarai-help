@@ -1,18 +1,50 @@
 ---
 title: Glossary
-description: Definitions for the terms used throughout this help centre.
+description: Definitions for the terms used throughout JARAI Studio and this help centre.
 ---
 
-This page is being built. A brief subset:
+The terms you'll meet across the Studio Console, Client Portal, and this help centre.
 
-- **Avatar** — A character profile (face + voice variant) used to narrate productions.
-- **Brief** — A specific production request, with a topic, avatar, duration, and target platforms.
-- **Voice variant** — One specific TTS voice (provider + accent + characteristic combination). E.g., "ElevenLabs Rachel — en-US-x-newyork — calm".
-- **Pipeline step** — One of the ~15 automated stages a brief moves through (narrative → script → image → voice → video → distribution).
-- **Production** — A completed run-through of the pipeline for a single brief. Includes all generated assets.
-- **Deliverable** — A final per-platform asset (e.g., the 9:16 TikTok video, the 16:9 LinkedIn video, the podcast MP3).
-- **Token allowance** — Budgeted AI-call units per month, tied to your subscription tier.
-- **Operator** — User of the Studio Console; produces content.
-- **Customer** — User of the Client Portal; reviews and approves content.
+## Content & production
 
-More definitions coming. For specific terms not listed here, see [FAQ](/general/faq/) or [Contact support](/general/contact-support/).
+- **Production** — one full run of the pipeline for a single brief, including every generated asset and the final deliverables.
+- **Brief** — a production request: topic/subject, project type, avatar(s), and options. The pipeline starts from the brief.
+- **Project type** — the kind of output (short-form video, long-form video, podcast, article, book…). It sets which pipeline steps run.
+- **Content theme** — the subject space the brief generator works within (e.g. "tech news", "recipes").
+- **Pipeline step** — one of the ~15 automated stages a production moves through (brief → narrative → script → images → voice → video → variants → packaging). See [Production pipeline](/operators/pipeline/).
+- **Deliverable** — a final, packaged per-platform asset (e.g. the 9:16 TikTok video, the 16:9 LinkedIn video, the podcast MP3).
+- **Asset** — an individual piece produced along the way (a sourced/generated image, a voiceover clip, captions).
+- **Attribution package** — the aggregated sources, licences and credits for everything used in a production.
+
+## Avatars & voices
+
+- **Avatar** — a persona used in productions: a **likeness** (on-screen face) plus a **voice variant**.
+- **Voice variant** — one specific TTS voice (provider + accent + character), e.g. *ElevenLabs — en-GB Yorkshire — calm*.
+- **Accent (taxonomy)** — a precise regional label for a voice, from country level (e.g. `es-ES`) down to sub-regional (e.g. `es-ES-x-andalucia-sevilla`).
+- **Trait facet** — a filterable voice attribute: accent, age, gender, style, use-case, tags, colour.
+
+## People & roles
+
+- **Operator** — a Studio Console user who produces content (`AccountOperator`).
+- **Customer** — a Client Portal user who reviews and approves content (`CustomerAdministrator` / `CustomerViewer`).
+- **Platform administrator** — manages shared platform infrastructure across all accounts (`PlatformAdministrator`).
+- **Account** — the workspace a set of productions and avatars belongs to.
+- **Customer (entity)** — the organisation a set of accounts belongs to; billing rolls up here.
+
+## Pipeline & operations
+
+- **Loop** — a stage of the wider system: Loop 1 produces content, Loop 2 distributes it, later loops handle engagement, optimisation and promotion.
+- **Distribution** — publishing approved content to your connected channels (Loop 2).
+- **Gate** — a check a production must pass before it can advance (e.g. the final gate before distribution).
+- **Quality score** — a per-step measure of output quality, compared against your account's quality floor.
+- **Dead-letter queue (DLQ)** — where a permanently-failed pipeline message is parked for an operator to inspect and resubmit.
+- **Idempotency** — the property that re-running a step that already completed has no harmful effect (so retries are safe).
+
+## Billing & access
+
+- **Token allowance** — the budgeted AI-call units included with your subscription each month.
+- **Top-up / extra capacity** — additional allowance you can buy when you run low.
+- **Tier** — your subscription level (Creator / Pro / Atelier).
+- **RLS (row-level security)** — the database mechanism that isolates each account's data so one account can never read another's.
+
+Term not here? See the [FAQ](/general/faq/) or [Contact support](/general/contact-support/).
