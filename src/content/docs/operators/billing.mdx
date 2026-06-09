@@ -1,11 +1,71 @@
 ---
 title: Billing and usage
-description: Subscription tiers, token allowances, top-ups, and usage banners in Studio Console.
+description: Subscription tiers, token allowances, top-ups, and the usage banner in Studio Console.
 ---
 
-This page is being built. While we fill it in, see:
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-- [FAQ](/general/faq/) — billing-related FAQs
-- [Contact support](/general/contact-support/) — for billing questions
+JARAI bills on a **subscription + token allowance** model. Each AI call your productions
+make (text, image generation, voiceover, video composition, music…) consumes a budgeted
+number of **tokens** from your monthly allowance. This page explains tiers, allowances,
+and how to keep producing when you run low.
 
-JARAI's subscription model uses **token allowances** — each AI call (image gen, TTS, video composition, etc.) consumes a budgeted number of tokens. When you hit 75% of monthly allowance with auto-top-up off, a banner appears prompting you to buy more.
+<VideoHelper title="Tokens, allowance & top-ups" duration="90 sec">
+
+1. Your **tier** sets a monthly token allowance (Creator / Pro / Atelier).
+2. Each AI step consumes tokens; the **billing banner** shows what's left.
+3. At ~75% used (without auto-top-up) a banner prompts you to **buy extra capacity**.
+4. Track cost vs revenue on the **Account P&L** dashboard.
+
+</VideoHelper>
+
+## Tiers
+
+| Tier | For | Allowance | Accounts |
+|---|---|---|---|
+| **Creator** | Individuals getting started | Entry monthly token allowance | Single account |
+| **Pro** | Regular producers | Larger allowance + priority processing | Unlimited accounts |
+| **Atelier** | Teams | Pooled capacity across seats | Multi-seat team billing |
+
+See current pricing on [jarai.studio](https://www.jarai.studio). Annual prepay carries
+a discount over monthly.
+
+## Token allowances
+
+Each AI call consumes a budgeted number of **tokens**. Heavier steps (video
+composition, long voiceover) cost more than light ones (a short text generation). Your
+**monthly allowance** refreshes each billing cycle.
+
+## The usage banner
+
+The Console shows a **billing banner** with your remaining allowance. When you reach
+about **75%** of the monthly allowance with auto-top-up off, the banner prompts you to
+**buy extra capacity** so productions don't stall mid-month.
+
+<Aside type="tip">
+Turn on **auto-top-up** if you'd rather not be interrupted — JARAI adds capacity
+automatically when you run low, and you keep producing without watching the banner.
+</Aside>
+
+## Extra capacity (top-ups)
+
+When you need more than your tier includes, buy **extra capacity** on top of the
+subscription. It's added to your balance and consumed after the monthly allowance.
+
+## Budgets & limits
+
+Accounts can carry a **production budget**. If an account hits its monthly limit, new
+productions are **rejected up front** with a clear "budget limit reached" message
+rather than partially running. Raise the budget or buy capacity to resume.
+
+## Seeing where the money goes
+
+The **Account P&L** dashboard shows revenue, AI cost, and margin for an account; the
+**Customer P&L** rolls it up across a customer's accounts. Use these to see which
+productions or steps are driving cost.
+
+<Aside type="note">
+Partner API usage draws on the **same** allowance and billing as the Console — there
+isn't a separate API meter.
+</Aside>

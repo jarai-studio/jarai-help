@@ -1,10 +1,71 @@
 ---
 title: Distribution and publishing
-description: Configure platform targets and ship approved content to LinkedIn, TikTok, podcast feeds, and more.
+description: How approved content ships to your connected channels, and how to track what published and how it performed.
 ---
 
-This page is being built. While we fill it in, see:
+import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-- [First production walkthrough](/operators/first-production/) — covers the "Publish" action that triggers distribution
-- [FAQ](/general/faq/) — distribution-related FAQs
-- [Contact support](/general/contact-support/) — for help connecting a new platform
+Once a production is finished and you **approve it to publish**, JARAI distributes it to
+your connected channels and tracks the results. This page covers that flow end to end.
+
+<VideoHelper title="Publish to your channels" duration="2 min">
+
+1. **Connect your channels** once via OAuth (Settings → Connected platforms).
+2. Finish a production and open its detail page.
+3. **Approve to publish** — optionally deselect platforms you don't want this time.
+4. JARAI posts to each in-scope channel and records the published URLs.
+5. Track publications + engagement on the **Distribution** dashboard.
+
+</VideoHelper>
+
+## Before you can publish
+
+You need at least one **connected channel**. Connecting is a one-time OAuth step per
+platform — see [Connected platforms](/operators/connected-platforms/). After that,
+publishing is automatic on approval.
+
+## Approving to publish
+
+<Steps>
+
+1. **Open the finished production** (it reaches an "awaiting publish" state once the deliverables are packaged).
+
+2. **Review the deliverables** — preview each platform variant on the Story tab.
+
+3. **Choose platforms.** By default JARAI publishes to the channels in scope; you can **deselect** any platform you don't want for this production. Deselected platforms are suppressed (not published); the rest go ahead.
+
+4. **Approve.** JARAI hands the production to the distribution loop, which posts the right variant to each selected channel.
+
+</Steps>
+
+<Aside type="tip">
+Per-platform **rights review** happens here too — acknowledge any advisory warnings
+(copyright/likeness/attribution) before approving. See
+[Approval and rights review](/customers/rights-review/) for the customer-side view of
+the same gate.
+</Aside>
+
+## What happens after approval
+
+- JARAI posts the **platform-specific variant** (correct aspect ratio, duration, and SEO metadata) to each connected channel.
+- It records the **published URL** for each.
+- **Engagement and revenue** flow back in and appear on the **Distribution** dashboard.
+
+## Tracking results
+
+Use **Dashboards → Distribution** to see what published where, the live URLs, and the
+engagement/revenue events tied to each. The **Avatar performance** dashboard breaks
+results down by avatar and platform.
+
+## When a publish doesn't go through
+
+- **Channel disconnected / token expired** → reconnect it (Settings → Connected platforms). JARAI refreshes tokens automatically where it can, but a revoked authorisation needs re-consent.
+- **Platform still pending approval** → some platforms require app review before production posting; content for those is held rather than failing.
+- **Nothing in scope** → make sure at least one connected channel was selected at approval.
+
+<Aside type="note">
+Distribution runs after the production pipeline completes — it's a separate stage, so
+a production can be fully produced and waiting on your approval before anything posts.
+Nothing publishes without that approval.
+</Aside>
