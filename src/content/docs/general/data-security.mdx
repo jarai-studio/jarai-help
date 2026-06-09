@@ -1,0 +1,58 @@
+---
+title: Data & security overview
+description: How JARAI Studio protects your data — identity, secrets, account isolation, encryption, and content safety.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This is a plain-language overview of how JARAI protects your data. For formal terms,
+see [Legal](/general/legal/) and your data-protection rights under
+[Your privacy rights (GDPR)](/customers/privacy-rights/).
+
+## Account isolation
+
+Your account's data is isolated from every other account at the **database** level —
+not just in the application. Each request is scoped to the calling account, and the
+database enforces that scope with row-level security, so one account can never read
+another's productions, media, or settings even if a request tried to.
+
+## Secrets & credentials
+
+- JARAI never stores raw third-party API keys or your platform tokens in its application database. Credentials live in a dedicated **secrets vault** and are referenced by name only.
+- Services authenticate to cloud resources using **managed identities** (short-lived, automatically-rotated platform credentials) rather than long-lived connection strings or embedded keys.
+- Your OAuth tokens for connected channels are stored in the vault and refreshed automatically; you can disconnect a channel at any time.
+
+<Aside type="tip" title="What this means for you">
+There's no long-lived secret for an attacker to steal from a config file, and access
+to cloud resources is governed by identity rather than copied keys.
+</Aside>
+
+## Encryption
+
+Data is encrypted **in transit** (HTTPS/TLS everywhere) and **at rest** (storage,
+database, and the secrets vault are encrypted by the platform).
+
+## Content safety
+
+Generated content passes a **content-safety floor** that blocks a narrow set of
+prohibited categories. Beyond that floor, JARAI surfaces risk signals (copyright,
+likeness, privacy) as advisory information so the publisher can make an informed
+decision — you stay in control of what's published, with the risks visible.
+
+## Your data rights
+
+You can access, correct, export, or request erasure of your personal data. How to
+exercise these rights is in [Your privacy rights (GDPR)](/customers/privacy-rights/);
+administrators handle requests via the platform's DSAR tooling.
+
+## Reporting a security concern
+
+If you believe you've found a vulnerability or a data-handling issue, contact us via
+[Contact support](/general/contact-support/) with enough detail to reproduce it.
+Please report privately rather than disclosing publicly so we can fix it first.
+
+<Aside type="note">
+This page is an overview for users, not a full security whitepaper. Specific
+contractual and compliance commitments are covered in your agreement and the
+[Legal](/general/legal/) page.
+</Aside>

@@ -18,7 +18,7 @@ Durable plan so the work can resume after any interruption.
 - [x] **Batch 4** — Developers section: index (quickstart) + authentication + production-lifecycle (webhooks folded in) + sidebar + dev-portal link.
 - [x] **Batch 5** — Operators: dashboards, media-library, prompt-templates, connected-platforms (+ sidebar, VideoHelpers). _(settings tour can fold into a later batch)_
 - [x] **Batch 6** — Customers: notifications + account-settings + team-and-seats (+ sidebar, VideoHelpers).
-- [ ] **Batch 7** — General: keyboard shortcuts, accessibility statement, data & security overview, release notes index.
+- [x] **Batch 7** — General: accessibility statement + data-&-security overview + release-notes index (+ sidebar). _(keyboard-shortcuts skipped — no verified shortcuts to document; won't fabricate.)_
 - [ ] **Batch 8** — Cross-app Help links (needs-review PRs in studio-console / website / dev-portal) pointing to help.jarai.studio.
 - [ ] **Batch 9** — VideoHelper coverage sweep: ensure every major page has a transcript block.
 
