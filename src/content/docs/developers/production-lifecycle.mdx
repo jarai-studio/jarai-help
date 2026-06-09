@@ -1,0 +1,81 @@
+---
+title: Production lifecycle (API)
+description: Submit a production via the Partner API, track it with polling or webhooks, and collect the finished deliverables.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+A production is **asynchronous**: you submit it, JARAI runs the pipeline over several
+minutes, and the deliverables become available when it finishes. This page covers
+how to drive that lifecycle from your own code. Exact endpoints and schemas are in
+the **[Developer Portal](https://developer.jarai.studio)**.
+
+<VideoHelper title="Drive a production end-to-end" duration="2 min">
+
+1. **Submit** a production (project type, theme, avatar(s), options) → you get an id + initial status.
+2. JARAI runs the 15-step pipeline asynchronously.
+3. **Track** it: poll the status endpoint, or register a webhook.
+4. On the terminal "ready" status, **fetch the deliverables** (assets + attribution).
+
+</VideoHelper>
+
+## 1. Submit
+
+POST a production request describing what you want (project type, content theme,
+avatar selection, and any overrides). The response includes the production's
+**identifier** and an initial **status**. Keep the identifier — every later call
+uses it.
+
+<Aside type="tip">
+The same inputs an operator sets on the Console "New Production" form map to the
+API request fields. If you're unsure what a field does, the
+[first-production walkthrough](/operators/first-production/) explains each choice.
+</Aside>
+
+## 2. Track — polling vs webhooks
+
+Pick whichever fits your architecture:
+
+- **Polling** — call the production's status endpoint on an interval (e.g. every 15–30s). Simple; good for scripts and low volume. Back off when status is unchanged; don't hammer it.
+- **Webhooks** — register an endpoint and let JARAI POST you a notification when the production's status changes. Efficient; preferred for production systems and higher volume. Verify the callback's authenticity and respond `2xx` quickly (do heavy work asynchronously on your side).
+
+## 3. Status states
+
+Productions move through a sequence that mirrors the pipeline. At the API level the
+states you care about are: **queued/running** (keep waiting), a **review/awaiting**
+state (the deliverables exist and may await approval), a terminal **ready/published**
+state (collect deliverables), and a **failed** state (inspect the error).
+
+<Aside type="caution">
+Treat any non-terminal status as "not done yet". Only fetch deliverables once the
+production reaches its terminal ready state — the exact state names are in the
+reference.
+</Aside>
+
+## 4. Collect deliverables
+
+When the production is ready, fetch its packaged deliverables — the produced assets
+(video/audio/text), platform variants, and the **attribution package** (sources and
+licences for everything used). Persist what you need on your side.
+
+## Idempotency & retries
+
+The pipeline is idempotent step-by-step, and transient failures retry automatically
+server-side. On **your** side:
+
+<Steps>
+
+1. **Retry transient HTTP errors** (`5xx`, timeouts) with backoff — they're usually momentary.
+
+2. **Don't auto-retry `4xx`** — those are permanent (bad request, auth, budget). Fix the cause first.
+
+3. **Make submission safe to retry** — if you resubmit after a network blip, guard against creating duplicate productions (track the identifier you got back; see the reference for any idempotency-key support).
+
+</Steps>
+
+<Aside type="note">
+Budget matters: a production that would exceed the account's budget is rejected up
+front with a clear error rather than partially run. Surface that to your users
+rather than retrying blindly.
+</Aside>

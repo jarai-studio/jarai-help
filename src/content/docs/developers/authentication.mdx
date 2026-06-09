@@ -1,0 +1,63 @@
+---
+title: Authentication & API keys
+description: How JARAI's Partner API authenticates requests, and how to create, use, rotate and protect your API keys.
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+The Partner API authenticates every request with an **API key** you create in the
+**[Developer Portal](https://developer.jarai.studio)**. The key identifies your
+integration and scopes it to your account's data.
+
+<VideoHelper title="Create and use an API key" duration="90 sec">
+
+1. Sign in to the Developer Portal.
+2. Create an API key (name it for the integration that will use it).
+3. Copy it **once** — store it in your own secret manager; JARAI shows it only at creation.
+4. Send it on every request in the authentication header (exact header name + format are in the Developer Portal reference).
+5. Rotate it periodically; revoke immediately if it leaks.
+
+</VideoHelper>
+
+## Creating a key
+
+<Steps>
+
+1. **Open the Developer Portal** and sign in.
+
+2. **Create a key** and give it a descriptive name (e.g. `prod-ingest-service`) so you can tell keys apart later.
+
+3. **Copy the secret once.** It's shown only at creation time. Store it in your own secret manager — never in source control, client-side code, or a shared doc.
+
+</Steps>
+
+## Using a key
+
+Send the key on **every** request in the authentication header. The exact header
+name and value format are documented in the **[Developer Portal reference](https://developer.jarai.studio)**
+(it's the authoritative source — don't hard-code an assumption from a blog post).
+
+<Aside type="caution" title="Keep keys server-side">
+An API key carries your account's authority. Call the Partner API from your
+**backend**, never from a browser or mobile client where the key would be exposed.
+For end-user-facing flows, proxy through your own server.
+</Aside>
+
+## Rotating & revoking
+
+- **Rotate** keys on a schedule. Create the new key, deploy it, then revoke the old one — zero-downtime rotation.
+- **Revoke immediately** if a key is exposed (committed, logged, leaked). Revocation takes effect at once; in-flight requests with the old key start failing auth.
+- Use **separate keys per integration/environment** so you can revoke one without breaking the others, and so usage is attributable.
+
+## What a key can do
+
+A key acts within your account's scope and draws on its token allowance and
+billing. It cannot cross into other accounts' data — the platform enforces
+account isolation server-side regardless of what a key requests.
+
+<Aside type="note">
+Auth failures return a structured error (an authentication error code + message).
+Handle `401`/auth errors by checking the key is present, current, and sent in the
+correct header — see the reference for the exact codes.
+</Aside>
