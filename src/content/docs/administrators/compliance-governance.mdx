@@ -1,0 +1,67 @@
+---
+title: Compliance & governance
+description: DSAR handling, takedown requests, the operator audit log, and content-safety controls for platform administrators.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Administrators own the platform's compliance posture: responding to data-subject
+requests, handling takedowns, keeping an auditable record of operator actions, and
+overseeing the content-safety floor. These surfaces live under **Settings** and
+**Dashboards**.
+
+<VideoHelper title="Compliance tooling tour" duration="2 min">
+
+1. **Settings → DSAR management** — log and fulfil GDPR data-subject access/erasure requests.
+2. **Settings → Takedowns** — triage and decide takedown notices (Pending / Decided / All).
+3. **Settings → Operator audit log** — an immutable record of who changed what, with revert where supported.
+4. **Dashboards → Compliance** — attribution coverage and rights status across productions.
+
+</VideoHelper>
+
+## Data-subject requests (DSAR)
+
+GDPR gives individuals rights over their personal data. **Settings → DSAR management**
+lets you log a request against a subject and platform, and record fulfilment. JARAI's
+stance is **informed-consent + transparency**: the platform surfaces risks and records
+decisions rather than silently blocking.
+
+## Takedowns
+
+**Settings → Takedowns** lists takedown notices filtered by **Pending / Decided / All**.
+The public-facing intake is documented in [Submit a takedown notice](/general/takedown-notice/).
+Each notice is acknowledged and worked to an SLA; decisions are recorded for audit.
+
+<Aside type="note">
+A legitimate takedown notice or GDPR complaint is a defined escalation trigger for
+the platform's legal posture — handle promptly and record the decision.
+</Aside>
+
+## Operator audit log
+
+**Settings → Operator audit log** captures sensitive operator actions with a
+before/after snapshot, written by the platform's audit service. Where an action is
+reversible, the log offers a **revert**. Treat the audit log as the source of truth
+for "who changed this and when".
+
+## Content safety
+
+JARAI runs a **hard-floor** content-safety classifier (Azure Content Safety + a
+blocklist) that blocks a narrow set of categories (e.g. CSAM, NCII, terrorism,
+GDPR-violating biometric use). Beyond that floor the platform's default is to
+**warn-and-log**, not block — surfacing risk signals (copyright, likeness, privacy)
+as advisory while the publisher decides. The hard floor reproduces across
+environments via seed/bootstrap data.
+
+<Aside type="caution">
+The hard floor is deliberately minimal and not operator-tunable down. Adding new
+*blocking* classifiers is a policy decision, not a routine config change.
+</Aside>
+
+## Attribution & rights
+
+The **Compliance dashboard** tracks attribution-package coverage and rights status
+across productions, so you can see at a glance which deliverables carry complete
+source attribution. Per-platform rights review during approval is documented for
+customers under [Approval and rights review](/customers/rights-review/).

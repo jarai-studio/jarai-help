@@ -1,0 +1,58 @@
+---
+title: Finance & profit-and-loss
+description: Account, customer and platform P&L dashboards, markup, budgets, and exchange rates for platform administrators and finance viewers.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+JARAI tracks the cost of every AI call and the revenue from every subscription and
+top-up, then rolls them into profit-and-loss dashboards at three levels. These live
+under **Dashboards**, and are also visible to the **`FinanceViewer`** role.
+
+<VideoHelper title="Read the P&L dashboards" duration="90 sec">
+
+1. **Dashboards → Account P&L** — revenue, AI cost and margin for a single account.
+2. **Dashboards → Customer P&L** — the same rolled up across a customer's accounts.
+3. **Dashboards → Platform P&L** — the whole platform (admin-only): total revenue, cost, and margin.
+4. Each dashboard supports a date range and caches for performance; figures are aggregated across accounts (cross-account view).
+
+</VideoHelper>
+
+## The three P&L levels
+
+| Dashboard | Scope | Source |
+|---|---|---|
+| **Account P&L** | One account | `AccountPL` |
+| **Customer P&L** | All accounts under a customer | `CustomerPL` |
+| **Platform P&L** | Entire platform (admin-only) | `PlatformCustomerPL` / `PlatformAccountPL` |
+
+Costs come from per-step AI spend (each model's cost basis × usage); revenue comes
+from subscriptions and extra-usage top-ups. The monthly roll-up is produced by the
+`MonthlyPLCalculator` background function.
+
+## Markup
+
+Customer-facing cost can carry a **markup** over raw AI spend. Markup is configured
+per the platform's pricing policy and is reflected in Customer/Account P&L margin.
+
+<Aside type="note">
+Markup and customer pricing changes are platform-wide and finance-sensitive — make
+them deliberately and review the resulting margin on the P&L dashboards afterwards.
+</Aside>
+
+## Budgets & spend control
+
+- **Budget enforcement** — accounts have a production budget; the `BudgetEnforcementFunction` gate rejects new productions for an account that has hit its monthly limit (the operator sees a clear "budget limit reached" message rather than a silent failure).
+- **Token allowance** — each tier (Creator / Pro / Atelier) includes a monthly token allowance; extra capacity can be purchased. Operators see remaining allowance in the Console billing banner.
+
+## Exchange rates
+
+Providers bill in different currencies. JARAI normalises spend using stored
+**exchange rates** (`ExchangeRate`) so all P&L figures present in a single currency.
+Rates are part of the platform bootstrap/seed data.
+
+<Aside type="tip" title="Finance viewers">
+If you only need the numbers, the `FinanceViewer` role grants read access to the
+P&L dashboards without the rest of the admin surface.
+</Aside>

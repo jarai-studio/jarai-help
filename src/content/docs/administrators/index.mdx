@@ -1,0 +1,64 @@
+---
+title: Platform administrator overview
+description: What platform administrators manage in JARAI Studio — providers, models, languages, finance, compliance, and operations.
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Platform administrators hold the **`PlatformAdministrator`** role. You manage the
+shared infrastructure every account depends on — the AI providers and models, the
+language and voice catalogue, platform connectors, pricing and P&L, and the
+compliance and operations tooling. Most of these surfaces live under **Settings**
+and **Dashboards** in the Studio Console and are visible only to administrators.
+
+<Aside type="caution" title="Admin-only, platform-wide">
+Changes here affect **every** account, not just your own. Enum ordinals, provider
+configuration, and pricing are deliberately hard to change once live. Read the
+relevant page before editing.
+</Aside>
+
+<VideoHelper title="Platform admin console tour" duration="2 min">
+
+A tour of the administrator surfaces (each is documented in its own page):
+
+1. **AI providers & models** — register providers, models, roles and capabilities; watch provider health.
+2. **Languages & voices** — the language catalogue, voice variants and the accent taxonomy.
+3. **Platforms & distribution** — distribution connectors and platform controls.
+4. **Finance & P&L** — account / customer / platform profit-and-loss, markup and budgets.
+5. **Compliance & governance** — DSAR, takedowns, the operator audit log, content safety.
+6. **Operations & reliability** — alerts, escalation, the dead-letter queue and production recovery.
+
+</VideoHelper>
+
+## What you manage
+
+<CardGrid>
+  <Card title="AI providers & models" icon="setting">
+    Register and configure AI providers, models, roles and capabilities; monitor health and the model-selection chain. [Open →](/administrators/ai-providers-models/)
+  </Card>
+  <Card title="Finance & P&L" icon="seti:db">
+    Account, customer and platform profit-and-loss dashboards; markup, budgets and exchange rates. [Open →](/administrators/finance-pl/)
+  </Card>
+  <Card title="Compliance & governance" icon="approve-check">
+    DSAR requests, takedown handling, the operator audit log, and content-safety controls. [Open →](/administrators/compliance-governance/)
+  </Card>
+  <Card title="Operations & reliability" icon="warning">
+    Alerts and escalation, the dead-letter queue, and recovering stuck productions. _(See Batch 3.)_
+  </Card>
+</CardGrid>
+
+## Roles at a glance
+
+| Role | Sees | Typical use |
+|---|---|---|
+| `PlatformAdministrator` | Everything, all accounts | You — platform operations |
+| `AccountOperator` | Their account's productions/media | Day-to-day content production |
+| `CustomerAdministrator` | Their customer's accounts (Client Portal) | Customer-side review & billing |
+| `CustomerViewer` | Read-only customer view | Stakeholder visibility |
+| `FinanceViewer` | P&L dashboards only | Finance reporting |
+
+<Aside type="note">
+Administrators are also operators — you can produce content in any account. The
+admin surfaces below are the *additional* responsibilities the role unlocks.
+</Aside>
