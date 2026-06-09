@@ -75,6 +75,16 @@ export default defineConfig({
           ],
         },
         {
+          label: 'For administrators',
+          collapsed: false,
+          items: [
+            { label: 'Administrator overview', link: '/administrators/' },
+            { label: 'AI providers, models & capabilities', link: '/administrators/ai-providers-models/' },
+            { label: 'Finance & profit-and-loss', link: '/administrators/finance-pl/' },
+            { label: 'Compliance & governance', link: '/administrators/compliance-governance/' },
+          ],
+        },
+        {
           label: 'General',
           collapsed: true,
           items: [
