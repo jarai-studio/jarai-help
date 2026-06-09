@@ -1,10 +1,66 @@
 ---
 title: Managing avatars
-description: How to add, configure, and manage avatars in JARAI Studio Console.
+description: How to add, configure, and manage avatars — the on-screen face and voice your productions use.
 ---
 
-This page is being built. While we fill it in, see:
+import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-- [First production walkthrough](/operators/first-production/) — shows how avatars are picked when creating a production
-- [Voice variants](/operators/voice-variants/) — for the voice side of an avatar
-- [FAQ](/general/faq/) — common avatar-related questions
+An **avatar** is the persona your content is built around — its **likeness** (the face
+shown on screen) and its **voice** (the voice variant used for narration). You pick an
+avatar (or two, for dialogue formats) when creating a production, so setting good
+avatars up front makes every production faster.
+
+<VideoHelper title="Set up an avatar and its voice" duration="2 min">
+
+1. **Avatars → New avatar.**
+2. Give it a **name** and a **likeness** (upload or generate the face image).
+3. Pick a **voice variant** — filter by trait chips (accent, age, gender, style).
+4. **Preview the voice** with the test player, then save.
+5. The avatar is now selectable on the New Production form.
+
+</VideoHelper>
+
+## What an avatar is made of
+
+- **Name** — how you'll recognise it in pickers and on productions.
+- **Likeness** — the face image used on screen. You can upload one or generate it.
+- **Voice variant** — the TTS voice used for this avatar's narration (see [Voice variants](/operators/voice-variants/)).
+- **Language/accent** — drives which voices are appropriate and how the avatar speaks.
+
+## Creating an avatar
+
+<Steps>
+
+1. **Open Avatars → New avatar.**
+
+2. **Name it** and add a **likeness.** Upload an image, or generate one if you don't have a source. The image becomes the on-screen face in video productions.
+
+3. **Choose a voice.** Use the trait-chip filter (accent, age, gender, style, use-case) to narrow the catalogue, then pick a variant. The same chips appear on the voice-variants admin page, so a selection here matches what's available there.
+
+4. **Preview** the voice with the inline test player so you know how narration will sound.
+
+5. **Save.** The avatar appears immediately in the New Production avatar picker.
+
+</Steps>
+
+## Using avatars in productions
+
+- **Solo formats** — pick one avatar; its face + voice narrate the whole piece.
+- **Dialogue formats** (e.g. debates, interviews) — pick **Character 1** and **Character 2** avatars; the script generator writes alternating-speaker scripts and each character speaks in its own voice.
+
+<Aside type="tip">
+For dialogue formats the two characters must be **different** avatars — the form
+enforces this. Set up a small cast of recurring avatars so you can mix and match.
+</Aside>
+
+## Editing & reusing
+
+Avatars are reusable across many productions. Editing an avatar (e.g. swapping its
+voice) affects **future** productions; already-completed productions keep the avatar
+exactly as it was when they ran.
+
+<Aside type="note">
+A great-looking likeness plus a well-matched voice and accent is the single biggest
+lever on how "on-brand" your output feels. It's worth spending a few minutes here.
+</Aside>
