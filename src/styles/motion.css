@@ -1,0 +1,56 @@
+/* ============================================================
+   JARAI — Mark in motion (aperture spinner / loader / fan)
+   Apply a class to the <g class="jarai-iris"> that wraps the
+   hexagon + 6 blades. Keep the outer ring + spark as siblings
+   so only the iris rotates (a spinning circle is invisible).
+   Colours come from --color-accent-1 (teal) and --color-spark (ember).
+   ============================================================ */
+
+@keyframes jarai-spin      { to { transform: rotate(360deg); } }
+@keyframes jarai-pulse     { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(.78); } }
+@keyframes jarai-irisfan   { 0%,100% { transform: rotate(0deg) scale(.56); } 50% { transform: rotate(36deg) scale(1); } }
+
+/* shared: rotate around the mark centre */
+.jarai-iris,
+.jarai-arc,
+.jarai-spark,
+.jarai-fan {
+  transform-origin: center;
+  transform-box: fill-box;   /* origin = element's own box (needed for SVG groups) */
+}
+
+/* 1 · Lens spin (default loading): ring static, iris rotates, spark pulses */
+.jarai-spin-lens .jarai-iris  { animation: jarai-spin 3.2s linear infinite; }
+.jarai-spin-lens .jarai-spark { animation: jarai-pulse 1.4s ease-in-out infinite; }
+
+/* 2 · Loader (buttons / page loads): a gapped accent arc sweeps.
+   Put a <circle class="jarai-arc" r="41" stroke-dasharray="150 108"> as the ring. */
+.jarai-spin-loader .jarai-arc  { animation: jarai-spin 1.1s cubic-bezier(.5,.15,.5,.85) infinite; }
+.jarai-spin-loader .jarai-iris { animation: jarai-spin 1s linear infinite; opacity:.9; }
+.jarai-spin-loader .jarai-spark{ animation: jarai-pulse 1.4s ease-in-out infinite; }
+
+/* 3 · Full spin (processing): steady clockwise iris */
+.jarai-spin-full .jarai-iris   { animation: jarai-spin 2s linear infinite; }
+
+/* 4 · Iris fan (hero / first-load / success one-shot): blades fan open ↔ close */
+.jarai-fan-loop .jarai-fan     { animation: jarai-irisfan 2.6s ease-in-out infinite; }
+/* one-shot open on success — add .jarai-fan-once, listen for animationend to settle */
+@keyframes jarai-fan-open { from { transform: rotate(0) scale(.56); } to { transform: rotate(36deg) scale(1); } }
+.jarai-fan-once .jarai-fan     { animation: jarai-fan-open .6s cubic-bezier(.2,.7,.3,1) forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .jarai-iris, .jarai-arc, .jarai-spark, .jarai-fan { animation: none !important; }
+}
+
+/* Example markup (teal mark, ember spark):
+<svg viewBox="0 0 100 100" class="jarai-spin-lens" style="color:var(--color-accent-1)">
+  <circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="2.6" opacity=".4"/>
+  <g class="jarai-iris" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 31 L66.45 40.5 L66.45 59.5 L50 69 L33.55 59.5 L33.55 40.5 Z"/>
+    <line x1="50" y1="31" x2="74.4" y2="20.9"/><line x1="66.45" y1="40.5" x2="87.4" y2="56.6"/>
+    <line x1="66.45" y1="59.5" x2="63" y2="85.7"/><line x1="50" y1="69" x2="25.6" y2="79.1"/>
+    <line x1="33.55" y1="59.5" x2="12.6" y2="43.4"/><line x1="33.55" y1="40.5" x2="37" y2="14.3"/>
+  </g>
+  <circle class="jarai-spark" cx="50" cy="50" r="5.5" fill="var(--color-spark)"/>
+</svg>
+*/

@@ -88,17 +88,21 @@
 /* === BEGIN BRAND BLOCK (byte-identical across all five surfaces) === */
 :root {
   /* Foundation colours */
-  --color-dark: #141413;
-  --color-light: #faf9f5;
-  --color-mid: #b0aea5;
-  --color-subtle: #e8e6dc;
+  --color-dark: #0E1B19;
+  --color-light: #FBFCFD;
+  --color-mid: #A6B2AF;
+  --color-subtle: #E7ECEC;
 
-  /* Brand accents */
-  --color-accent-1: #d97757;
-  --color-accent-1-hover: #c4684a;
-  --color-accent-1-active: #b8593e;
+  /* Brand accents — TEAL leads */
+  --color-accent-1: #0F766E;
+  --color-accent-1-hover: #0C5F58;
+  --color-accent-1-active: #0A514B;
   --color-accent-2: #6a9bcc;
   --color-accent-3: #788c5d;
+
+  /* Spark — the sparing warm accent (was terracotta's role) */
+  --color-spark: #E0823F;       /* ember — dots, icons, fills, mark centre. NOT for text */
+  --color-spark-deep: #AE5C25;  /* ember for TEXT on light (4.6:1 AA) */
 
   /* Status accents (semantic, NOT brand) */
   --color-success: #788c5d;
@@ -115,9 +119,9 @@
   --tint-danger:  #f5ddd5;  --on-danger:  #9a3a25;
   --tint-neutral: #e8e6dc;  --on-neutral: #b0aea5;
 
-  /* Light-section accessibility variants (WCAG AA on Cream) */
-  --color-mid-accessible: #6b6860;
-  --color-accent-1-on-light: #ae5538;
+  /* Light-section accessibility variants (WCAG AA on near-white) */
+  --color-mid-accessible: #5B6B68;
+  --color-accent-1-on-light: #0C5F58;
 
   /* Typography */
   --font-heading: 'Poppins', Arial, sans-serif;
@@ -140,11 +144,13 @@
 }
 
 [data-theme="dark"] {
-  --color-accent-1: #e89478;
-  --color-accent-1-hover: #ef9f84;
-  --color-accent-1-active: #d97757;
+  --color-accent-1: #2FC2AD;
+  --color-accent-1-hover: #48D2BE;
+  --color-accent-1-active: #2FC2AD;
   --color-accent-2: #8fb4d8;
   --color-accent-3: #9aac82;
+  --color-spark: #ECA15E;
+  --color-spark-deep: #ECA15E;
   --color-warning: #d8a949;  --color-warning-ink: #d8a949;
   --color-danger: #d97a62;   --color-danger-ink: #d97a62;
   --color-success: #9aac82;
@@ -157,3 +163,40 @@
   --tint-neutral: #2b2a27;  --on-neutral: #b0aea5;
 }
 /* === END BRAND BLOCK === */
+
+/* ============================================================
+   JARAI — Mark in motion (aperture spinner / loader / fan)
+   Apply a class to the <svg> wrapping the aperture; the inner
+   <g class="jarai-iris"> (hexagon + 6 blades) rotates while the
+   outer ring + .jarai-spark stay siblings. Colours come from
+   --color-accent-1 (teal) and --color-spark (ember).
+   prefers-reduced-motion safe. See motion.css for full docs.
+   ============================================================ */
+@keyframes jarai-spin    { to { transform: rotate(360deg); } }
+@keyframes jarai-pulse   { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(.78); } }
+@keyframes jarai-irisfan { 0%,100% { transform: rotate(0deg) scale(.56); } 50% { transform: rotate(36deg) scale(1); } }
+@keyframes jarai-fan-open { from { transform: rotate(0) scale(.56); } to { transform: rotate(36deg) scale(1); } }
+
+.jarai-iris,
+.jarai-arc,
+.jarai-spark,
+.jarai-fan {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.jarai-spin-lens .jarai-iris   { animation: jarai-spin 3.2s linear infinite; }
+.jarai-spin-lens .jarai-spark  { animation: jarai-pulse 1.4s ease-in-out infinite; }
+
+.jarai-spin-loader .jarai-arc  { animation: jarai-spin 1.1s cubic-bezier(.5,.15,.5,.85) infinite; }
+.jarai-spin-loader .jarai-iris { animation: jarai-spin 1s linear infinite; opacity:.9; }
+.jarai-spin-loader .jarai-spark{ animation: jarai-pulse 1.4s ease-in-out infinite; }
+
+.jarai-spin-full .jarai-iris   { animation: jarai-spin 2s linear infinite; }
+
+.jarai-fan-loop .jarai-fan     { animation: jarai-irisfan 2.6s ease-in-out infinite; }
+.jarai-fan-once .jarai-fan     { animation: jarai-fan-open .6s cubic-bezier(.2,.7,.3,1) forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .jarai-iris, .jarai-arc, .jarai-spark, .jarai-fan { animation: none !important; }
+}

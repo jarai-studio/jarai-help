@@ -1,14 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" role="img" aria-label="JARAI Help">
-  <!-- Bloom-on-Terracotta tile (matches favicon.svg, rx 23%) -->
-  <rect width="64" height="64" rx="14.72" fill="#d97757"/>
-  <g fill="#faf9f5" transform="translate(32 32) scale(0.512) translate(-50 -50)">
-    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z"/>
-    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(72 50 50)"/>
-    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(144 50 50)"/>
-    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(216 50 50)"/>
-    <path d="M50 50 C45 31 47 18 50 13 C53 18 55 31 50 50 Z" transform="rotate(288 50 50)"/>
+  <!-- Aperture-on-Teal tile (matches favicon.svg, rx 23%) -->
+  <rect width="64" height="64" rx="14.72" fill="#0F766E"/>
+  <g transform="translate(32 32) scale(0.512) translate(-50 -50)">
+    <circle cx="50" cy="50" r="41" fill="none" stroke="#FBFCFD" stroke-width="2.6" opacity="0.55"/>
+    <g fill="none" stroke="#FBFCFD" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M50 31 L66.45 40.5 L66.45 59.5 L50 69 L33.55 59.5 L33.55 40.5 Z"/>
+      <line x1="50" y1="31" x2="74.4" y2="20.9"/>
+      <line x1="66.45" y1="40.5" x2="87.4" y2="56.6"/>
+      <line x1="66.45" y1="59.5" x2="63" y2="85.7"/>
+      <line x1="50" y1="69" x2="25.6" y2="79.1"/>
+      <line x1="33.55" y1="59.5" x2="12.6" y2="43.4"/>
+      <line x1="33.55" y1="40.5" x2="37" y2="14.3"/>
+    </g>
+    <circle cx="50" cy="50" r="5.5" fill="#E0823F"/>
   </g>
-  <!-- Wordmark: Bloom + JARAI Poppins 700 caps, small-size fallback form -->
-  <text x="80" y="36" font-family="Poppins, sans-serif" font-size="22" font-weight="700" letter-spacing="1.76" fill="#141413">JARAI</text>
-  <text x="80" y="55" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="13" font-weight="400" fill="#6a695f">Help</text>
+  <!-- Wordmark: JARAI Poppins 700 caps -->
+  <text x="80" y="36" font-family="Poppins, sans-serif" font-size="22" font-weight="700" letter-spacing="1.76" fill="#0E1B19">JARAI</text>
+  <text x="80" y="55" font-family="'IBM Plex Sans', system-ui, sans-serif" font-size="13" font-weight="400" fill="#5B6B68">Help</text>
 </svg>
