@@ -1,0 +1,80 @@
+---
+title: Languages & voices
+description: The language catalogue, voice variants, the accent taxonomy, and the voice harvester.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+JARAI produces content in many languages and a deep catalogue of voices. Administrators
+curate the language list, the voice variants available to operators, and the accent
+taxonomy that makes the voice picker expressive. These surfaces live under **Settings**.
+
+<VideoHelper title="Manage languages & voices" duration="2 min">
+
+1. **Settings → Languages** — the catalogue, each with an LLM support level and a TTS support level.
+2. **Settings → Voice variants** — every available voice, filterable by trait chips (accent, age, gender, style, use-case…).
+3. The **accent taxonomy** gives voices a precise regional label (e.g. `es-ES-x-andalucia-sevilla`).
+4. The **voice harvester** discovers new provider voices and proposes them for the catalogue.
+
+</VideoHelper>
+
+## Languages
+
+**Settings → Languages** lists supported languages, each carrying:
+
+- an **LLM support level** — how well text generation performs in that language;
+- a **TTS support level** — whether (and how well) voiceover is available.
+
+Operators pick a language per production; the support levels set expectations and
+drive which downstream providers are eligible.
+
+## Voice variants
+
+**Settings → Voice variants** is the catalogue of voices operators choose from when
+configuring an avatar. Each variant carries provider metadata that's parsed into
+**trait facets** — `accent`, `age`, `gender`, `style`, `use cases`, `tags`, and voice
+**colour**. The same chip-multiselect filter appears here and in the avatar voice
+picker, so a selection drills to the same voices in both places.
+
+<Aside type="tip">
+Trait facets come from each provider's own labels (ElevenLabs `labels`, Deepgram
+`tags`, Cartesia/generic top-level fields). Rows with sparse metadata simply show
+fewer chips — they're still selectable.
+</Aside>
+
+## The accent taxonomy
+
+Accent is a deliberate competitive strength. Voices are tagged with a BCP-47 code
+plus an optional private-use extension for sub-regional accents — for example:
+
+- `es-ES` — Castilian Spanish (country level)
+- `es-ES-x-andalucia` — Andalusian (regional)
+- `es-ES-x-andalucia-sevilla` — Sevillano (sub-province)
+- `en-GB-x-yorkshire`, `pt-BR-x-carioca`, `ar-x-egyptian`, `de-DE-x-bavarian` …
+
+Tiers: **1** = country/locale (broadly available), **2** = strong regional, **3** =
+aspirational sub-regional (often "no voice yet — request one" until a provider offers
+it). The taxonomy is the source of truth shared by the Console's cascading accent
+picker.
+
+<Aside type="note">
+A sub-regional accent with no provider voice yet falls back to its parent locale's
+audio. Where that fallback would be worse than helpful, the accent is intentionally
+left out rather than added as metadata-only.
+</Aside>
+
+## Voice harvester
+
+The **voice harvester** (Settings → Voice harvester: sources / runs / library)
+periodically discovers new voices from configured provider **sources**, captures
+samples, and proposes candidates for the catalogue. A licence-classification step
+reads each voice's licence text and assigns a licence class, which supports
+auto-approval of clearly-permissive voices and flags restrictive ones for review.
+
+<Aside type="caution">
+Adding a brand-new enum ordinal anywhere in this area (e.g. a new support level or
+licence class) requires the matching `CK_*` CHECK-constraint bump in the same EF
+migration — otherwise the first write of the new value fails at runtime. (Engineering
+note; not a Console action.)
+</Aside>

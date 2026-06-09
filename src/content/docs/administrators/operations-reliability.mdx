@@ -1,0 +1,78 @@
+---
+title: Operations & reliability
+description: Alerts and escalation, the dead-letter queue, provider health, and recovering stuck productions.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+JARAI's pipeline is asynchronous and self-healing: transient failures retry, failing
+providers are routed around, and permanent failures are surfaced as alerts and
+parked on a dead-letter queue for an operator. This page covers the tools that keep
+productions flowing and tell you when something needs a human.
+
+<VideoHelper title="Operations & reliability tour" duration="2 min">
+
+1. **Dashboards → Alert operations** — open alerts by type and severity.
+2. **Settings → DLQ management** — messages that failed permanently; inspect and resubmit.
+3. **Production recovery** — productions stuck mid-pipeline are detected and re-driven automatically.
+4. **Provider health** — failing providers are routed around so productions keep moving.
+
+</VideoHelper>
+
+## Retry vs dead-letter (how failures are classified)
+
+Every pipeline step classifies its failures:
+
+- **Retriable** (transient — SQL pool exhaustion, provider 5xx, lock lost, blob timeout): the message returns to the queue and the step status becomes `Retrying`. No action needed.
+- **Non-retriable** (permanent — contract violation, missing required record, retries exhausted): the message **dead-letters** immediately and the step status becomes `Failed`, carrying a structured error envelope (error class/code, function, brief/step, correlation id).
+
+<Aside type="tip">
+This is why a single provider outage rarely breaks productions — 5xx is retriable
+and the model-selection chain also routes around a Failing provider.
+</Aside>
+
+## Alerts & escalation
+
+- **Alert operations dashboard** (`Dashboards → Alert operations`) shows open alerts grouped by **type** and **severity**, sourced from the `AlertQueue`.
+- The **AlertDispatcher** routes alerts to their channels; the **EscalationFunction** raises severity for alerts left unacknowledged past their SLA; a periodic **digest** summarises activity.
+- Acknowledge an alert once you've actioned it so escalation stops.
+
+## Dead-letter queue (DLQ)
+
+**Settings → DLQ management** lists permanently-failed messages. For each you can
+inspect the error envelope and **resubmit** once the root cause is fixed.
+
+<Steps>
+
+1. **Read the error** — the envelope tells you the error class/code, function, and the production/step it belongs to.
+2. **Fix the cause** — e.g. a missing credential, a bad template/contract, or a provider misconfiguration.
+3. **Resubmit** — the message re-enters its topic and the step re-runs from a clean state (idempotency guards prevent double-processing of already-complete steps).
+
+</Steps>
+
+<Aside type="caution">
+Resubmitting before fixing the cause just dead-letters the message again. Confirm
+the fix first.
+</Aside>
+
+## Stuck-production recovery
+
+The **ProductionRecoveryFunction** periodically detects productions that have stalled
+mid-pipeline (e.g. a message lost to an infrastructure blip) and re-drives them.
+Combined with idempotency guards on every step, this means most stalls self-resolve
+without an operator touching them.
+
+## Provider health & quality
+
+- **ProviderHealthMonitor** maintains the Healthy/Degraded/Failing/Suspended badge used by the model-selection chain (see [AI providers & models](/administrators/ai-providers-models/)).
+- **RapidQualityCheck** compares each step's quality score against the account's quality floor and flags regressions, so quality dips surface as alerts rather than silently shipping.
+
+## Where to look when something's wrong
+
+| Symptom | Look here |
+|---|---|
+| A production is "Failed" | Production detail → the failed step's error; resubmit via DLQ after fixing |
+| Many failures from one vendor | Provider health badge; the chain should already be routing around it |
+| Productions not starting | Budget/concurrency gates (account limits) and provider health |
+| Quality regressions | RapidQualityCheck alerts on the Alert operations dashboard |
