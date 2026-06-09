@@ -1,0 +1,52 @@
+---
+title: Prompt templates
+description: How per-account prompt templates shape what each pipeline step generates, and how to edit them safely.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Each AI-generating pipeline step runs from a **prompt template** — the system prompt,
+context, task instruction, and a **typed output contract** that the model's response
+must satisfy. Templates are per-account, so you can tune voice and behaviour without
+affecting other accounts.
+
+<VideoHelper title="Edit a prompt template" duration="90 sec">
+
+1. Open **Settings → Prompt templates**.
+2. Pick the step's template to edit.
+3. Adjust the instruction text; the **typed field contract** defines the required output fields.
+4. Save — new productions use the updated template; in-flight ones keep the version they started with.
+
+</VideoHelper>
+
+## What a template contains
+
+- **System prompt** — the model's role and ground rules.
+- **Context tokens** — placeholders (e.g. the brief, scene, persona) filled in at runtime.
+- **Task + output instruction** — what to produce and in what shape.
+- **Typed field contract** — a schema the model output must validate against. If the output doesn't match, the step fails with a contract violation rather than passing bad data downstream.
+
+<Aside type="caution" title="Contract changes are sensitive">
+Tightening a typed field contract can make previously-valid outputs fail. Roll out
+contract changes carefully (staged across accounts) and after the supporting code is
+in place — otherwise productions hit contract-violation failures. For most tuning you
+only need to edit the instruction text, not the contract.
+</Aside>
+
+## Editing safely
+
+<Steps>
+
+1. **Change the instruction, not the contract,** for tone/behaviour tweaks — lowest risk.
+
+2. **Test on one account first.** Run a production and check the step output (the production detail page shows each step's result).
+
+3. **Roll out gradually** if you're applying a template change across many accounts — staged, not all at once.
+
+</Steps>
+
+<Aside type="note">
+Each production captures the template version it ran with, so editing a template
+never rewrites the history of completed productions.
+</Aside>

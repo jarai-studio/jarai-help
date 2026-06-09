@@ -16,7 +16,7 @@ Durable plan so the work can resume after any interruption.
 - [x] **Batch 2** — Administrators section: index + ai-providers-models + finance-pl + compliance-governance + sidebar (PR #7, merged).
 - [x] **Batch 3** — Administrators: operations-reliability + languages-voices (+ sidebar).
 - [x] **Batch 4** — Developers section: index (quickstart) + authentication + production-lifecycle (webhooks folded in) + sidebar + dev-portal link.
-- [ ] **Batch 5** — Operators: per-console-page how-tos (dashboards index, media library, prompt templates, connected platforms, settings tour) + VideoHelpers.
+- [x] **Batch 5** — Operators: dashboards, media-library, prompt-templates, connected-platforms (+ sidebar, VideoHelpers). _(settings tour can fold into a later batch)_
 - [ ] **Batch 6** — Customers: expand (notifications, account settings, team/seats) + VideoHelpers on key pages.
 - [ ] **Batch 7** — General: keyboard shortcuts, accessibility statement, data & security overview, release notes index.
 - [ ] **Batch 8** — Cross-app Help links (needs-review PRs in studio-console / website / dev-portal) pointing to help.jarai.studio.

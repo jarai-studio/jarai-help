@@ -1,0 +1,64 @@
+---
+title: Connected platforms
+description: Connect your social and publishing channels with OAuth so JARAI can distribute approved content on your behalf.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+To publish to your channels, JARAI needs permission to post on your behalf. You grant
+that once per channel via **OAuth** under **Settings → Connected platforms**. After
+that, approving a production to publish fans it out to your connected channels
+automatically.
+
+<VideoHelper title="Connect a publishing channel" duration="90 sec">
+
+1. Open **Settings → Connected platforms**.
+2. Click **Connect** next to a platform (YouTube, Instagram, TikTok, LinkedIn, X, Pinterest, Facebook…).
+3. Complete the platform's OAuth consent in the popup.
+4. The channel shows as **Connected** — approved productions can now publish to it.
+
+</VideoHelper>
+
+## Connecting a channel
+
+<Steps>
+
+1. **Click Connect** for the platform. You're redirected to that platform's own consent screen.
+
+2. **Grant the requested scopes.** JARAI asks only for what it needs to publish and read back basic engagement.
+
+3. **Return to the Console.** The platform now shows **Connected**, with the account/handle it's linked to.
+
+</Steps>
+
+## How publishing uses connections
+
+When you **Approve to publish** a finished production (see [Distribution & publishing](/operators/distribution/)),
+JARAI's distribution loop posts to each connected channel that's in scope, then tracks
+the published URLs and engagement back into the **Distribution** dashboard.
+
+## Tokens, expiry & reconnecting
+
+OAuth access is token-based and tokens **expire** or get **revoked** by the platform.
+JARAI refreshes them automatically where the platform allows. If a channel shows
+**Disconnected** or **Needs attention**:
+
+<Steps>
+
+1. **Reconnect** — click Connect again and re-grant consent. This is the fix for an expired/revoked token.
+
+2. **Check platform-side access** — if you removed JARAI's app authorisation on the platform, you'll need to re-authorise.
+
+</Steps>
+
+<Aside type="caution" title="Per-platform availability">
+Some platforms require app review/approval before production posting is enabled. If a
+connect option is missing or limited, that platform's integration may still be
+pending approval — content for it is held rather than failing.
+</Aside>
+
+<Aside type="note">
+Connections are managed per account. Disconnecting a channel stops future
+publications to it but doesn't remove already-published content.
+</Aside>

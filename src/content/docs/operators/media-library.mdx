@@ -1,0 +1,48 @@
+---
+title: Media library
+description: Browse, preview and download the assets and deliverables your productions generate.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+The **Media** section is where every asset a production generates lives — images,
+audio, video, transcripts, and the final packaged deliverables. Use it to preview
+results, download files, and trace an asset back to the production that made it.
+
+<VideoHelper title="Find and download your media" duration="90 sec">
+
+1. Open **Media** from the left sidebar.
+2. Browse assets (videos show a hover/scrub thumbnail) or filter to a production.
+3. Click an asset to open its **detail drawer** — type, the production it belongs to, and a preview.
+4. **Download** — files save as `JARAI - <Production name>.<ext>`, not a raw UUID.
+
+</VideoHelper>
+
+## Assets vs deliverables
+
+- **Assets** are the individual pieces produced along the way — sourced/generated images, voiceover audio, the assembled video, captions, transcripts.
+- **Deliverables** are the final, packaged outputs (with platform variants and the attribution package) produced at the end of the pipeline. The **Master deliverable registry** lists these.
+
+## Previewing
+
+- **Images** show inline.
+- **Audio** plays in an inline player.
+- **Video** uses a lightweight poster/scrub thumbnail in the grid and a full player in the detail drawer — so the list stays fast.
+
+## Downloading
+
+Downloads use a friendly, human filename — **`JARAI - <Production name>.<ext>`** —
+derived from the production name and the file's real extension, so you never get an
+opaque blob UUID on disk. You can download a single asset or grab everything for a
+production at once.
+
+<Aside type="tip">
+The asset detail drawer links back to its **production** — handy when you've found
+an asset in the library and want to see how (and why) it was made.
+</Aside>
+
+<Aside type="note">
+Old assets are tiered to cheaper storage over time by a background job. They remain
+downloadable; the first fetch of a very old asset may take a moment longer.
+</Aside>
