@@ -4,8 +4,24 @@ description: Step-by-step guide to creating your first JARAI production, from br
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
 This walkthrough takes you from a logged-in Studio Console to a finished, downloadable video. Plan for about 15–20 minutes of clock time (most of it waiting on the AI pipeline to run).
+
+<VideoHelper title="Create your first production" duration="2 min">
+
+A quick tour of the full flow (each step is detailed below):
+
+1. **Productions → New Production.**
+2. Pick a **project type** (sets the pipeline shape) and a **content theme**.
+3. Pick an **avatar** (or two, for dialogue formats).
+4. Optionally type a **Subject override**; otherwise JARAI invents a topic.
+5. Click **Start production** — it lands in your queue as `Queued`.
+6. Watch the **pipeline step badges** advance on the Production detail page.
+7. When **Step 14 (DeliverablePackager)** completes, preview/download assets on the **Story** tab.
+8. **Approve to publish** (sends to distribution) or **Reject**.
+
+</VideoHelper>
 
 <Aside type="tip" title="Prerequisites">
 - You're logged in to Studio Console with `AccountOperator` or higher role.

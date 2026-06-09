@@ -1,0 +1,154 @@
+---
+/**
+ * VideoHelper — a reusable "short video helper" block for the JARAI help centre.
+ *
+ * Design goals:
+ *  - The page is COMPLETE without the video. The written transcript/steps (passed
+ *    as the default slot) is always rendered in a <details>, so a reader (or a
+ *    screen-reader user, or anyone on a metered connection) gets the full guidance
+ *    even when no recording exists yet.
+ *  - When `src` is absent, a graceful "coming soon" placeholder renders instead of
+ *    a broken player — so we can ship the page now and drop the recording in later
+ *    by adding a single `src` attribute (see VIDEO_SCRIPTS.md for the storyboards).
+ *  - Supports both self-hosted files (mp4/webm in /public) and embeds
+ *    (YouTube / Loom / Vimeo). Lazy-loaded; respects the brand accent token.
+ *
+ * Usage in MDX:
+ *   import VideoHelper from '../../../components/VideoHelper.astro';
+ *
+ *   <VideoHelper title="Create your first production" duration="2 min" src="https://www.youtube.com/embed/XXXX">
+ *     1. Open **Productions → New Production**.
+ *     2. Pick a project type and content theme.
+ *     ...
+ *   </VideoHelper>
+ */
+interface Props {
+  /** Heading shown above the player. */
+  title?: string;
+  /** Video URL — a self-hosted /public file (.mp4/.webm) OR a YouTube/Loom/Vimeo embed URL. Omit to render the "coming soon" placeholder. */
+  src?: string;
+  /** Poster image shown before playback (self-hosted videos only). */
+  poster?: string;
+  /** Human-readable length, e.g. "2 min". */
+  duration?: string;
+  /** Label for the transcript disclosure. */
+  transcriptTitle?: string;
+}
+
+const {
+  title = 'Video walkthrough',
+  src,
+  poster,
+  duration,
+  transcriptTitle = 'Prefer to read? Open the step-by-step transcript',
+} = Astro.props;
+
+const isEmbed = !!src && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(src);
+const isFile = !!src && !isEmbed;
+---
+
+<figure class="video-helper not-content">
+  <figcaption class="video-helper__caption">
+    <span class="video-helper__icon" aria-hidden="true">🎬</span>
+    <span class="video-helper__title">{title}</span>
+    {duration && <span class="video-helper__duration">{duration}</span>}
+  </figcaption>
+
+  {isFile && (
+    <video class="video-helper__player" controls preload="metadata" poster={poster}>
+      <source src={src} />
+      Your browser can't play this video — use the transcript below.
+    </video>
+  )}
+
+  {isEmbed && (
+    <div class="video-helper__embed">
+      <iframe
+        src={src}
+        title={title}
+        loading="lazy"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  )}
+
+  {!src && (
+    <div class="video-helper__placeholder" role="note">
+      <strong>Short video coming soon.</strong>
+      <span>The full written walkthrough is right below — everything the video will cover.</span>
+    </div>
+  )}
+
+  <details class="video-helper__transcript" open={!src}>
+    <summary>{transcriptTitle}</summary>
+    <div class="video-helper__transcript-body">
+      <slot />
+    </div>
+  </details>
+</figure>
+
+<style>
+  .video-helper {
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--sl-color-black);
+  }
+  .video-helper__caption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    font-weight: 600;
+    background: var(--sl-color-gray-6, var(--sl-color-black));
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  .video-helper__title { flex: 1; }
+  .video-helper__duration {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-3);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    padding: 0.05rem 0.55rem;
+  }
+  .video-helper__player,
+  .video-helper__embed iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+  .video-helper__placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    color: var(--sl-color-gray-2);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        var(--sl-color-gray-6, rgba(255,255,255,0.02)) 10px,
+        var(--sl-color-gray-6, rgba(255,255,255,0.02)) 20px
+      );
+  }
+  .video-helper__placeholder strong { color: var(--sl-color-white); }
+  .video-helper__placeholder span { font-size: 0.9rem; }
+  .video-helper__transcript {
+    padding: 0.5rem 0.9rem 0.9rem;
+    background: var(--sl-color-bg, var(--sl-color-black));
+  }
+  .video-helper__transcript > summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--sl-color-accent-high, var(--sl-color-text-accent));
+    padding: 0.4rem 0;
+  }
+  .video-helper__transcript-body { padding-top: 0.5rem; }
+</style>
