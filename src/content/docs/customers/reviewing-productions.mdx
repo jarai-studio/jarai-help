@@ -1,10 +1,55 @@
 ---
 title: Reviewing productions
-description: How to preview, approve, or reject productions JARAI has built for you.
+description: How to preview, approve, or reject the productions JARAI has built for you.
 ---
 
-This page is being built. While we fill it in, see:
+import { Steps, Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-- [Customer overview](/customers/) — the high-level flow
-- [Approval and rights review](/customers/rights-review/) — what happens before publish
-- [FAQ](/general/faq/) — review-related FAQs
+When a production is ready, it appears in your Client Portal for review. **Nothing is
+published until you approve it** — you're the final say on what goes out.
+
+<VideoHelper title="Review and approve your content" duration="90 sec">
+
+1. Open the production from your list (or from the [notification](/customers/notifications/)).
+2. **Preview** every asset — video, audio, captions.
+3. Check the **rights review** — acknowledge any advisory warnings.
+4. **Approve** to publish, or **Reject** to send it back.
+
+</VideoHelper>
+
+## Finding productions to review
+
+Productions awaiting your decision are highlighted in the portal and you're notified
+when one is ready (see [Notifications](/customers/notifications/)). Open one to start
+reviewing.
+
+## Previewing
+
+<Steps>
+
+1. **Play the video / audio** inline and read the **captions/transcript**. Preview the platform variants if more than one was produced.
+
+2. **Read the details** — the topic, the avatar(s) used, and any per-platform metadata (title, description).
+
+3. **Check the rights review** — JARAI surfaces advisory warnings (copyright, likeness, attribution) per platform. Acknowledge them so you're publishing with the risks visible. Full detail is on [Approval and rights review](/customers/rights-review/).
+
+</Steps>
+
+## Approving or rejecting
+
+- **Approve** → the production is published to the connected channels in scope, and you can track results.
+- **Reject** → the production doesn't publish. Use reject when the content isn't right; your operator can adjust and re-run.
+- **Per-platform choice** → you can approve for some channels and not others where that option is offered.
+
+<Aside type="tip">
+Approvals are time-sensitive — content waits for your decision. If several people on
+your side review, agree who owns the final approval so productions don't sit waiting.
+</Aside>
+
+<Aside type="note">
+Approving is a recorded decision (who approved, when, and what warnings were
+acknowledged) — this protects you and provides an audit trail for what was published.
+</Aside>
+
+Stuck on a review? [Contact support](/general/contact-support/).
