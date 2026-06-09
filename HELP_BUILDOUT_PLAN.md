@@ -15,7 +15,7 @@ Durable plan so the work can resume after any interruption.
 - [x] **Batch 1** — VideoHelper component + VIDEO_SCRIPTS.md + home/first-production wiring (PR #6, merged).
 - [x] **Batch 2** — Administrators section: index + ai-providers-models + finance-pl + compliance-governance + sidebar (PR #7, merged).
 - [x] **Batch 3** — Administrators: operations-reliability + languages-voices (+ sidebar).
-- [ ] **Batch 4** — Developers section: index (quickstart) + auth/keys + production lifecycle + webhooks (+ link to dev portal).
+- [x] **Batch 4** — Developers section: index (quickstart) + authentication + production-lifecycle (webhooks folded in) + sidebar + dev-portal link.
 - [ ] **Batch 5** — Operators: per-console-page how-tos (dashboards index, media library, prompt templates, connected platforms, settings tour) + VideoHelpers.
 - [ ] **Batch 6** — Customers: expand (notifications, account settings, team/seats) + VideoHelpers on key pages.
 - [ ] **Batch 7** — General: keyboard shortcuts, accessibility statement, data & security overview, release notes index.

@@ -1,0 +1,68 @@
+---
+title: Developer quickstart
+description: Integrate with JARAI's Partner API — get a key, submit a production, poll its status, and receive a webhook.
+---
+
+import { Steps, Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Build on JARAI by calling the **Partner API** — submit productions programmatically,
+track them to completion, and pull the finished deliverables into your own product.
+
+<Aside type="tip" title="The reference lives in the Developer Portal">
+This page is a conceptual quickstart. The **authoritative, always-current API
+reference** — every endpoint, request/response schema, and error code — is in the
+**[Developer Portal](https://developer.jarai.studio)**. When this guide and the
+reference disagree, the reference wins.
+</Aside>
+
+<VideoHelper title="Call the Partner API in 5 minutes" duration="2 min">
+
+1. Create an **API key** in the Developer Portal.
+2. Send your first **authenticated request** (key in the auth header).
+3. **Submit a production** (project type + theme + options).
+4. **Poll its status** until the deliverables are ready — or receive a **webhook**.
+5. **Fetch the deliverables**.
+
+</VideoHelper>
+
+## The integration shape
+
+JARAI productions are **asynchronous**: you submit a request, JARAI runs the
+multi-step AI pipeline (this takes minutes, not milliseconds), and the result
+arrives later. So every integration follows the same shape:
+
+<Steps>
+
+1. **Authenticate** — every request carries your API key. See [Authentication & API keys](/developers/authentication/).
+
+2. **Submit a production** — POST the request (project type, content theme, avatar(s), options). You get back an identifier and an initial status.
+
+3. **Track it** — either **poll** the production's status endpoint, or register a **webhook** and let JARAI call you when the status changes. See [Production lifecycle](/developers/production-lifecycle/).
+
+4. **Collect the deliverables** — once the production reaches its terminal "ready" state, fetch the packaged assets (video/audio/text + attribution).
+
+</Steps>
+
+## Next steps
+
+<CardGrid>
+  <Card title="Authentication & API keys" icon="seti:lock">
+    How to create, use, rotate and scope API keys. [Read →](/developers/authentication/)
+  </Card>
+  <Card title="Production lifecycle" icon="rocket">
+    Submit → status states → polling vs webhooks → deliverables. [Read →](/developers/production-lifecycle/)
+  </Card>
+  <Card title="Full API reference" icon="external">
+    Every endpoint + schema, live. [Open the Developer Portal →](https://developer.jarai.studio)
+  </Card>
+  <Card title="Concepts" icon="open-book">
+    New to JARAI? Start with [What is JARAI Studio?](/getting-started/what-is-jarai/) and the [glossary](/general/glossary/).
+  </Card>
+</CardGrid>
+
+<Aside type="note">
+Partner API usage draws on the same token allowance and billing as the Console.
+Watch your usage on the billing surfaces; productions that would exceed an
+account's budget are rejected with a clear error rather than partially run.
+</Aside>

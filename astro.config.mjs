@@ -87,6 +87,16 @@ export default defineConfig({
           ],
         },
         {
+          label: 'For developers',
+          collapsed: false,
+          items: [
+            { label: 'Developer quickstart', link: '/developers/' },
+            { label: 'Authentication & API keys', link: '/developers/authentication/' },
+            { label: 'Production lifecycle (API)', link: '/developers/production-lifecycle/' },
+            { label: 'Full API reference ↗', link: 'https://developer.jarai.studio' },
+          ],
+        },
+        {
           label: 'General',
           collapsed: true,
           items: [
