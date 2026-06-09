@@ -22,7 +22,7 @@ Durable plan so the work can resume after any interruption.
 - [ ] **Batch 8** — Cross-app Help links (needs-review PRs in studio-console / website / dev-portal) pointing to help.jarai.studio.
 - [~] **Batch 9 (pivoted to STUB-FILL — higher value than a video sweep)** — 10 pages shipped as "This page is being built" stubs. Fill each with real content + a VideoHelper:
   - [x] 9a — operators/avatars, operators/voice-variants, operators/pipeline (kept the accurate step table).
-  - [ ] 9b — operators/distribution, operators/billing, operators/troubleshooting.
+  - [x] 9b — operators/distribution, operators/billing, operators/troubleshooting (filled).
   - [ ] 9c — customers/billing, customers/reviewing-productions, customers/troubleshooting, general/glossary.
 - [ ] **Batch 10** — VideoHelper coverage sweep on remaining real pages that still lack one.
 

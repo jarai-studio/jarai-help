@@ -4,28 +4,66 @@ description: Common failure modes in the Studio Console and how to recover.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-This page is being built. Common failure modes you'll encounter:
+Most pipeline failures are transient and recover on their own; the rest you fix from the
+**production detail page** with the built-in retry/override actions. This page covers the
+failure modes you'll actually see and how to clear them.
+
+<VideoHelper title="Recover a failed production" duration="90 sec">
+
+1. Open the production's **detail page** and find the step with the ❌ **Failed** badge.
+2. Read the step's error (code + detail).
+3. Fix the cause if it's permanent (e.g. a credential, a contract); for transient errors just **Retry step**.
+4. For exhausted/dead-lettered messages, use the admin **DLQ management** resubmit after fixing.
+
+</VideoHelper>
 
 ## Step failures
 
-- **Failed** status on a step → click **Retry step** on the production detail page. Recoverable: AI provider 5xx, timeouts, transient SQL errors.
-- **Dead-lettered** → the step exhausted retries. Investigate the error code in the step's `ValidationErrorDetail` JSON, then either retry or override.
+- **Failed** status on a step → click **Retry step** on the production detail page. Recoverable causes: AI provider 5xx, timeouts, transient SQL errors.
+- **Dead-lettered** → the step exhausted retries. Investigate the error code in the step's `ValidationErrorDetail`, then either retry or override. (Admins resubmit from **Settings → DLQ management** — see [Operations & reliability](/administrators/operations-reliability/).)
 
-## Approved-with-warnings (Step 6 outputs)
+## Approved-with-warnings (image safety/rights)
 
-When an image carries `WarningFlags` (low safety score, high copyright risk, attribution required), the asset proceeds but the operator must acknowledge before publishing via the Pre-Publish Rights Review drawer.
+When an image carries warning flags (low safety score, high copyright risk, attribution
+required), the asset still proceeds, but you must **acknowledge** the warnings before
+publishing via the pre-publish rights-review drawer. See
+[Approval and rights review](/customers/rights-review/).
 
 ## Missing assets
 
-If Step 7's per-scene image count is below the brief's planned scene count, the production stalls at Step 11 (PlatformVariantProducer). Check Step 7's output on the production detail page — re-run if needed.
+If the per-scene image count is below the brief's planned scene count, the production can
+stall later in the pipeline (around the platform-variant step). Check the image step's
+output on the production detail page and re-run it if needed.
 
 ## Provider outages
 
-If an AI provider (OpenAI, ElevenLabs, etc.) is in an outage, the affected steps will exhaust retries. Check [Status](/general/status/) for current incident status.
+If an AI provider (OpenAI, ElevenLabs, etc.) is in an outage, the affected steps exhaust
+retries. JARAI routes around a **Failing** provider using the model-selection chain where
+it can; check the [Status page](/general/status/) for current incidents.
+
+## Stuck productions
+
+A production that stalls mid-pipeline (e.g. a message lost to an infrastructure blip) is
+usually re-driven automatically by the recovery process — give it a few minutes before
+intervening. If it stays stuck, retry the current step.
+
+## Quick reference
+
+| Symptom | Do this |
+|---|---|
+| One step shows **Failed** | Retry step (after fixing the cause if permanent) |
+| Step **dead-lettered** | Admin: inspect + resubmit via DLQ management |
+| Image **warnings** | Acknowledge in the rights-review drawer before publishing |
+| Many failures, one vendor | Check provider health / [Status](/general/status/) — the chain should route around it |
+| Production won't **start** | Check the account's budget/allowance and concurrency limits |
+| Production **stuck** | Wait for auto-recovery; if persistent, retry the current step |
 
 <Aside type="caution">
-Don't manually edit the database or blob storage to "fix" a failed brief — JARAI's reconciliation engine will detect drift and may revert your changes. Always use the Console's retry / override actions.
+Don't manually edit the database or storage to "fix" a failed production — JARAI's
+reconciliation will detect the drift and may revert your changes. Always use the
+Console's retry / override actions.
 </Aside>
 
-For specific error codes, see [FAQ](/general/faq/) or [Contact support](/general/contact-support/).
+Still stuck? See the [FAQ](/general/faq/) or [Contact support](/general/contact-support/).
