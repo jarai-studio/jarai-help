@@ -1,0 +1,49 @@
+---
+title: Accessibility statement
+description: JARAI Studio's commitment to accessibility, the standard we target, and how to report a barrier.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+JARAI Studio is committed to making its products usable by everyone, including people
+who rely on assistive technology.
+
+## The standard we target
+
+We aim to meet **WCAG 2.1 level AA** across the Studio Console, the Client Portal, the
+Developer Portal, the marketing site, and this help centre. In practice that means:
+
+- **Keyboard operability** — interactive controls are reachable and usable without a mouse.
+- **Accessible names** — buttons, links, and form fields expose a clear name to screen readers (icon-only controls carry an explicit label).
+- **Structure** — pages use proper headings, landmarks, and reading order.
+- **Reduced motion** — animations are suppressed when your system requests reduced motion.
+- **Contrast** — text and essential UI meet AA contrast against the brand palette.
+- **Forms** — labels are associated with their controls, and errors are announced.
+
+<Aside type="note">
+Accessibility is treated as a build requirement, not an afterthought — automated
+checks run in our pipelines and the codebase carries guards against common
+regressions (for example, an unlabelled icon button fails a test rather than shipping).
+</Aside>
+
+## Media & captions
+
+Generated video and audio can include **captions**, **transcripts**, and **audio
+descriptions**. Coverage is tracked on the Accessibility dashboard so gaps are visible
+and can be closed.
+
+## Known limitations
+
+No product is perfectly accessible at every moment. Where we're aware of a barrier,
+we prioritise fixing it. If you hit something that blocks you, please tell us — that's
+the fastest way to get it fixed.
+
+## Report an accessibility barrier
+
+Contact us via [Contact support](/general/contact-support/) and describe:
+
+- the page or feature,
+- what you were trying to do,
+- the assistive technology and browser/device you were using.
+
+We'll acknowledge your report and work to resolve it.
