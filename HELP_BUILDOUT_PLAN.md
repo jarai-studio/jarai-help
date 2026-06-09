@@ -20,7 +20,11 @@ Durable plan so the work can resume after any interruption.
 - [x] **Batch 6** — Customers: notifications + account-settings + team-and-seats (+ sidebar, VideoHelpers).
 - [x] **Batch 7** — General: accessibility statement + data-&-security overview + release-notes index (+ sidebar). _(keyboard-shortcuts skipped — no verified shortcuts to document; won't fabricate.)_
 - [ ] **Batch 8** — Cross-app Help links (needs-review PRs in studio-console / website / dev-portal) pointing to help.jarai.studio.
-- [ ] **Batch 9** — VideoHelper coverage sweep: ensure every major page has a transcript block.
+- [~] **Batch 9 (pivoted to STUB-FILL — higher value than a video sweep)** — 10 pages shipped as "This page is being built" stubs. Fill each with real content + a VideoHelper:
+  - [x] 9a — operators/avatars, operators/voice-variants, operators/pipeline (kept the accurate step table).
+  - [ ] 9b — operators/distribution, operators/billing, operators/troubleshooting.
+  - [ ] 9c — customers/billing, customers/reviewing-productions, customers/troubleshooting, general/glossary.
+- [ ] **Batch 10** — VideoHelper coverage sweep on remaining real pages that still lack one.
 
 ## Conventions
 - Match the existing pages' depth + voice (concrete, accurate, role-aware). Don't fabricate UI that doesn't exist.

@@ -1,10 +1,66 @@
 ---
 title: Voice variants
-description: Browse, sample, and request voice variants across all TTS providers.
+description: Browse, sample, and choose voice variants across all TTS providers, filtered by accent and other traits.
 ---
 
-This page is being built. While we fill it in, see:
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
 
-- [Managing avatars](/operators/avatars/) — voice variants are picked per-avatar
-- [FAQ](/general/faq/) — voice-related FAQs
-- [Contact support](/general/contact-support/) — to request a specific accent
+A **voice variant** is a single TTS voice from one of JARAI's speech providers. The
+catalogue spans many providers, languages, and accents, and you pick a variant per
+[avatar](/operators/avatars/). This page covers how to find the right voice.
+
+<VideoHelper title="Find the right voice" duration="90 sec">
+
+1. Open the voice picker (on an avatar) or **Settings → Voice variants** to browse.
+2. Use the **trait chips** to filter — accent, age, gender, style, use-case.
+3. **Preview** a variant with the inline player.
+4. Pick it for your avatar; if the accent you want has no voice yet, request it.
+
+</VideoHelper>
+
+## Filtering by traits
+
+Every voice carries provider metadata parsed into **trait facets** you can filter by:
+
+- **Accent** — the regional accent (see below).
+- **Age**, **Gender**, **Style** — broad voice character.
+- **Use cases** — what the provider suggests the voice suits (narration, ads, audiobook…).
+- **Tags / colour** — extra descriptors where the provider supplies them.
+
+Select chips across categories to narrow down: filtering is **AND across categories**
+(accent *and* gender) and **OR within a category** (British *or* Irish). The same
+filter appears here and in the avatar voice picker, so a selection drills to the same
+voices in both places.
+
+## Accents
+
+Accent is a first-class trait. Voices are tagged with a precise regional label — from
+country level (e.g. *Spain — Castilian*, *UK — Received Pronunciation*) down to
+sub-regional accents (e.g. *Andalusia — Sevillano*, *Brazil — Carioca*). Use the
+accent filter to match a voice to your audience.
+
+<Aside type="tip">
+The accent catalogue is intentionally deep. If you produce for a specific region,
+filtering by its accent makes the output feel local rather than generic.
+</Aside>
+
+## Previewing
+
+Use the inline **preview player** before committing a voice to an avatar — a voice
+that reads well for ads may not suit long-form narration, and accent nuance is easier
+to hear than to read.
+
+## When there's no voice for an accent yet
+
+The accent taxonomy is broader than any single provider's catalogue, so some accents
+show as **available to request** rather than ready to use. If the accent you need has
+no voice:
+
+- Pick the closest available accent (often the parent country/region), **or**
+- [Contact support](/general/contact-support/) to request the specific accent — demand signal helps prioritise which voices get added.
+
+<Aside type="note">
+New voices are added over time as providers expand and as the voice harvester
+discovers and vets them, so the catalogue you see grows.
+</Aside>

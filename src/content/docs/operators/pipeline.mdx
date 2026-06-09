@@ -1,9 +1,40 @@
 ---
 title: Production pipeline (Steps 1–15)
-description: Reference for every step in the JARAI production pipeline.
+description: What each step of the JARAI production pipeline does, the status badges, timings, and the final gate.
 ---
 
-This page is being built. While we fill it in, the brief version:
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Every production runs through a fixed sequence of pipeline **steps**, each fulfilled by
+an AI model. You don't run these by hand — they execute automatically once you start a
+production — but knowing what each does helps you read progress and troubleshoot.
+
+<VideoHelper title="How the pipeline works" duration="2 min">
+
+The pipeline turns your brief into a finished deliverable in five phases:
+
+1. **Write** (Steps 1–4) — brief → narrative → beats → per-scene script.
+2. **Visuals** (Steps 5–7) — source/generate images, safety-check them, pick the best.
+3. **Audio** (Steps 8–9) — voiceover + soundtrack.
+4. **Video & variants** (Steps 10–12) — compose video, make per-platform variants, write SEO.
+5. **Package** (Steps 13–15) — attribution, final deliverables + captions, gate checks.
+
+Watch each step's status badge advance on the production detail page.
+
+</VideoHelper>
+
+## The five phases
+
+| Phase | Steps | What happens |
+|---|---|---|
+| **Write** | 1–4 | The brief, narrative, beat outlines, and per-scene script (voiceover + image prompts + cues) are written. |
+| **Visuals** | 5–7 | Images are sourced (stock), generated (AI), or operator-supplied; each is safety/rights-checked; the best per scene is chosen. |
+| **Audio** | 8–9 | Voiceover is produced per scene (TTS), and a soundtrack/ambience is added. |
+| **Video & variants** | 10–12 | Scenes are composed into video, per-platform aspect-ratio/duration variants are made, and SEO metadata is written. |
+| **Package** | 13–15 | Attribution (licences/credits) is aggregated, final per-platform deliverables + captions are packaged, and a final gate runs before distribution. |
+
+## Step reference
 
 | Step | Name | What it does |
 |---|---|---|
@@ -11,17 +42,47 @@ This page is being built. While we fill it in, the brief version:
 | 2 | NarrativeGenerator | Generates per-Act narrative |
 | 3 | SequenceBeatGenerator | Per-beat outlines |
 | 4 | SceneScriptGenerator | Per-scene VO + image-prompt + FX cues |
-| 5/5b/5c | Image acquisition (stock + AI + operator-supplied) | Sources images per scene |
+| 5 / 5b / 5c | Image acquisition (stock + AI + operator-supplied) | Sources images per scene |
 | 6 | ImageAnalyser | Safety + copyright + commercial-use evaluation |
 | 7 | ImageProducer | Picks the winning image per scene |
-| 8 | VoiceoverProducer | Per-scene TTS via ElevenLabs / OpenAI / Polly / Azure / etc. |
+| 8 | VoiceoverProducer | Per-scene TTS (ElevenLabs / OpenAI / Polly / Azure / …) |
 | 9 | SoundtrackProducer | Background music + ambience |
-| 10/10b/10c/10d | Video composition (Shotstack / Creatomate / Cloudinary / Mux / TalksVideoComposer / AvatarAnimator) | Per-scene videos |
+| 10 / 10b–d | Video composition (Shotstack / Creatomate / Cloudinary / Mux / Talks / Avatar) | Per-scene videos |
 | 11 | PlatformVariantProducer | Per-platform aspect-ratio + duration variants |
 | 12 | SEOGenerator | Per-platform titles / descriptions / hashtags |
-| 13 | AttributionPackager | License + credits + rights aggregation |
+| 13 | AttributionPackager | Licence + credits + rights aggregation |
 | 14 | DeliverablePackager | Final per-platform deliverables |
 | 14a | TranscriptGenerator | Captions / subtitles |
-| 15 | GateEvaluator | Gate checks before Loop 2 dispatch |
+| 15 | GateEvaluator | Gate checks before distribution dispatch |
 
-[Troubleshooting](/operators/troubleshooting/) covers per-step failure recovery.
+<Aside type="note">
+The exact steps that run depend on the **project type** — a podcast skips video
+composition; an article skips voiceover. The pipeline activates only the steps that
+project needs.
+</Aside>
+
+## Reading step status
+
+On the production detail page each step shows a badge:
+
+- **Pending** — waiting for an upstream step.
+- **InProgress** — running now (pulsing).
+- **Complete** ✅ — done.
+- **Failed** ❌ — permanent failure, with a retry option (see [Troubleshooting](/operators/troubleshooting/)).
+- **PendingReview** — gated on an operator decision.
+
+Rough timing: Write ~1–2 min, Visuals ~3–5 min, Audio/Video ~5–10 min depending on
+length, Package ~1–2 min.
+
+## Quality & gates
+
+Each AI-generating step records a **quality score**; a background check compares it
+against your account's quality floor and flags regressions. The final **GateEvaluator**
+(Step 15) runs the checks that must pass before a production can be approved and sent
+to distribution.
+
+<Aside type="tip">
+If a production stops at **PendingReview** or **Failed**, it's waiting on you — open
+its detail page, read the step, and either retry (after fixing the cause) or take the
+gated decision.
+</Aside>
