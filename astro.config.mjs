@@ -82,6 +82,8 @@ export default defineConfig({
             { label: 'AI providers, models & capabilities', link: '/administrators/ai-providers-models/' },
             { label: 'Finance & profit-and-loss', link: '/administrators/finance-pl/' },
             { label: 'Compliance & governance', link: '/administrators/compliance-governance/' },
+            { label: 'Operations & reliability', link: '/administrators/operations-reliability/' },
+            { label: 'Languages & voices', link: '/administrators/languages-voices/' },
           ],
         },
         {
