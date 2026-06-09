@@ -1,0 +1,53 @@
+---
+title: Dashboards
+description: The Studio Console dashboards — what each one shows, who can see it, and how to filter.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+The **Dashboards** section aggregates data across your productions and accounts so you
+can see performance, cost, quality, and compliance at a glance. Each dashboard is
+read-only, supports a date range, and caches briefly for speed.
+
+<VideoHelper title="Tour the dashboards" duration="90 sec">
+
+1. Open **Dashboards** from the left sidebar.
+2. Pick a dashboard (P&L, production quality, alert operations, distribution…).
+3. Set the **date range** (and account/customer scope where offered).
+4. Read the aggregates; drill into the linked detail pages for specifics.
+
+</VideoHelper>
+
+## What each dashboard shows
+
+| Dashboard | Answers | Who |
+|---|---|---|
+| **Account P&L** | Revenue, AI cost, margin for an account | Operators, admins, finance |
+| **Customer P&L** | The same rolled up across a customer's accounts | Admins, finance |
+| **Production quality** | Quality scores across productions/steps; regressions | Operators, admins |
+| **Alert operations** | Open alerts by type + severity | Admins |
+| **Trigger analysis** | Why productions were (or weren't) triggered | Admins |
+| **Compliance** | Attribution coverage + rights status | Operators, admins |
+| **Distribution** | Publications + revenue events across channels | Operators, admins |
+| **Accessibility** | Captions/transcripts/audio-description coverage | Operators, admins |
+| **Avatar performance** | Content performance by avatar + platform | Operators, admins |
+| **Platform P&L** | Whole-platform revenue/cost/margin | Admins only |
+
+<Aside type="note">
+Dashboards aggregate **across accounts** rather than scoping to one, so the figures
+are platform- or customer-level by design. Visibility follows your role — finance
+roles see P&L; admins see the operational and platform-wide views.
+</Aside>
+
+## Filtering & reading
+
+- **Date range** narrows every figure to the selected window.
+- Numbers are **cached** for a few minutes — if you just changed something, give it a moment or re-open.
+- Where a dashboard links to detail (a production, an alert, a publication), click through for the underlying records.
+
+<Aside type="tip">
+For *cost* questions start with **Account/Customer P&L**; for *"is anything broken?"*
+start with **Alert operations** and **Production quality**; for *"did it publish and
+earn?"* use **Distribution**.
+</Aside>
