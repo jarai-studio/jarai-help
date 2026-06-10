@@ -5,11 +5,11 @@
  * Order: light theme first, dark theme overrides below.
  */
 
-/* Light theme. Target :root[data-theme='light'] too — Starlight sets its (blue) light
- * accent under that selector (specificity 0,1,1), so a plain :root override loses by
- * specificity. Matching the selector lets our later-loaded value win by source order. */
-:root,
-:root[data-theme='light'] {
+/* Base tokens (fonts + fallbacks). Starlight's own light theme lives under
+ * :root[data-theme='light'], which out-specifies a plain :root, so the greyscale/bg/text
+ * here intentionally DEFER to Starlight in light mode (they're dark-oriented and only seed
+ * the dark theme below). Only the accent is forced into light mode, in its own block. */
+:root {
   /* Starlight accent scale — vivid JARAI teal that reads green (not blue) and matches the
    * bright #2FC2AD brand teal of the videos, while still clearing WCAG AA on the near-white
    * docs background. #1F8274 is the brightest brand-teal-hue value at >=4.5:1 on #FBFCFD
@@ -41,6 +41,17 @@
   --sl-font: var(--font-body);
   --sl-font-system: var(--font-body);
   --sl-font-mono: var(--font-mono);
+}
+
+/* Light mode — force ONLY the accent so the teal beats Starlight's default blue (set under
+ * this same selector). Greyscale/bg/text are left to Starlight's correct light values:
+ * broadening the whole base block to this selector applied dark-oriented greys in light mode
+ * and made the sidebar text + cards unreadable. */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #CDE7E3;
+  --sl-color-accent: #1F8274;
+  --sl-color-accent-high: #0F766E;
+  --sl-color-text-accent: #1F8274;
 }
 
 /* Dark mode. Starlight's grey ramp runs LIGHT -> DARK: --sl-color-white is the highest-
