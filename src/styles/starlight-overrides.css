@@ -5,7 +5,11 @@
  * Order: light theme first, dark theme overrides below.
  */
 
-:root {
+/* Light theme. Target :root[data-theme='light'] too — Starlight sets its (blue) light
+ * accent under that selector (specificity 0,1,1), so a plain :root override loses by
+ * specificity. Matching the selector lets our later-loaded value win by source order. */
+:root,
+:root[data-theme='light'] {
   /* Starlight accent scale — vivid JARAI teal that reads green (not blue) and matches the
    * bright #2FC2AD brand teal of the videos, while still clearing WCAG AA on the near-white
    * docs background. #1F8274 is the brightest brand-teal-hue value at >=4.5:1 on #FBFCFD
@@ -39,20 +43,23 @@
   --sl-font-mono: var(--font-mono);
 }
 
-/* Dark mode — invert the foundation pair, dim the accents */
+/* Dark mode. Starlight's grey ramp runs LIGHT -> DARK: --sl-color-white is the highest-
+ * contrast colour (headings) and must be near-white in dark mode; --sl-color-black is the
+ * deepest. The previous values had this inverted (white == near-black), so headings,
+ * sidebar labels and the TOC rendered dark-on-dark and were unreadable. Corrected below. */
 :root[data-theme='dark'] {
   --sl-color-accent-low: #07221F;
   --sl-color-accent: #2FC2AD;
-  --sl-color-accent-high: #CDE7E3;
+  --sl-color-accent-high: #8DE6D6;
 
-  --sl-color-white: var(--color-dark);
-  --sl-color-gray-1: #14201E;
-  --sl-color-gray-2: #1C2524;
-  --sl-color-gray-3: #2A3331;
-  --sl-color-gray-4: #4A5654;
-  --sl-color-gray-5: var(--color-mid);
-  --sl-color-gray-6: #C7D2CF;
-  --sl-color-black: var(--color-light);
+  --sl-color-white: #FBFCFD;   /* lightest — headings, high-emphasis text */
+  --sl-color-gray-1: #DDE4E2;
+  --sl-color-gray-2: #C0C9C7;
+  --sl-color-gray-3: #93A09D;  /* muted text (TOC, captions) */
+  --sl-color-gray-4: #5F6E6B;
+  --sl-color-gray-5: #3A4644;
+  --sl-color-gray-6: #1C2524;  /* dark surfaces */
+  --sl-color-black: #0B100F;   /* deepest */
 
   --sl-color-bg: #0E1413;
   --sl-color-bg-nav: #161D1C;
