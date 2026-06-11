@@ -29,8 +29,6 @@ interface Props {
   src?: string;
   /** Poster image shown before playback (self-hosted videos only). */
   poster?: string;
-  /** Human-readable length, e.g. "2 min". */
-  duration?: string;
   /** Label for the transcript disclosure. */
   transcriptTitle?: string;
 }
@@ -39,7 +37,6 @@ const {
   title = 'Video walkthrough',
   src,
   poster,
-  duration,
   transcriptTitle = 'Prefer to read? Open the step-by-step transcript',
 } = Astro.props;
 
@@ -59,7 +56,6 @@ const isFile = !!finalSrc && !isEmbed;
   <figcaption class="video-helper__caption">
     <span class="video-helper__icon" aria-hidden="true">🎬</span>
     <span class="video-helper__title">{title}</span>
-    {duration && <span class="video-helper__duration">{duration}</span>}
   </figcaption>
 
   {isFile && (
