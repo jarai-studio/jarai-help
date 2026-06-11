@@ -10,7 +10,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "links:check": "node scripts/check-broken-links.mjs",
+    "seo:generate": "node scripts/generate-video-seo.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

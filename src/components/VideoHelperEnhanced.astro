@@ -1,0 +1,574 @@
+---
+/**
+ * VideoHelperEnhanced — VideoHelper with keyboard shortcuts, speed controls, and accessibility.
+ *
+ * New Features:
+ *  - Keyboard shortcuts (space=play/pause, K=skip, M=mute, F=fullscreen, C=captions)
+ *  - Playback speed controls (0.75x, 1x, 1.25x, 1.5x, 2x)
+ *  - Mobile-friendly touch controls
+ *  - Proper ARIA labels for accessibility
+ *  - Progress bar with time display
+ *
+ * Usage (same as VideoHelper):
+ *   <VideoHelperEnhanced src="avatars.mp4" title="Create an avatar">
+ *     Step 1. Open Avatars...
+ *   </VideoHelperEnhanced>
+ */
+interface Props {
+  title?: string;
+  src?: string;
+  poster?: string;
+  transcriptTitle?: string;
+}
+
+const {
+  title = 'Video walkthrough',
+  src,
+  poster,
+  transcriptTitle = 'Prefer to read? Open the step-by-step transcript',
+} = Astro.props;
+
+// Construct final src: if it's a filename (no protocol), prepend Blob Storage URL + SAS token
+let finalSrc = src;
+if (src && !src.includes('://')) {
+  const sasToken = 'se=2099-12-31T23%3A59%3A59Z&sp=rl&sv=2026-02-06&sr=c&sig=UDdB33Nc6cLu9iOzeO4Aiq5CMiMR0mJu93QnRT8vXpU%3D';
+  finalSrc = `https://stjaraimediadev.blob.core.windows.net/help-videos/${src}?${sasToken}#t=3`;
+}
+
+const isEmbed = !!finalSrc && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(finalSrc);
+const isFile = !!finalSrc && !isEmbed;
+
+// Generate unique ID for this video (for keyboard event listeners)
+const videoId = `video-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<figure class="video-helper not-content" data-video-id={videoId}>
+  <figcaption class="video-helper__caption">
+    <span class="video-helper__icon" aria-hidden="true">🎬</span>
+    <span class="video-helper__title">{title}</span>
+    {isFile && (
+      <div class="video-helper__controls-hint">
+        Press <kbd>?</kbd> for keyboard shortcuts
+      </div>
+    )}
+  </figcaption>
+
+  {isFile && (
+    <div class="video-helper__player-wrapper">
+      <video
+        id={videoId}
+        class="video-helper__player"
+        controls
+        preload="metadata"
+        poster={poster}
+        role="application"
+        aria-label={title}
+      >
+        <source src={finalSrc} />
+        Your browser can't play this video — use the transcript below.
+      </video>
+
+      {/* Speed Controls */}
+      <div class="video-helper__speed-controls" role="group" aria-label="Playback speed">
+        <button
+          class="speed-btn"
+          data-speed="0.75"
+          title="Play at 0.75x speed"
+          aria-label="Slow down to 0.75x"
+        >
+          0.75x
+        </button>
+        <button
+          class="speed-btn active"
+          data-speed="1"
+          title="Play at normal speed"
+          aria-label="Normal speed (1x)"
+        >
+          1x
+        </button>
+        <button
+          class="speed-btn"
+          data-speed="1.25"
+          title="Play at 1.25x speed"
+          aria-label="Speed up to 1.25x"
+        >
+          1.25x
+        </button>
+        <button
+          class="speed-btn"
+          data-speed="1.5"
+          title="Play at 1.5x speed"
+          aria-label="Speed up to 1.5x"
+        >
+          1.5x
+        </button>
+        <button
+          class="speed-btn"
+          data-speed="2"
+          title="Play at 2x speed"
+          aria-label="Speed up to 2x"
+        >
+          2x
+        </button>
+      </div>
+
+      {/* Keyboard Shortcuts Help */}
+      <div class="video-helper__shortcuts-modal" role="dialog" aria-label="Keyboard shortcuts">
+        <div class="shortcuts-content">
+          <h3>⌨️ Keyboard Shortcuts</h3>
+          <dl class="shortcuts-list">
+            <dt><kbd>Space</kbd></dt>
+            <dd>Play / Pause</dd>
+
+            <dt><kbd>→</kbd> / <kbd>←</kbd></dt>
+            <dd>Skip forward / backward (10 seconds)</dd>
+
+            <dt><kbd>K</kbd></dt>
+            <dd>Skip forward 10 seconds</dd>
+
+            <dt><kbd>J</kbd></dt>
+            <dd>Skip backward 10 seconds</dd>
+
+            <dt><kbd>M</kbd></dt>
+            <dd>Mute / Unmute</dd>
+
+            <dt><kbd>↑</kbd> / <kbd>↓</kbd></dt>
+            <dd>Increase / Decrease volume</dd>
+
+            <dt><kbd>F</kbd></dt>
+            <dd>Fullscreen</dd>
+
+            <dt><kbd>T</kbd></dt>
+            <dd>Theater mode (expand player)</dd>
+
+            <dt><kbd>C</kbd></dt>
+            <dd>Toggle captions</dd>
+
+            <dt><kbd>></kbd> / <kbd><</kbd></dt>
+            <dd>Speed up / Slow down</dd>
+
+            <dt><kbd>0–9</kbd></dt>
+            <dd>Jump to 0–90% of video</dd>
+
+            <dt><kbd>?</kbd></dt>
+            <dd>Show this help menu</dd>
+          </dl>
+          <button class="close-shortcuts" aria-label="Close keyboard shortcuts menu">
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
+  {isEmbed && (
+    <div class="video-helper__embed">
+      <iframe
+        src={finalSrc}
+        title={title}
+        loading="lazy"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  )}
+
+  {!src && (
+    <div class="video-helper__placeholder" role="note">
+      <strong>Short video coming soon.</strong>
+      <span>The full written walkthrough is right below — everything the video will cover.</span>
+    </div>
+  )}
+
+  <details class="video-helper__transcript" open={!src}>
+    <summary>{transcriptTitle}</summary>
+    <div class="video-helper__transcript-body">
+      <slot />
+    </div>
+  </details>
+</figure>
+
+<style>
+  .video-helper {
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: var(--sl-color-black);
+  }
+
+  .video-helper__caption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    font-weight: 600;
+    background: var(--sl-color-gray-6, var(--sl-color-black));
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    justify-content: space-between;
+  }
+
+  .video-helper__title {
+    flex: 1;
+  }
+
+  .video-helper__controls-hint {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--sl-color-gray-3);
+    opacity: 0.7;
+  }
+
+  .video-helper__player-wrapper {
+    position: relative;
+  }
+
+  .video-helper__player {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+
+  /* Speed Controls */
+  .video-helper__speed-controls {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--sl-color-gray-6, rgba(255, 255, 255, 0.02));
+    border-top: 1px solid var(--sl-color-gray-5);
+    flex-wrap: wrap;
+  }
+
+  .speed-btn {
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--sl-color-gray-5);
+    background: transparent;
+    color: var(--sl-color-gray-2);
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .speed-btn:hover {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+
+  .speed-btn.active {
+    background: var(--sl-color-accent-high, var(--sl-color-text-accent));
+    border-color: var(--sl-color-accent-high, var(--sl-color-text-accent));
+    color: var(--sl-color-black);
+  }
+
+  /* Keyboard Shortcuts Modal */
+  .video-helper__shortcuts-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-helper__shortcuts-modal.show {
+    display: flex;
+  }
+
+  .shortcuts-content {
+    background: var(--sl-color-black);
+    border: 2px solid var(--sl-color-accent-high, var(--sl-color-text-accent));
+    border-radius: 0.75rem;
+    padding: 2rem;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .shortcuts-content h3 {
+    margin: 0 0 1.5rem 0;
+    color: var(--sl-color-accent-high, var(--sl-color-text-accent));
+    font-size: 1.5rem;
+  }
+
+  .shortcuts-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem 1.5rem;
+  }
+
+  .shortcuts-list dt {
+    font-weight: 700;
+    color: var(--sl-color-white);
+    white-space: nowrap;
+  }
+
+  .shortcuts-list dd {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+
+  kbd {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: var(--sl-color-gray-6, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.3rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+  }
+
+  .close-shortcuts {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--sl-color-gray-3);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+  }
+
+  .close-shortcuts:hover {
+    color: var(--sl-color-white);
+  }
+
+  /* Embed fallback */
+  .video-helper__embed iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+
+  /* Placeholder */
+  .video-helper__placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    color: var(--sl-color-gray-2);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      var(--sl-color-gray-6, rgba(255, 255, 255, 0.02)) 10px,
+      var(--sl-color-gray-6, rgba(255, 255, 255, 0.02)) 20px
+    );
+  }
+
+  .video-helper__placeholder strong {
+    color: var(--sl-color-white);
+  }
+
+  .video-helper__placeholder span {
+    font-size: 0.9rem;
+  }
+
+  /* Transcript */
+  .video-helper__transcript {
+    padding: 0.5rem 0.9rem 0.9rem;
+    background: var(--sl-color-bg, var(--sl-color-black));
+  }
+
+  .video-helper__transcript > summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--sl-color-accent-high, var(--sl-color-text-accent));
+    padding: 0.4rem 0;
+  }
+
+  .video-helper__transcript-body {
+    padding-top: 0.5rem;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 640px) {
+    .video-helper__caption {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .video-helper__speed-controls {
+      justify-content: center;
+    }
+
+    .speed-btn {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.6rem;
+    }
+
+    .shortcuts-content {
+      padding: 1.5rem;
+      max-width: 95vw;
+    }
+  }
+</style>
+
+<script define:vars={{ videoId }}>
+  // Keyboard shortcuts implementation
+  const videoPlayer = document.getElementById(videoId);
+  const modal = document.querySelector(`[data-video-id="${videoId}"] .video-helper__shortcuts-modal`);
+  const closeBtn = document.querySelector(`[data-video-id="${videoId}"] .close-shortcuts`);
+  const speedBtns = document.querySelectorAll(`[data-video-id="${videoId}"] .speed-btn`);
+
+  if (!videoPlayer) {
+    console.warn(`Video player #${videoId} not found`);
+  } else {
+    // Speed control buttons
+    speedBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const speed = parseFloat(btn.dataset.speed);
+        videoPlayer.playbackRate = speed;
+
+        // Update active button
+        speedBtns.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Don't trigger if user is typing in an input
+      if (
+        e.target.tagName === 'INPUT' ||
+        e.target.tagName === 'TEXTAREA' ||
+        e.target.contentEditable === 'true'
+      ) {
+        return;
+      }
+
+      // Check if video player is focused or in view
+      const rect = videoPlayer.getBoundingClientRect();
+      const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (!isInView && e.key !== '?') {
+        return;
+      }
+
+      switch (e.code) {
+        case 'Space':
+          e.preventDefault();
+          if (videoPlayer.paused) {
+            videoPlayer.play();
+          } else {
+            videoPlayer.pause();
+          }
+          break;
+
+        case 'KeyK':
+          videoPlayer.currentTime = Math.min(videoPlayer.currentTime + 10, videoPlayer.duration);
+          break;
+
+        case 'KeyJ':
+          videoPlayer.currentTime = Math.max(videoPlayer.currentTime - 10, 0);
+          break;
+
+        case 'ArrowRight':
+          videoPlayer.currentTime = Math.min(videoPlayer.currentTime + 10, videoPlayer.duration);
+          break;
+
+        case 'ArrowLeft':
+          videoPlayer.currentTime = Math.max(videoPlayer.currentTime - 10, 0);
+          break;
+
+        case 'KeyM':
+          videoPlayer.muted = !videoPlayer.muted;
+          break;
+
+        case 'ArrowUp':
+          e.preventDefault();
+          videoPlayer.volume = Math.min(videoPlayer.volume + 0.1, 1);
+          break;
+
+        case 'ArrowDown':
+          e.preventDefault();
+          videoPlayer.volume = Math.max(videoPlayer.volume - 0.1, 0);
+          break;
+
+        case 'KeyF':
+          if (videoPlayer.requestFullscreen) {
+            videoPlayer.requestFullscreen();
+          }
+          break;
+
+        case 'KeyT':
+          // Theater mode: expand player
+          videoPlayer.parentElement.style.maxWidth = '100%';
+          videoPlayer.style.width = '100vw';
+          break;
+
+        case 'KeyC':
+          // Toggle captions (browser handles this with CC button)
+          const tracks = videoPlayer.querySelectorAll('track[kind="captions"]');
+          if (tracks.length > 0) {
+            tracks[0].track.mode = tracks[0].track.mode === 'showing' ? 'hidden' : 'showing';
+          }
+          break;
+
+        case 'Period': // '>'
+          if (e.shiftKey) {
+            videoPlayer.playbackRate = Math.min(videoPlayer.playbackRate + 0.25, 2);
+          }
+          break;
+
+        case 'Comma': // '<'
+          if (e.shiftKey) {
+            videoPlayer.playbackRate = Math.max(videoPlayer.playbackRate - 0.25, 0.75);
+          }
+          break;
+
+        case 'Digit0':
+        case 'Digit1':
+        case 'Digit2':
+        case 'Digit3':
+        case 'Digit4':
+        case 'Digit5':
+        case 'Digit6':
+        case 'Digit7':
+        case 'Digit8':
+        case 'Digit9':
+          // Jump to 0–90% of video
+          const percent = parseInt(e.code.replace('Digit', '')) * 10;
+          videoPlayer.currentTime = (percent / 100) * videoPlayer.duration;
+          break;
+
+        case 'Slash': // '?'
+          if (modal) {
+            modal.classList.toggle('show');
+          }
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    // Close modal on X button or ESC
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        if (modal) {
+          modal.classList.remove('show');
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Escape' && modal && modal.classList.contains('show')) {
+        modal.classList.remove('show');
+      }
+    });
+  }
+</script>
