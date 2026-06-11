@@ -45,7 +45,7 @@ let finalSrc = src;
 if (src && !src.includes('://')) {
   // It's a filename; fetch from Blob Storage with SAS token
   const sasToken = 'se=2099-12-31T23%3A59%3A59Z&sp=rl&sv=2026-02-06&sr=c&sig=UDdB33Nc6cLu9iOzeO4Aiq5CMiMR0mJu93QnRT8vXpU%3D';
-  finalSrc = `https://stjaraimediadev.blob.core.windows.net/help-videos/${src}?${sasToken}`;
+  finalSrc = `https://stjaraimediadev.blob.core.windows.net/help-videos/${src}?${sasToken}#t=3`;
 }
 
 const isEmbed = !!finalSrc && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(finalSrc);
