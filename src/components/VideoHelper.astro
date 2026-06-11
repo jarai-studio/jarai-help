@@ -64,7 +64,7 @@ const isFile = !!finalSrc && !isEmbed;
 
   {isFile && (
     <video class="video-helper__player" controls preload="metadata" poster={poster}>
-      <source src={src} />
+      <source src={finalSrc} />
       Your browser can't play this video — use the transcript below.
     </video>
   )}
@@ -72,7 +72,7 @@ const isFile = !!finalSrc && !isEmbed;
   {isEmbed && (
     <div class="video-helper__embed">
       <iframe
-        src={src}
+        src={finalSrc}
         title={title}
         loading="lazy"
         frameborder="0"
