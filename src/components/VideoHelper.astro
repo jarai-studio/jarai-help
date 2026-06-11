@@ -10,13 +10,13 @@
  *  - When `src` is absent, a graceful "coming soon" placeholder renders instead of
  *    a broken player — so we can ship the page now and drop the recording in later
  *    by adding a single `src` attribute (see VIDEO_SCRIPTS.md for the storyboards).
- *  - Supports both self-hosted files (mp4/webm in /public) and embeds
- *    (YouTube / Loom / Vimeo). Lazy-loaded; respects the brand accent token.
+ *  - Supports: Blob Storage video filenames, self-hosted files (.mp4/.webm in /public),
+ *    and embeds (YouTube / Loom / Vimeo). Lazy-loaded; respects the brand accent token.
  *
  * Usage in MDX:
  *   import VideoHelper from '../../../components/VideoHelper.astro';
  *
- *   <VideoHelper title="Create your first production" duration="2 min" src="https://www.youtube.com/embed/XXXX">
+ *   <VideoHelper title="Create your first production" duration="2 min" src="avatars.mp4">
  *     1. Open **Productions → New Production**.
  *     2. Pick a project type and content theme.
  *     ...
@@ -25,7 +25,7 @@
 interface Props {
   /** Heading shown above the player. */
   title?: string;
-  /** Video URL — a self-hosted /public file (.mp4/.webm) OR a YouTube/Loom/Vimeo embed URL. Omit to render the "coming soon" placeholder. */
+  /** Video URL — a filename (uploaded to Blob Storage), self-hosted /public file (.mp4/.webm), OR a YouTube/Loom/Vimeo embed URL. Omit to render the "coming soon" placeholder. */
   src?: string;
   /** Poster image shown before playback (self-hosted videos only). */
   poster?: string;
@@ -43,8 +43,15 @@ const {
   transcriptTitle = 'Prefer to read? Open the step-by-step transcript',
 } = Astro.props;
 
-const isEmbed = !!src && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(src);
-const isFile = !!src && !isEmbed;
+// Construct final src: if it's a filename (no protocol), prepend Blob Storage URL
+let finalSrc = src;
+if (src && !src.includes('://')) {
+  // It's a filename; fetch from Blob Storage
+  finalSrc = `https://stjaraimediadev.blob.core.windows.net/help-videos/${src}`;
+}
+
+const isEmbed = !!finalSrc && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(finalSrc);
+const isFile = !!finalSrc && !isEmbed;
 ---
 
 <figure class="video-helper not-content">
