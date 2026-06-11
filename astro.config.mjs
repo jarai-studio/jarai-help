@@ -24,18 +24,8 @@ export default defineConfig({
       title: 'JARAI Help',
       description:
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
-      logo: {
-        src: './src/assets/logo.svg',
-        replacesTitle: false,
-      },
       favicon: '/favicon.svg',
       customCss: ['./src/styles/brand-tokens.css', './src/styles/starlight-overrides.css'],
-      social: {
-        github: 'https://github.com/jarai-studio',
-      },
-      editLink: {
-        baseUrl: 'https://github.com/jarai-studio/jarai-help/edit/main/',
-      },
       lastUpdated: true,
       pagefind: true,
       sidebar: [
@@ -122,7 +112,7 @@ export default defineConfig({
       head: [
         {
           tag: 'meta',
-          attrs: { name: 'theme-color', content: '#d97757' },
+          attrs: { name: 'theme-color', content: '#0F766E' },
         },
       ],
     }),

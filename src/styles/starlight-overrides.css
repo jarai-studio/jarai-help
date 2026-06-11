@@ -5,12 +5,20 @@
  * Order: light theme first, dark theme overrides below.
  */
 
+/* Base tokens (fonts + fallbacks). Starlight's own light theme lives under
+ * :root[data-theme='light'], which out-specifies a plain :root, so the greyscale/bg/text
+ * here intentionally DEFER to Starlight in light mode (they're dark-oriented and only seed
+ * the dark theme below). Only the accent is forced into light mode, in its own block. */
 :root {
-  /* Starlight accent scale — built from --color-accent-1 (#0F766E — JARAI teal).
-   * Generated via Starlight's recommended approach: high == darkest, low == lightest. */
+  /* Starlight accent scale — vivid JARAI teal that reads green (not blue) and matches the
+   * bright #2FC2AD brand teal of the videos, while still clearing WCAG AA on the near-white
+   * docs background. #1F8274 is the brightest brand-teal-hue value at >=4.5:1 on #FBFCFD
+   * (4.54:1; white text on it = 4.66:1, so it also works as a button fill). high == darker
+   * variant for hover/active, low == pale tint. NOTE: this brightens ONLY the Starlight
+   * surface — the shared BRAND BLOCK in brand-tokens.css stays byte-identical across sites. */
   --sl-color-accent-low: #CDE7E3;
-  --sl-color-accent: #0F766E;
-  --sl-color-accent-high: #0A514B;
+  --sl-color-accent: #1F8274;
+  --sl-color-accent-high: #0F766E;
 
   /* Greyscale tied to JARAI foundation palette (cool) */
   --sl-color-white: var(--color-light);    /* #FBFCFD */
@@ -27,7 +35,7 @@
   --sl-color-bg-nav: var(--color-light);
   --sl-color-bg-sidebar: var(--color-subtle);
   --sl-color-text: var(--color-dark);
-  --sl-color-text-accent: var(--color-accent-1);
+  --sl-color-text-accent: #1F8274;  /* links + title — vivid teal, no longer reads blue */
 
   /* Fonts */
   --sl-font: var(--font-body);
@@ -35,20 +43,34 @@
   --sl-font-mono: var(--font-mono);
 }
 
-/* Dark mode — invert the foundation pair, dim the accents */
+/* Light mode — force ONLY the accent so the teal beats Starlight's default blue (set under
+ * this same selector). Greyscale/bg/text are left to Starlight's correct light values:
+ * broadening the whole base block to this selector applied dark-oriented greys in light mode
+ * and made the sidebar text + cards unreadable. */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #CDE7E3;
+  --sl-color-accent: #1F8274;
+  --sl-color-accent-high: #0F766E;
+  --sl-color-text-accent: #1F8274;
+}
+
+/* Dark mode. Starlight's grey ramp runs LIGHT -> DARK: --sl-color-white is the highest-
+ * contrast colour (headings) and must be near-white in dark mode; --sl-color-black is the
+ * deepest. The previous values had this inverted (white == near-black), so headings,
+ * sidebar labels and the TOC rendered dark-on-dark and were unreadable. Corrected below. */
 :root[data-theme='dark'] {
   --sl-color-accent-low: #07221F;
   --sl-color-accent: #2FC2AD;
-  --sl-color-accent-high: #CDE7E3;
+  --sl-color-accent-high: #8DE6D6;
 
-  --sl-color-white: var(--color-dark);
-  --sl-color-gray-1: #14201E;
-  --sl-color-gray-2: #1C2524;
-  --sl-color-gray-3: #2A3331;
-  --sl-color-gray-4: #4A5654;
-  --sl-color-gray-5: var(--color-mid);
-  --sl-color-gray-6: #C7D2CF;
-  --sl-color-black: var(--color-light);
+  --sl-color-white: #FBFCFD;   /* lightest — headings, high-emphasis text */
+  --sl-color-gray-1: #DDE4E2;
+  --sl-color-gray-2: #C0C9C7;
+  --sl-color-gray-3: #93A09D;  /* muted text (TOC, captions) */
+  --sl-color-gray-4: #5F6E6B;
+  --sl-color-gray-5: #3A4644;
+  --sl-color-gray-6: #1C2524;  /* dark surfaces */
+  --sl-color-black: #0B100F;   /* deepest */
 
   --sl-color-bg: #0E1413;
   --sl-color-bg-nav: #161D1C;
