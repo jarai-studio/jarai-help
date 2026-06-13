@@ -29,3 +29,5 @@ pnpm-debug.log*
 .claude/settings.local.json
 .claude/*.lock
 .claude/worktrees/
+
+public/videos/
