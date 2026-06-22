@@ -3,10 +3,11 @@
 // pager). editLink + lastUpdated are disabled in astro.config.mjs so the
 // "Edit this page" / "Last updated" lines are gone. We append the shared
 // © line carried by every JARAI STUDIO surface footer.
+import type { Props } from '@astrojs/starlight/props';
 import Default from '@astrojs/starlight/components/Footer.astro';
 ---
 
-<Default {...Astro.props}><slot /></Default>
+<Default {...Astro.props} />
 
 <p class="jarai-copyright">© 2026 JARAI STUDIO Ltd. All rights reserved.</p>
 
