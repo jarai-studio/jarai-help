@@ -1,0 +1,73 @@
+---
+// App switcher (⊞) — vanilla-JS (Starlight has no React). ✦ Design System Phase 0.3.
+// Links are rendered server-side from the env-aware registry; a small script handles
+// open/close (click, click-outside, Escape).
+import { SITE_LINKS, CURRENT_SITE } from './siteLinks';
+---
+<div class="jarai-appsw">
+  <button class="jarai-appsw__btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Switch JARAI app">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  </button>
+  <div class="jarai-appsw__menu" role="menu" hidden>
+    <p class="jarai-appsw__hd">JARAI apps</p>
+    {SITE_LINKS.map((s) => (
+      <a
+        href={s.href}
+        role="menuitem"
+        class:list={['jarai-appsw__item', s.key === CURRENT_SITE && 'is-current']}
+        aria-current={s.key === CURRENT_SITE ? 'page' : undefined}
+      >{s.label}</a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .jarai-appsw { position: relative; display: inline-flex; }
+  .jarai-appsw__btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 6px;
+    background: none; border: none; color: currentColor; opacity: .65; cursor: pointer;
+  }
+  .jarai-appsw__btn:hover, .jarai-appsw__btn[aria-expanded='true'] { opacity: 1; }
+  .jarai-appsw__menu {
+    position: absolute; top: calc(100% + 8px); left: 0; min-width: 200px;
+    background: var(--sl-color-bg-nav, #0E1B19);
+    border: 1px solid var(--sl-color-hairline, rgba(255,255,255,.12));
+    border-radius: 10px; padding: 6px; box-shadow: 0 16px 40px -22px rgba(0,0,0,.7); z-index: 200;
+  }
+  .jarai-appsw__hd {
+    font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--sl-color-gray-3); padding: 6px 10px 4px; margin: 0;
+  }
+  .jarai-appsw__item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px; border-radius: 6px; font-size: .85rem; font-weight: 500;
+    text-decoration: none; color: var(--sl-color-text);
+  }
+  .jarai-appsw__item:hover { background: var(--sl-color-gray-6, rgba(255,255,255,.06)); }
+  .jarai-appsw__item.is-current { color: var(--sl-color-accent, #2FC2AD); }
+</style>
+
+<script>
+  document.querySelectorAll('.jarai-appsw').forEach((root) => {
+    const btn = root.querySelector('.jarai-appsw__btn');
+    const menu = root.querySelector('.jarai-appsw__menu');
+    if (!btn || !menu) return;
+    const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = menu.hidden;
+      menu.hidden = !willOpen;
+      btn.setAttribute('aria-expanded', String(willOpen));
+    });
+    document.addEventListener('click', (e) => {
+      if (!root.contains(e.target as Node)) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Escape') close();
+    });
+  });
+</script>
