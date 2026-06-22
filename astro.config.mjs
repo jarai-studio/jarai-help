@@ -23,12 +23,17 @@ export default defineConfig({
     starlight({
       title: 'JARAI Help',
       // ✦ Phase 0.3 header — unified brand zone (⊞ app-switcher + aperture + JARAI Help).
-      components: { SiteTitle: './src/components/SiteTitle.astro' },
+      // ✦ Phase 0.4 footer — Starlight built-in pager + shared © line (edit/last-updated dropped).
+      components: {
+        SiteTitle: './src/components/SiteTitle.astro',
+        Footer: './src/components/Footer.astro',
+      },
       description:
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/brand-tokens.css', './src/styles/starlight-overrides.css'],
-      lastUpdated: true,
+      // ✦ Phase 0.4 — docs aren't editable by visitors: no editLink, no last-updated.
+      lastUpdated: false,
       pagefind: true,
       sidebar: [
         {
@@ -111,10 +116,68 @@ export default defineConfig({
           ],
         },
       ],
+      // ✦ Phase 0.2b — aperture dark-tile icon set + Open Graph defaults.
+      // Starlight already emits og:title/type/url/locale/description/site_name +
+      // twitter:card; we override site_name → "JARAI STUDIO", set og:type=website,
+      // and add the default share image (Starlight emits no og:image by default).
       head: [
+        // ✦ Design System Phase 0.5 — bridge Starlight's theme to the shared,
+        // cross-subdomain `jarai-theme` cookie so the choice carries across the
+        // app surfaces (console / dev portal / help). Runs early in <head>:
+        // seeds Starlight's stored theme from the cookie (and re-applies
+        // data-theme to avoid a flash), then mirrors explicit changes back.
+        {
+          tag: 'script',
+          content: `(function(){try{var m=document.cookie.match(/(?:^|; )jarai-theme=([^;]+)/);var c=m&&decodeURIComponent(m[1]);if(c==='light'||c==='dark'){try{localStorage.setItem('starlight-theme',c);}catch(e){}document.documentElement.dataset.theme=c;}var dom=/(^|\\.)jarai\\.studio$/.test(location.hostname)?'; Domain=.jarai.studio':'';new MutationObserver(function(){var t=document.documentElement.getAttribute('data-theme');var s;try{s=localStorage.getItem('starlight-theme');}catch(e){}if(s==='light'||s==='dark'){document.cookie='jarai-theme='+t+'; Path=/; SameSite=Lax; Max-Age=31536000'+dom;}else{document.cookie='jarai-theme=; Path=/; SameSite=Lax; Max-Age=0'+dom;}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});}catch(e){}})();`,
+        },
+        // Favicons / PWA
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon-180.png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'manifest', href: '/site.webmanifest' },
+        },
         {
           tag: 'meta',
-          attrs: { name: 'theme-color', content: '#0F766E' },
+          attrs: { name: 'theme-color', content: '#0E1B19' },
+        },
+        // Open Graph / Twitter defaults
+        {
+          tag: 'meta',
+          attrs: { property: 'og:type', content: 'website' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:site_name', content: 'JARAI STUDIO' },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image',
+            content: 'https://help.jarai.studio/og-default-1200x630.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:width', content: '1200' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:height', content: '630' },
+        },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:card', content: 'summary_large_image' },
         },
       ],
     }),
