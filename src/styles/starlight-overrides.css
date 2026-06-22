@@ -35,12 +35,26 @@
   --sl-color-bg-nav: var(--color-light);
   --sl-color-bg-sidebar: var(--color-subtle);
   --sl-color-text: var(--color-dark);
-  --sl-color-text-accent: #1F8274;  /* links + title — vivid teal, no longer reads blue */
+  /* ✦ Phase 2 docs-prose contract — inline links teal, locked. AA-safe brand
+   * teal-on-light #0C5F58 (4.8:1 on #FBFCFD), identical to the dev portal so
+   * the two surfaces match exactly. Dark mode uses brand teal #2FC2AD below. */
+  --sl-color-text-accent: #0C5F58;
 
   /* Fonts */
   --sl-font: var(--font-body);
   --sl-font-system: var(--font-body);
   --sl-font-mono: var(--font-mono);
+
+  /* ✦ Phase 2 docs-prose contract — shared heading scale + body rhythm, mapped
+   * onto Starlight's text tokens so help articles match the dev portal 1:1.
+   * Spec: portal-consistency/content-prose-consistency.md */
+  --sl-content-width: 45rem;        /* 720px shared measure (was 47.5rem) */
+  --sl-text-h1: 2.25rem;
+  --sl-text-h2: 1.5rem;
+  --sl-text-h3: 1.1875rem;
+  --sl-text-h4: 1rem;
+  --sl-line-height: 1.7;            /* body rhythm */
+  --docs-hairline: var(--color-subtle);  /* h2 rule — mirrors dev portal --border */
 }
 
 /* Light mode — force ONLY the accent so the teal beats Starlight's default blue (set under
@@ -51,7 +65,7 @@
   --sl-color-accent-low: #CDE7E3;
   --sl-color-accent: #1F8274;
   --sl-color-accent-high: #0F766E;
-  --sl-color-text-accent: #1F8274;
+  --sl-color-text-accent: #0C5F58;  /* ✦ Phase 2 — teal-locked inline links */
 }
 
 /* Dark mode. Starlight's grey ramp runs LIGHT -> DARK: --sl-color-white is the highest-
@@ -76,7 +90,8 @@
   --sl-color-bg-nav: #161D1C;
   --sl-color-bg-sidebar: #1C2524;
   --sl-color-text: #EEF3F1;
-  --sl-color-text-accent: #2FC2AD;
+  --sl-color-text-accent: #2FC2AD;  /* ✦ Phase 2 — teal-locked inline links (dark) */
+  --docs-hairline: #2A3331;         /* h2 rule — mirrors dev portal --border (dark) */
 }
 
 /* Apply heading font from the brand */
@@ -115,7 +130,56 @@
   }
 }
 
-/* Nudge the reading column to the brand prose width (~760px ≈ 47.5rem). */
-:root {
-  --sl-content-width: 47.5rem;
+/* ✦ Design System Phase 2 — docs-prose contract (heading rhythm, code, asides).
+   Aligns the help centre to the dev portal so a reference page and a guide page
+   differ only in content + page-type widget, never in type scale, spacing, code
+   blocks or admonitions. Spec: portal-consistency/content-prose-consistency.md */
+
+/* h2 — 1px subtle bottom rule + 48px top margin (matches dev portal). */
+.sl-markdown-content h2 {
+  margin-top: 48px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--docs-hairline);
 }
+.sl-markdown-content h3 { margin-top: 32px; }
+
+/* Code blocks (Expressive Code) — dark in BOTH themes, identical surface/radius/
+   font to the dev portal's <CodeBlock>. Background + radius come from
+   astro.config.mjs styleOverrides; this guards the frame chrome and rounding. */
+.sl-markdown-content .expressive-code .frame {
+  border-radius: var(--radius-card);
+}
+
+/* Admonitions — restyle Starlight asides to the shared callout system: left 3px
+   accent border + semantic tint bg + uppercase title. Mirrors the dev portal's
+   <Callout> 1:1. note→info, tip→success, caution→warning, danger→danger.
+   Tints carry their own [data-theme=dark] overrides in brand-tokens.css. */
+.sl-markdown-content .starlight-aside {
+  border-inline-start-width: 3px;
+  border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  padding: 13px 16px;
+}
+.sl-markdown-content .starlight-aside__title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.sl-markdown-content .starlight-aside--note {
+  background: var(--tint-info); border-color: var(--on-info);
+}
+.sl-markdown-content .starlight-aside--note .starlight-aside__title { color: var(--on-info); }
+.sl-markdown-content .starlight-aside--tip {
+  background: var(--tint-success); border-color: var(--on-success);
+}
+.sl-markdown-content .starlight-aside--tip .starlight-aside__title { color: var(--on-success); }
+.sl-markdown-content .starlight-aside--caution {
+  background: var(--tint-warning); border-color: var(--on-warning);
+}
+.sl-markdown-content .starlight-aside--caution .starlight-aside__title { color: var(--on-warning); }
+.sl-markdown-content .starlight-aside--danger {
+  background: var(--tint-danger); border-color: var(--on-danger);
+}
+.sl-markdown-content .starlight-aside--danger .starlight-aside__title { color: var(--on-danger); }
+/* Aside body text inherits --sl-color-text (readable on the tint in both themes). */

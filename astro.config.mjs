@@ -32,6 +32,30 @@ export default defineConfig({
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/brand-tokens.css', './src/styles/starlight-overrides.css'],
+      // ✦ Phase 2 docs-prose contract — code blocks dark in BOTH site themes,
+      // identical surface (#0c1413), font (JetBrains Mono) and radius to the dev
+      // portal's <CodeBlock> (which uses the same github-dark Shiki theme), so
+      // code reads identically across the two engines. A single dark theme is
+      // applied regardless of light/dark site mode.
+      // Spec: portal-consistency/content-prose-consistency.md
+      expressiveCode: {
+        themes: ['github-dark'],
+        styleOverrides: {
+          borderRadius: 'var(--radius-card)',
+          codeFontFamily: 'var(--font-mono)',
+          codeFontSize: '0.85rem',
+          codeLineHeight: '1.6',
+          codeBackground: '#0c1413',
+          frames: {
+            frameBoxShadowCssValue: 'none',
+            editorBackground: '#0c1413',
+            editorActiveTabBackground: '#0c1413',
+            editorTabBarBackground: '#0a1110',
+            terminalBackground: '#0c1413',
+            terminalTitlebarBackground: '#0a1110',
+          },
+        },
+      },
       // ✦ Phase 0.4 — docs aren't editable by visitors: no editLink, no last-updated.
       lastUpdated: false,
       pagefind: true,
