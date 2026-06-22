@@ -53,8 +53,8 @@ import { SITE_LINKS, CURRENT_SITE } from './siteLinks';
 
 <script>
   document.querySelectorAll('.jarai-appsw').forEach((root) => {
-    const btn = root.querySelector('.jarai-appsw__btn');
-    const menu = root.querySelector('.jarai-appsw__menu');
+    const btn = root.querySelector('.jarai-appsw__btn') as HTMLElement | null;
+    const menu = root.querySelector('.jarai-appsw__menu') as HTMLElement | null;
     if (!btn || !menu) return;
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
     btn.addEventListener('click', (e) => {
