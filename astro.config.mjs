@@ -121,6 +121,15 @@ export default defineConfig({
       // twitter:card; we override site_name → "JARAI STUDIO", set og:type=website,
       // and add the default share image (Starlight emits no og:image by default).
       head: [
+        // ✦ Design System Phase 0.5 — bridge Starlight's theme to the shared,
+        // cross-subdomain `jarai-theme` cookie so the choice carries across the
+        // app surfaces (console / dev portal / help). Runs early in <head>:
+        // seeds Starlight's stored theme from the cookie (and re-applies
+        // data-theme to avoid a flash), then mirrors explicit changes back.
+        {
+          tag: 'script',
+          content: `(function(){try{var m=document.cookie.match(/(?:^|; )jarai-theme=([^;]+)/);var c=m&&decodeURIComponent(m[1]);if(c==='light'||c==='dark'){try{localStorage.setItem('starlight-theme',c);}catch(e){}document.documentElement.dataset.theme=c;}var dom=/(^|\\.)jarai\\.studio$/.test(location.hostname)?'; Domain=.jarai.studio':'';new MutationObserver(function(){var t=document.documentElement.getAttribute('data-theme');var s;try{s=localStorage.getItem('starlight-theme');}catch(e){}if(s==='light'||s==='dark'){document.cookie='jarai-theme='+t+'; Path=/; SameSite=Lax; Max-Age=31536000'+dom;}else{document.cookie='jarai-theme=; Path=/; SameSite=Lax; Max-Age=0'+dom;}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});}catch(e){}})();`,
+        },
         // Favicons / PWA
         {
           tag: 'link',
