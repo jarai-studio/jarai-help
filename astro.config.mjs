@@ -22,6 +22,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'JARAI Help',
+      // ✦ Phase 0.3 header — unified brand zone (⊞ app-switcher + aperture + JARAI Help).
+      components: { SiteTitle: './src/components/SiteTitle.astro' },
       description:
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
       favicon: '/favicon.svg',

@@ -1,0 +1,35 @@
+---
+// Starlight SiteTitle override — Phase 0.3 unified brand zone:
+// [ ⊞ app-switcher · aperture · JARAI Help ]. Registered via astro.config.mjs
+// starlight({ components: { SiteTitle: './src/components/SiteTitle.astro' } }).
+import AppSwitcher from './AppSwitcher.astro';
+---
+<div class="jarai-site-title">
+  <AppSwitcher />
+  <a href="/" class="jarai-brand-link" aria-label="JARAI Help — home">
+    <svg class="jarai-mark" width="24" height="24" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <circle cx="50" cy="50" r="41" stroke="currentColor" stroke-width="2.6" opacity="0.5"></circle>
+      <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M50 31 L66.45 40.5 L66.45 59.5 L50 69 L33.55 59.5 L33.55 40.5 Z"></path>
+        <line x1="50" y1="31" x2="74.4" y2="20.9"></line>
+        <line x1="66.45" y1="40.5" x2="87.4" y2="56.6"></line>
+        <line x1="66.45" y1="59.5" x2="63" y2="85.7"></line>
+        <line x1="50" y1="69" x2="25.6" y2="79.1"></line>
+        <line x1="33.55" y1="59.5" x2="12.6" y2="43.4"></line>
+        <line x1="33.55" y1="40.5" x2="37" y2="14.3"></line>
+      </g>
+      <circle cx="50" cy="50" r="5.5" fill="var(--color-spark, #E0823F)"></circle>
+    </svg>
+    <span class="jarai-wm">JARAI <span class="jarai-sub">Help</span></span>
+  </a>
+</div>
+
+<style>
+  .jarai-site-title { display: flex; align-items: center; gap: 8px; }
+  .jarai-brand-link { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--sl-color-white); }
+  .jarai-mark { color: var(--sl-color-accent); flex: none; }
+  .jarai-wm { font-weight: 700; letter-spacing: .08em; font-size: 1.05rem; white-space: nowrap; }
+  .jarai-sub { font-weight: 500; letter-spacing: .04em; color: var(--sl-color-accent); }
+  /* Hide the wordmark text on very narrow screens; keep the mark + switcher. */
+  @media (max-width: 30rem) { .jarai-wm { display: none; } }
+</style>

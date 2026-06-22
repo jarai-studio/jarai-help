@@ -51,6 +51,9 @@ jobs:
         run: |
           npm run check
           npm run build
+        env:
+          # ✦ Phase 0.3 header — per-env subdomains in the app-switcher (siteLinks.ts).
+          PUBLIC_JARAI_ENV: dev
 
       - name: Deploy to Azure Static Web Apps (SWA CLI — no Docker on self-hosted runner)
         run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
