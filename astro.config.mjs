@@ -111,10 +111,59 @@ export default defineConfig({
           ],
         },
       ],
+      // ✦ Phase 0.2b — aperture dark-tile icon set + Open Graph defaults.
+      // Starlight already emits og:title/type/url/locale/description/site_name +
+      // twitter:card; we override site_name → "JARAI STUDIO", set og:type=website,
+      // and add the default share image (Starlight emits no og:image by default).
       head: [
+        // Favicons / PWA
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'icon', href: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon-180.png' },
+        },
+        {
+          tag: 'link',
+          attrs: { rel: 'manifest', href: '/site.webmanifest' },
+        },
         {
           tag: 'meta',
-          attrs: { name: 'theme-color', content: '#0F766E' },
+          attrs: { name: 'theme-color', content: '#0E1B19' },
+        },
+        // Open Graph / Twitter defaults
+        {
+          tag: 'meta',
+          attrs: { property: 'og:type', content: 'website' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:site_name', content: 'JARAI STUDIO' },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image',
+            content: 'https://help.jarai.studio/og-default-1200x630.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:width', content: '1200' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:height', content: '630' },
+        },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:card', content: 'summary_large_image' },
         },
       ],
     }),
