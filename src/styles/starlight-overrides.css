@@ -95,3 +95,27 @@
 .sl-link-card {
   border-radius: var(--radius-card);
 }
+
+/* ✦ Design System Phase 1 — ultra-wide tune (portal-consistency/help-changes.md).
+   Cap + center the whole Starlight frame past 1536px (== marketing --page-max) so
+   the sidebars/content/ToC don't drift apart on a 4K monitor; the full-bleed header
+   is centered to match. Verified against Starlight 0.30.6 DOM (.page / header.header).
+   Mobile/tablet are unchanged — Starlight's drawer + collapsing ToC handle them. */
+@media (min-width: 1536px) {
+  .page {
+    max-width: 1536px;
+    margin-inline: auto;
+    border-inline: 1px solid var(--sl-color-gray-5);  /* intentional side rail */
+  }
+  header.header {
+    max-width: 1536px;
+    margin-inline: auto;
+    /* fixed element: pin both edges so margin-inline:auto can center it */
+    inset-inline: 0;
+  }
+}
+
+/* Nudge the reading column to the brand prose width (~760px ≈ 47.5rem). */
+:root {
+  --sl-content-width: 47.5rem;
+}
