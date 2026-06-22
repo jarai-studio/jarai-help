@@ -1,0 +1,21 @@
+---
+// ✦ Phase 0.4 footer — Help centre uses Starlight's built-in footer (Prev/Next
+// pager). editLink + lastUpdated are disabled in astro.config.mjs so the
+// "Edit this page" / "Last updated" lines are gone. We append the shared
+// © line carried by every JARAI STUDIO surface footer.
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+<p class="jarai-copyright">© 2026 JARAI STUDIO Ltd. All rights reserved.</p>
+
+<style>
+  .jarai-copyright {
+    margin: 0;
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+</style>

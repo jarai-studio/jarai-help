@@ -23,12 +23,17 @@ export default defineConfig({
     starlight({
       title: 'JARAI Help',
       // ✦ Phase 0.3 header — unified brand zone (⊞ app-switcher + aperture + JARAI Help).
-      components: { SiteTitle: './src/components/SiteTitle.astro' },
+      // ✦ Phase 0.4 footer — Starlight built-in pager + shared © line (edit/last-updated dropped).
+      components: {
+        SiteTitle: './src/components/SiteTitle.astro',
+        Footer: './src/components/Footer.astro',
+      },
       description:
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/brand-tokens.css', './src/styles/starlight-overrides.css'],
-      lastUpdated: true,
+      // ✦ Phase 0.4 — docs aren't editable by visitors: no editLink, no last-updated.
+      lastUpdated: false,
       pagefind: true,
       sidebar: [
         {
