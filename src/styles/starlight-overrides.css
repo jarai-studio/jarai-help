@@ -143,6 +143,31 @@
 }
 .sl-markdown-content h3 { margin-top: 32px; }
 
+/* Inline code — brand tokens, mirrors the dev portal's <code> 1:1. Scoped with
+   :not(pre) so it never touches Expressive Code's fenced blocks (those render
+   inside <pre>). bg = --docs-hairline (theme-aware, = dev portal --border). */
+.sl-markdown-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background-color: var(--docs-hairline);
+  padding: 2px 6px;
+  border-radius: var(--radius-badge);
+}
+
+/* Tables — full width, uppercase mid th, subtle row rules. Mirrors the dev portal
+   so a help page and a dev-portal page read identically. */
+.sl-markdown-content table {
+  width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: var(--space-md) 0;
+}
+.sl-markdown-content :is(th, td) {
+  text-align: start; padding: 10px 12px;
+  border-bottom: 1px solid var(--docs-hairline); vertical-align: top;
+}
+.sl-markdown-content th {
+  font-family: var(--font-heading); font-weight: 600; font-size: 0.78rem;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-mid);
+}
+
 /* Code blocks (Expressive Code) — dark in BOTH themes, identical surface/radius/
    font to the dev portal's <CodeBlock>. Background + radius come from
    astro.config.mjs styleOverrides; this guards the frame chrome and rounding. */
