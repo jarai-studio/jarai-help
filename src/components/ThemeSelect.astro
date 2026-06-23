@@ -1,0 +1,91 @@
+---
+// ✦ Design System Phase 0.5 — Help theme control. Overrides Starlight's built-in
+// Dark/Light/Auto dropdown with the unified icon toggle used by Console / Developer /
+// Marketing / Client Portal: a single button whose icon shows the ACTION — sun when
+// dark is active ("switch to light"), moon when light is active ("switch to dark").
+//
+// Reconciliation with Starlight (handoff §4):
+//  1. Clicking writes localStorage['starlight-theme'] — the key Starlight reads on
+//     load — and sets data-theme, so the choice persists and Starlight stays in sync.
+//  2. The shared `.jarai.studio` `jarai-theme` cookie is kept in sync by the existing
+//     head bridge in astro.config.mjs, which observes data-theme and mirrors the
+//     cookie (and seeds Starlight's theme from the cookie on load). So the choice
+//     carries to the other surfaces and incoming choices carry into Help — no flash.
+//
+// Auto (follow system) remains the default on first visit via Starlight's own
+// provider + prefers-color-scheme; an explicit reset-to-auto is no longer exposed,
+// matching Console/Developer.
+---
+
+<button class="theme-toggle" type="button" aria-label="Switch theme">
+  <svg class="icon icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+  <svg class="icon icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 0;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .theme-toggle:hover { background: rgba(255, 255, 255, 0.14); }
+  /* Light skin — the Starlight header is light in light mode. */
+  :root[data-theme='light'] .theme-toggle {
+    background: var(--color-subtle);
+    color: var(--color-dark);
+  }
+  :root[data-theme='light'] .theme-toggle:hover { background: #dfe6e5; }
+  /* Icon shows the ACTION: light active → moon (go dark); dark active → sun (go light). */
+  .theme-toggle .icon-sun { display: none; }
+  :root[data-theme='dark'] .theme-toggle .icon-sun { display: block; }
+  :root[data-theme='dark'] .theme-toggle .icon-moon { display: none; }
+</style>
+
+<script is:inline>
+  (function () {
+    function current() {
+      return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    }
+    function syncLabels() {
+      var label = current() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+      document.querySelectorAll('.theme-toggle').forEach(function (b) {
+        b.setAttribute('aria-label', label);
+        b.setAttribute('title', label);
+      });
+    }
+    syncLabels();
+
+    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var next = current() === 'dark' ? 'light' : 'dark';
+        // Reconciliation #1 — write Starlight's own key so the choice persists on reload.
+        try { localStorage.setItem('starlight-theme', next); } catch (e) {}
+        document.documentElement.setAttribute('data-theme', next);
+        // Reconciliation #2 (the shared jarai-theme cookie) is written by the head
+        // bridge in astro.config.mjs, which observes this data-theme change.
+        syncLabels();
+      });
+    });
+
+    // Keep the icon correct if the theme changes elsewhere (e.g. the head bridge
+    // applying an incoming cookie on load).
+    try {
+      new MutationObserver(syncLabels).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
+    } catch (e) {}
+  })();
+</script>

@@ -27,6 +27,10 @@ export default defineConfig({
       components: {
         SiteTitle: './src/components/SiteTitle.astro',
         Footer: './src/components/Footer.astro',
+        // ✦ Design System Phase 0.5 — replace the Dark/Light/Auto dropdown with the
+        // unified icon toggle (sun/moon). Reconciles localStorage['starlight-theme']
+        // + the shared jarai-theme cookie (the head bridge above handles the cookie).
+        ThemeSelect: './src/components/ThemeSelect.astro',
       },
       description:
         'Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.',
