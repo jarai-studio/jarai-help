@@ -223,4 +223,19 @@
     align-items: center;
   }
   header.header .right-group .social-icons:empty { display: none; }
+
+  /* Starlight's mobile menu button is a fixed white pill in BOTH themes — its
+     background uses var(--sl-color-white) (dark) / var(--sl-color-black) (light),
+     which both resolve to near-white here, so it never adapts and reads as a white
+     blob on the dark header. Re-skin it to match the theme toggle: translucent on
+     dark (light icon), subtle brand surface on light (dark icon). */
+  starlight-menu-button button {
+    background-color: rgba(255, 255, 255, 0.07) !important;
+    color: var(--sl-color-white) !important;
+    box-shadow: none !important;
+  }
+  :root[data-theme='light'] starlight-menu-button button {
+    background-color: var(--color-subtle) !important;
+    color: var(--color-dark) !important;
+  }
 }
