@@ -208,3 +208,19 @@
 }
 .sl-markdown-content .starlight-aside--danger .starlight-aside__title { color: var(--on-danger); }
 /* Aside body text inherits --sl-color-text (readable on the tint in both themes). */
+
+/* ✦ Design System Phase 0.5 — re-show the header right-group on mobile so the unified
+   theme toggle returns. Starlight hides the right-group with `sl-hidden md:sl-flex`
+   and only exposes the theme control inside the mobile menu; this brings the icon
+   toggle back into the mobile header. Selector convention matches the ultra-wide
+   override above; verified against Starlight 0.30.6's `header.header .right-group`.
+   The social-icons slot is empty (no social links configured), so collapse it to
+   leave just the toggle — the :empty guard means it harmlessly no-ops if social
+   links are ever added. */
+@media (max-width: 50rem) {
+  header.header .right-group {
+    display: flex !important;
+    align-items: center;
+  }
+  header.header .right-group .social-icons:empty { display: none; }
+}
