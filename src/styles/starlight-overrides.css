@@ -32,9 +32,21 @@
 
   /* Background + text */
   --sl-color-bg: var(--color-light);
-  --sl-color-bg-nav: var(--color-light);
-  --sl-color-bg-sidebar: var(--color-subtle);
+  /* ✦ Header + sidebar share the page background (flat) — matches the dev portal's
+     header (background: var(--bg-page)) and sidebar exactly. */
+  --sl-color-bg-nav: var(--sl-color-bg);
+  --sl-color-bg-sidebar: var(--sl-color-bg);
   --sl-color-text: var(--color-dark);
+
+  /* ✦ Dev-portal semantic tokens mirrored here so the header search matches 1:1
+     (Developer uses --surface / --text-muted / --text-primary). Light values. */
+  --jarai-surface: #ffffff;
+  --jarai-text-muted: #5B6B68;
+  --jarai-text-strong: var(--color-dark);
+
+  /* ✦ Header height matches the dev portal's 56px bar (Starlight's desktop default is
+     4rem/64px; overridden at >=50rem below too). */
+  --sl-nav-height: 3.5rem;
   /* ✦ Phase 2 docs-prose contract — inline links teal, locked. AA-safe brand
    * teal-on-light #0C5F58 (4.8:1 on #FBFCFD), identical to the dev portal so
    * the two surfaces match exactly. Dark mode uses brand teal #2FC2AD below. */
@@ -48,13 +60,27 @@
   /* ✦ Phase 2 docs-prose contract — shared heading scale + body rhythm, mapped
    * onto Starlight's text tokens so help articles match the dev portal 1:1.
    * Spec: portal-consistency/content-prose-consistency.md */
-  --sl-content-width: 45rem;        /* 720px shared measure (was 47.5rem) */
+  /* ✦ SHARED 3-column docs layout — IDENTICAL values in jarai-developer-portal's
+     global.css (--docs-sidebar/measure/toc/gap/max). Cluster = 260+64+760+64+240 = 1388,
+     capped + centred → symmetric outer gutters on superwide. */
+  --sl-content-width: 760px;        /* body reading measure */
+  --sl-sidebar-width: 260px;        /* left nav width */
+  --docs-toc: 240px;                /* right "On this page" width */
+  --docs-gap: 64px;                 /* gap sidebar↔body and body↔ToC */
+  --docs-max: 1390px;               /* cluster cap = 1388 content + 2px for the 1px rails */
+  --home-max: 1120px;               /* shared HOME container (Part 2) — same value as the dev portal */
+  --home-pad: var(--space-lg);      /* 24px inline padding */
   --sl-text-h1: 2.25rem;
   --sl-text-h2: 1.5rem;
   --sl-text-h3: 1.1875rem;
   --sl-text-h4: 1rem;
   --sl-line-height: 1.7;            /* body rhythm */
   --docs-hairline: var(--color-subtle);  /* h2 rule — mirrors dev portal --border */
+
+  /* ✦ §1.5 unified button radius — 8px rounded-rect shared by Dev + Help. Overrides
+   * the shared BRAND BLOCK's --radius-button (6px) surface-locally so that
+   * byte-identical block (brand-tokens.css) stays untouched across the five surfaces. */
+  --radius-button: 8px;
 }
 
 /* Light mode — force ONLY the accent so the teal beats Starlight's default blue (set under
@@ -87,9 +113,14 @@
   --sl-color-black: #0B100F;   /* deepest */
 
   --sl-color-bg: #0E1413;
-  --sl-color-bg-nav: #161D1C;
-  --sl-color-bg-sidebar: #1C2524;
+  --sl-color-bg-nav: var(--sl-color-bg);       /* flat header — matches dev portal */
+  --sl-color-bg-sidebar: var(--sl-color-bg);  /* flat — matches dev portal sidebar */
   --sl-color-text: #EEF3F1;
+
+  /* ✦ Dev-portal semantic tokens (dark) for the header search 1:1 match. */
+  --jarai-surface: #161D1C;
+  --jarai-text-muted: #C7D2CF;
+  --jarai-text-strong: #EEF3F1;
   --sl-color-text-accent: #2FC2AD;  /* ✦ Phase 2 — teal-locked inline links (dark) */
   --docs-hairline: #2A3331;         /* h2 rule — mirrors dev portal --border (dark) */
 }
@@ -111,23 +142,300 @@
   border-radius: var(--radius-card);
 }
 
-/* ✦ Design System Phase 1 — ultra-wide tune (portal-consistency/help-changes.md).
-   Cap + center the whole Starlight frame past 1536px (== marketing --page-max) so
-   the sidebars/content/ToC don't drift apart on a 4K monitor; the full-bleed header
-   is centered to match. Verified against Starlight 0.30.6 DOM (.page / header.header).
-   Mobile/tablet are unchanged — Starlight's drawer + collapsing ToC handle them. */
-@media (min-width: 1536px) {
+/* ✦ §1.5 button system — one shared button: teal-filled primary (Starlight already
+   fills .primary with --sl-color-text-accent = brand teal) + ghost secondary, on the
+   single 8px radius token (was Starlight's 999rem pill). Poppins heading + 600 weight
+   match the dev portal's <a class="btn">. !important beats Astro's scoped component
+   rule (.sl-link-button[data-astro-cid-…], specificity 0,2,0). */
+.sl-link-button {
+  border-radius: var(--radius-button) !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+/* ✦ Active sidebar item — WHITE text on the teal pill (was Starlight's
+   --sl-color-text-invert, which renders dark in dark mode). Matches the dev portal's
+   active nav item exactly. Specificity (.sidebar a[aria-current]) beats Starlight's
+   scoped [aria-current='page'] rule, so no !important needed. */
+.sidebar a[aria-current='page'],
+.sidebar a[aria-current='page']:hover,
+.sidebar a[aria-current='page']:focus {
+  color: #fff;
+}
+
+/* ✦ Header search — centre the box and match the dev portal's width so the two headers
+   read identically: brand left · search centred · controls right. The grid lives on the
+   INNER <div class="header sl-flex"> (Header.astro), not the outer <header class="header">
+   (PageFrame) — so target .header.sl-flex. 1fr auto 1fr truly centres the middle (search)
+   cell; the button gets a fixed width shared with the dev portal's .topbar-search (360px). */
+/* Header bottom border — Starlight's dark hairline-shade (#1C2524) is nearly invisible on
+   the page bg; use the dev portal's border colour (--docs-hairline == its --border) so the
+   header closes with a visible horizontal line. */
+header.header {
+  border-bottom: 1px solid var(--docs-hairline);
+}
+
+@media (min-width: 50rem) {
+  /* Keep the header at 56px (Starlight bumps --sl-nav-height to 4rem on desktop). */
+  :root { --sl-nav-height: 3.5rem; }
+
+  .header.sl-flex {
+    grid-template-columns: 1fr auto 1fr !important;
+  }
+  .header.sl-flex > .title-wrapper { justify-self: start; }
+  .header.sl-flex > .right-group { justify-self: end; }
+
+  /* Search trigger — replicate the dev portal's <Search> button 1:1: surface bg, subtle
+     border, muted text + magnifier, 8px radius, teal border on hover. */
+  .header button[data-open-modal] {
+    width: 360px;
+    max-width: 360px;
+    height: auto !important;   /* beat Starlight's base height: 2.5rem (40px) */
+    padding: 7px 12px;
+    border: 1px solid var(--docs-hairline);
+    border-radius: var(--radius-button);
+    background-color: var(--jarai-surface);
+    color: var(--jarai-text-muted);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.5;   /* not the body's 1.7 — keeps the box 35px like the dev portal */
+  }
+  /* Magnifier icon 16px (Starlight's is larger) so the box height matches the dev portal. */
+  .header button[data-open-modal] > svg {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+  .header button[data-open-modal]:hover {
+    border-color: var(--color-accent-1);   /* teal hover, like the dev portal */
+    color: var(--jarai-text-strong);
+  }
+}
+
+/* Ctrl / K — render as TWO separate mono key-caps (outer wrapper transparent), exactly
+   like the dev portal's nested <kbd><kbd>Ctrl</kbd><kbd>K</kbd></kbd>. */
+.header button[data-open-modal] > kbd {
+  background-color: transparent;
+  padding: 0;
+  gap: 2px;
+}
+.header button[data-open-modal] > kbd > kbd {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--jarai-text-muted);
+  background-color: var(--docs-hairline);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* Hide the empty social-icons group entirely (no social links configured). This removes
+   both its stray ::after divider line AND the right-group gap slot it occupied before the
+   theme toggle — so the theme sits a clean 8px from the search on mobile. */
+.header .right-group .social-icons { display: none; }
+
+/* ✦ Left-align the content like the dev portal — Starlight centres .sl-container with
+   margin-inline:auto at >=72rem, which pushes the body text further right as the window
+   widens. Pin it to the left so the body starts right after the sidebar, matching the
+   dev portal's left-aligned content column. */
+/* ✦ 3-column track structure, applied from where the sidebar appears (>=50rem). The body
+   track FILLS the space between [sidebar + gap] and the ToC and SHRINKS below the cluster
+   (like the dev grid's minmax centre) — never left-aligned with a trailing gap. The ToC
+   only renders at >=72rem (Starlight), so below that the body simply fills the width after
+   the sidebar. The body text stays flush (no content padding); the --docs-gap is the spacing. */
+@media (min-width: 50rem) {
+  .main-frame { padding-inline-start: calc(var(--sl-sidebar-width) + var(--docs-gap)) !important; }  /* 324 */
+  .lg\:sl-flex { gap: var(--docs-gap); }                          /* 64 (body↔ToC) */
+  /* min-width:0 lets the flex body shrink below its content min-width (like the grid's
+     minmax(0,…)) instead of squishing the ToC track. */
+  .main-pane { width: auto !important; flex: 1 1 0 !important; min-width: 0 !important; }
+  .content-panel .sl-container { margin-inline: 0 !important; }
+  .main-pane .content-panel { padding-inline: 0; }
+
+  /* Full-bleed © band, robust at every width: pulled left by (sidebar + gap) so its left
+     edge lands on the page's left edge (or the cluster's left once capped). Width is
+     min(cluster−rails, 100vw) → spans the cluster when gutters exist (masking the rails)
+     and the viewport otherwise (masking the sidebar tail), and never causes h-scroll. */
+  .jarai-copyright {
+    width: min(calc(var(--docs-max) - 2px), 100vw);
+    margin-inline-start: calc(-1 * (var(--sl-sidebar-width) + var(--docs-gap)));   /* −324 */
+    margin-inline-end: 0;
+  }
+}
+
+/* ToC track (only rendered >=72rem). flex-shrink:0 keeps it at 240 while the body shrinks. */
+@media (min-width: 72rem) {
+  .right-sidebar-container { width: var(--docs-toc) !important; flex: 0 0 auto !important; }   /* 240 */
+  .right-sidebar { width: var(--docs-toc) !important; }
+}
+
+/* ✦ Mobile "On this page" bar (<72rem) — restyle Starlight's mobile ToC to MATCH the dev
+   portal's .mobile-toc exactly: a plain sticky bar at the top of the content column
+   ("On this page" + chevron + current heading), expanding to a plain, muted, indented
+   list — NO pill, NO row borders, NO active checkmark. */
+mobile-starlight-toc {
+  display: block;
+  background: var(--sl-color-bg);
+  border-bottom: 1px solid var(--docs-hairline);
+}
+mobile-starlight-toc nav { border: 0; background: none; }
+mobile-starlight-toc summary {
+  gap: var(--space-sm);
+  padding: 10px var(--space-md);
+  border: 0;
+  background: none;
+}
+mobile-starlight-toc summary::marker { content: ''; }
+mobile-starlight-toc summary::-webkit-details-marker { display: none; }
+/* Toggle: drop Starlight's pill (border/bg/radius/padding); plain heading text + chevron. */
+mobile-starlight-toc .toggle {
+  gap: var(--space-sm);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--jarai-text-strong);
+}
+/* Starlight's caret is a horizontal chevron (›); rotate it to a vertical down-chevron (⌄)
+   closed and up-chevron (⌃) open, matching the dev portal's down/up chevron. */
+mobile-starlight-toc .toggle .caret { color: var(--jarai-text-muted); transition: transform 0.2s ease; transform: rotate(90deg); }
+mobile-starlight-toc details[open] .toggle .caret { transform: rotate(-90deg); }
+mobile-starlight-toc .display-current {
+  color: var(--jarai-text-muted);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+/* Dropdown: plain muted list, flush, no row borders / backgrounds / checkmark. */
+mobile-starlight-toc .dropdown {
+  border: 0;
+  background: var(--sl-color-bg);
+  padding: 0 var(--space-md) var(--space-sm);
+}
+mobile-starlight-toc .dropdown ul { list-style: none; margin: 0; padding: 0; }
+mobile-starlight-toc .dropdown li { margin: 0; padding: 0; border: 0; }
+mobile-starlight-toc .dropdown a {
+  display: block;
+  padding: 6px 0;
+  padding-inline-start: calc(var(--depth, 0) * var(--space-md));   /* h3 (depth 1) indents 16px */
+  border: 0;
+  color: var(--jarai-text-muted);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+mobile-starlight-toc .dropdown a:hover { color: var(--jarai-text-strong); }
+mobile-starlight-toc .dropdown a[aria-current='true'] { color: var(--color-accent-1); background: none; font-weight: 400; }
+mobile-starlight-toc .dropdown a[aria-current='true']::before,
+mobile-starlight-toc .dropdown a[aria-current='true']::after { content: none; display: none; }
+mobile-starlight-toc .dropdown a > span { padding: 0; }
+
+/* ✦ §4 "On this page" width — match the dev portal's TOC content column (188px = its
+   220px rail − 2×16px padding). Starlight sizes this with a responsive "magic number"
+   calc that drifts wider on big screens; pin it so the two TOCs are the same size. */
+.right-sidebar-panel .sl-container {
+  width: 207px;        /* 240 ToC track − 1px divider − 2×16px panel padding */
+  max-width: 207px;
+}
+
+/* ✦ Drop the "On this page" heading down so it aligns with the body H1 (like the dev
+   portal). Starlight's TOC starts ~24px higher than the article title; this top padding
+   lines them up. (right-sidebar already pads nav-height to clear the fixed header.) */
+.right-sidebar-panel {
+  padding-top: 48px !important;
+}
+
+/* ✦ §2 shell rails + copyright — match the dev portal exactly: the vertical side-rails
+   (on .page) run from the top of the screen down THROUGH the body, then stop at a
+   horizontal line, with the "© …" sitting OUTSIDE the rails below it.
+   Starlight nests the © deep inside the railed .page, so we make it a full-bleed band
+   painted with the page background: it masks the .page rails below the pager, and its
+   capped ::before line reads as the rails' closing line (== dev portal .docs-copyright
+   border-top, --docs-hairline). */
+.jarai-copyright {
+  position: relative;
+  /* z-index 6 sits above the fixed sidebar (--sl-z-index-menu: 5) but below the header
+     (navbar: 10), so when scrolled to the page bottom this full-bleed band also masks
+     the sidebar's tail — the menu then ends at the closing line, inside the rails, like
+     the dev portal's sticky sidebar (which stops at the body bottom). */
+  z-index: 6;
+  padding-block: 1.5rem 2.5rem;   /* 24 top / 40 bottom — matches dev portal .docs-copyright */
+  background: var(--sl-color-bg);
+  /* The full-bleed width + offset live in the >=50rem block (so they win the cascade and
+     can reference the layout tokens); below 50rem the © is just a normal centred line. */
+}
+.jarai-copyright::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  width: min(var(--docs-max), 100%);   /* closing line = cluster width */
+  border-top: 1px solid var(--docs-hairline);
+}
+/* Remove the trailing content-panel + main bottom padding (48px) so the © band reaches
+   the document bottom — otherwise the full-height fixed sidebar peeks into that empty
+   strip below the closing line when scrolled all the way down. */
+.main-frame main { padding-bottom: 0; }
+.main-frame .content-panel:last-child { padding-bottom: 0; }
+
+/* ✦ Remove the horizontal rule after the page title — Starlight draws a border-top
+   between stacked content panels (title panel → body panel); the dev portal has none. */
+.sl-markdown-content + .content-panel,
+.content-panel + .content-panel { border-top: 0; }
+
+/* Lift the content column above the fixed sidebar so the full-bleed © band can mask the
+   sidebar's tail at the bottom. .main-pane already forms a stacking context
+   (isolation:isolate) but with z-index:auto it renders UNDER the sidebar (z-index 5),
+   trapping the band's z-index. The content never overlaps the sidebar (only the band
+   does), so raising it is safe — and the header (z-index 10) still stays on top. */
+@media (min-width: 50rem) {
+  .main-pane { position: relative; z-index: 6; }
+}
+
+/* ✦ SHARED 3-column cluster — cap [sidebar · body · ToC] at --docs-max (1388) and centre
+   it so superwide leftover becomes symmetric OUTER gutters (not a one-sided gap nor an
+   over-wide ToC track). This forces Starlight's TwoColumnContent (which DISTRIBUTES the
+   extra space, drifting the body and ballooning the ToC track) into fixed tracks
+   identical to the dev portal's grid: sidebar 260 · gap 64 · body 760 · gap 64 · ToC 240.
+   Verified against Starlight 0.30.6 DOM. */
+/* ✦ Cap + centre the cluster once gutters appear (>=--docs-max). The track structure +
+   band are handled above (>=50rem); here we only cap the shell, centre it, draw the side
+   rails, and pin the fixed sidebar to the centred cluster's left edge so the leftover
+   becomes symmetric OUTER gutters. */
+@media (min-width: 1390px) {
   .page {
-    max-width: 1536px;
+    max-width: var(--docs-max);
     margin-inline: auto;
-    border-inline: 1px solid var(--sl-color-gray-5);  /* intentional side rail */
+    border-inline: 1px solid var(--sl-color-gray-5);  /* side rails */
   }
   header.header {
-    max-width: 1536px;
+    max-width: var(--docs-max);
     margin-inline: auto;
-    /* fixed element: pin both edges so margin-inline:auto can center it */
-    inset-inline: 0;
+    inset-inline: 0;   /* fixed element: pin both edges so margin-inline:auto centres it */
+    border-inline: 1px solid var(--sl-color-gray-5);
   }
+  /* Sidebar pinned to the centred cluster's left edge ((100vw − 1390)/2 + 1px .page border). */
+  .sidebar-pane {
+    inset-inline-start: calc(50vw - 694px);
+  }
+}
+
+/* ✦ Remove the sidebar's vertical divider line (Starlight's border-inline-end) so the
+   flat menu blends with the page, per request. */
+.sidebar-pane {
+  border-inline-end: none !important;
+}
+
+/* ✦ Remove Starlight's nested-list vertical guide line + its extra indent, so menu items
+   sit flush under their group label exactly like the dev portal (no vertical line inside
+   the menu). Starlight applies these to `ul ul li`. */
+.sidebar ul ul li {
+  border-inline-start: none !important;
+  margin-inline-start: 0 !important;
+  padding-inline-start: 0 !important;
 }
 
 /* ✦ Design System Phase 2 — docs-prose contract (heading rhythm, code, asides).
@@ -224,18 +532,130 @@
   }
   header.header .right-group .social-icons:empty { display: none; }
 
-  /* Starlight's mobile menu button is a fixed white pill in BOTH themes — its
-     background uses var(--sl-color-white) (dark) / var(--sl-color-black) (light),
-     which both resolve to near-white here, so it never adapts and reads as a white
-     blob on the dark header. Re-skin it to match the theme toggle: translucent on
-     dark (light icon), subtle brand surface on light (dark icon). */
+  /* ✦ Group the controls on the right: push the brand left so search · theme · menu sit
+     together on the right (search just left of the theme toggle), with the brand as the
+     left group. 8px gap between items + a right padding that leaves an 8px gap to the
+     fixed menu button — so all three icons are equidistant, like the dev portal. */
+  .header.sl-flex { gap: 0.5rem !important; }   /* inner flex container; beat Starlight's gap: var(--sl-nav-gap) (16px) */
+  :root[data-has-sidebar] header.header {
+    padding-inline-end: calc(var(--sl-nav-pad-x) + 30px + 0.5rem) !important;
+  }
+  header.header .title-wrapper { margin-inline-end: auto; }
+
+  /* Mobile search = bare 30px magnifier (no box), same footprint as the theme/menu
+     boxes so the three are evenly spaced. (Desktop surface/border is scoped to >=50rem.) */
+  .header button[data-open-modal] {
+    width: 30px;
+    height: 30px;
+    min-height: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;   /* glyph hugs the right so it's 8px from the theme box */
+    background: transparent;
+    border: 0;
+  }
+  .header button[data-open-modal] > svg { font-size: 1rem; width: 1rem; height: 1rem; }
+
+  /* Re-skin Starlight's fixed menu button to match the theme toggle exactly: a 30px
+     rounded-SQUARE (was a 32px circle), translucent on dark / subtle surface on light. */
   starlight-menu-button button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 7px !important;
+    padding: 0 !important;
     background-color: rgba(255, 255, 255, 0.07) !important;
     color: var(--sl-color-white) !important;
     box-shadow: none !important;
   }
+  starlight-menu-button button > svg { width: 18px; height: 18px; }
   :root[data-theme='light'] starlight-menu-button button {
     background-color: var(--color-subtle) !important;
     color: var(--color-dark) !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════════════
+   ✦ PART 2 — HOME (splash) parity with the Developer home. Scoped to the home via
+   :has(.hero) (the Starlight splash hero only renders on the home page). Goal: header
+   brand · hero · lockup · footer all cap+centre to ONE --home-max container and share a
+   single left/right edge, exactly like the dev portal home.
+   ════════════════════════════════════════════════════════════════════════════════════ */
+
+/* Header — cap+centre to the home container (brand lands on the container edge); seamless
+   (no docs-shell bottom border / side rails). Applies at every width on the home route. */
+body:has(.hero) header.header {
+  max-width: var(--home-max) !important;
+  margin-inline: auto !important;
+  inset-inline: 0;
+  background: var(--sl-color-bg) !important;   /* seamless — Starlight's nav bg differs in light */
+  border-bottom: none !important;
+  border-inline: none !important;
+}
+
+/* Splash has no sidebar → drop the interior main-frame sidebar+gap offset + side rails,
+   then cap+centre the content column to the home container. */
+body:has(.hero) .main-frame { padding-inline-start: 0 !important; }
+body:has(.hero) .page { border-inline: none !important; }
+body:has(.hero) .main-pane {
+  max-width: var(--home-max) !important;
+  width: 100% !important;
+  margin-inline: auto !important;
+}
+/* Let the content + footer fill the 1120 main-pane (Starlight caps .sl-container at 1080,
+   which otherwise narrows the footer columns vs the dev portal). */
+body:has(.hero) .sl-container { max-width: none !important; }
+
+/* Hero — left-aligned, inline-padded to the container edge; H1 starts ~96px below the 56px
+   header (collapse Starlight's tall empty hero band). */
+body:has(.hero) .hero {
+  padding: 4.5rem var(--home-pad) 0 !important;
+  text-align: start;
+  gap: var(--space-lg);
+}
+body:has(.hero) .hero > .sl-flex,
+body:has(.hero) .hero .stack { align-items: flex-start !important; text-align: start !important; }
+body:has(.hero) .hero .actions { justify-content: flex-start !important; }
+/* H1 — shared scale (Poppins 700, clamp 2.5→3.5rem), matching the dev portal hero. */
+body:has(.hero) .hero h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* Hero buttons — match the dev portal's .btn system exactly: teal-filled primary, teal
+   ghost/outline secondary, 8px radius, same padding/height/weight/hover. (Starlight renders
+   hero actions as .sl-link-button.{primary,secondary}.) */
+body:has(.hero) .hero .sl-link-button {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1;
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-lg) !important;
+  border-radius: var(--radius-button);
+  gap: var(--space-sm);
+  box-shadow: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+body:has(.hero) .hero .sl-link-button.primary {
+  background: var(--color-accent-1);
+  color: var(--color-light);
+  border: none;
+}
+body:has(.hero) .hero .sl-link-button.secondary {
+  background: transparent;
+  color: var(--color-accent-1);
+  border: 1px solid var(--color-accent-1);
+}
+body:has(.hero) .hero .sl-link-button.secondary:hover {
+  background: var(--color-accent-1);
+  color: var(--color-light);
+}
+
+/* Inline-pad the markdown body (lockup, cards, quick links) to the same container edge. */
+body:has(.hero) .sl-markdown-content { padding-inline: var(--home-pad); }

@@ -7,21 +7,18 @@ hero:
   actions:
     - text: For operators
       link: /operators/
-      icon: right-arrow
       variant: primary
     - text: For customers
       link: /customers/
-      icon: right-arrow
+      variant: secondary
     - text: FAQ
       link: /general/faq/
-      icon: open-book
+      variant: secondary
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 import VideoHelper from '../../components/VideoHelper.astro';
 import BrandMark from '../../components/BrandMark.astro';
-
-<BrandMark />
 
 <VideoHelper src="overview.mp4" title="JARAI Studio in 45 seconds">
 
@@ -63,3 +60,7 @@ Pick your path below depending on whether you produce content (operator), receiv
 - [Onboarding to the Client Portal (customers)](/customers/onboarding/)
 - [Submit a takedown notice](/general/takedown-notice/)
 - [Contact support](/general/contact-support/)
+
+{/* ✦ Part 2.4 — centred JARAI STUDIO lockup as a closing brand band, at the SAME flow
+    position as the dev portal home (last section before the footer). */}
+<BrandMark />
