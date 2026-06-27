@@ -68,8 +68,8 @@
   --docs-toc: 240px;                /* right "On this page" width */
   --docs-gap: 64px;                 /* gap sidebar↔body and body↔ToC */
   --docs-max: 1390px;               /* cluster cap = 1388 content + 2px for the 1px rails */
-  --home-max: 1120px;               /* shared HOME container (Part 2) — same value as the dev portal */
-  --home-pad: var(--space-lg);      /* 24px inline padding */
+  --home-max: var(--docs-max);      /* match the interior app-shell width (1390) so home == interior */
+  --home-pad: var(--space-lg);      /* match the interior header gutter (24px) so the brand aligns home↔interior */
   --sl-text-h1: 2.25rem;
   --sl-text-h2: 1.5rem;
   --sl-text-h3: 1.1875rem;
@@ -269,6 +269,13 @@ header.header {
   .right-sidebar { width: var(--docs-toc) !important; }
 }
 
+/* Align the first sidebar item and the "On this page" heading with the page title — all three
+   columns share one top line (56px header + 40px). Matches the dev portal. The sidebar offset
+   is set directly; the ToC panel's padding is locked by Starlight, so pull its content up the
+   remaining 8px instead. */
+.sidebar-content { padding-top: 40px !important; }
+.right-sidebar-panel > .sl-container { margin-block-start: -8px !important; }
+
 /* ✦ Mobile "On this page" bar (<72rem) — restyle Starlight's mobile ToC to MATCH the dev
    portal's .mobile-toc exactly: a plain sticky bar at the top of the content column
    ("On this page" + chevron + current heading), expanding to a plain, muted, indented
@@ -278,7 +285,15 @@ mobile-starlight-toc {
   background: var(--sl-color-bg);
   border-bottom: 1px solid var(--docs-hairline);
 }
-mobile-starlight-toc nav { border: 0; background: none; }
+/* The fixed bar must be OPAQUE and above the content (it was transparent + z-index 4, so the
+   page scrolled visibly THROUGH it). Solid bg + separator + above-content z-index. */
+mobile-starlight-toc nav {
+  top: 56px;        /* flush under the 56px header (Starlight defaults to 55) */
+  border: 0;
+  border-bottom: 1px solid var(--docs-hairline);
+  background: var(--sl-color-bg);
+  z-index: 40;
+}
 mobile-starlight-toc summary {
   gap: var(--space-sm);
   padding: 10px var(--space-md);
@@ -451,6 +466,21 @@ mobile-starlight-toc .dropdown a > span { padding: 0; }
 }
 .sl-markdown-content h3 { margin-top: 32px; }
 
+/* Lede — the subtitle paragraph directly under the page title. Match the dev portal's lede
+   (1.125rem · line-height 1.5 · muted) so the intro reads the same on both sites. Targets only
+   the first content paragraph; the home is unaffected (its first child is the .home div). */
+.sl-markdown-content > p:first-child {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--jarai-text-muted);
+}
+
+/* Tighten the page-title → lede gap to 8px (matches the dev portal). Starlight puts the title
+   and the body in two separate .content-panels; their 24px + 24px vertical padding otherwise
+   leaves a 48px gap. (The home zeroes these panels via its own !important rule, so unaffected.) */
+.content-panel:has(h1) { padding-bottom: 0; }
+.content-panel:has(.sl-markdown-content) { padding-top: 8px; }
+
 /* Inline code — brand tokens, mirrors the dev portal's <code> 1:1. Scoped with
    :not(pre) so it never touches Expressive Code's fenced blocks (those render
    inside <pre>). bg = --docs-hairline (theme-aware, = dev portal --border). */
@@ -579,83 +609,51 @@ mobile-starlight-toc .dropdown a > span { padding: 0; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════════════
-   ✦ PART 2 — HOME (splash) parity with the Developer home. Scoped to the home via
-   :has(.hero) (the Starlight splash hero only renders on the home page). Goal: header
-   brand · hero · lockup · footer all cap+centre to ONE --home-max container and share a
-   single left/right edge, exactly like the dev portal home.
+   ✦ HOME (splash) layout adapter. Scoped to the home route via :has(.home) (the HomeHelp
+   wrapper renders only on the index splash page). Neutralises the interior docs-shell so
+   HomeHelp's own .wrap container (max-width --home-max = 1200, the same measure as the
+   footer) controls the width, aligns the shared header to that same 1200 edge, and hides
+   ONLY the redundant header search button (the prominent body search replaces it on the
+   home — the shared search component itself is untouched, so interior pages keep theirs).
+   Every rule is gated by body:has(.home): INTERIOR PAGES ARE COMPLETELY UNAFFECTED.
    ════════════════════════════════════════════════════════════════════════════════════ */
 
-/* Header — cap+centre to the home container (brand lands on the container edge); seamless
-   (no docs-shell bottom border / side rails). Applies at every width on the home route. */
-body:has(.hero) header.header {
-  max-width: var(--home-max) !important;
-  margin-inline: auto !important;
-  inset-inline: 0;
-  background: var(--sl-color-bg) !important;   /* seamless — Starlight's nav bg differs in light */
-  border-bottom: none !important;
-  border-inline: none !important;
+/* Per-repo --home-* role adapter (the ONLY non-shared home styling) — maps the shared
+   home roles to Help's Starlight/--jarai theme tokens so every shared home-* component
+   (incl. the footer, which renders OUTSIDE .home) inherits them and themes in light+dark. */
+body:has(.home) {
+  --home-bg: var(--sl-color-bg);
+  --home-surface: var(--jarai-surface);
+  --home-surface-alt: var(--sl-color-gray-6);
+  --home-fg-1: var(--jarai-text-strong);
+  --home-fg-2: var(--jarai-text-muted);
+  --home-fg-3: var(--color-mid);
+  --home-border: var(--docs-hairline);
+  --home-border-strong: var(--sl-color-gray-5);
 }
 
-/* Splash has no sidebar → drop the interior main-frame sidebar+gap offset + side rails,
-   then cap+centre the content column to the home container. */
-body:has(.hero) .main-frame { padding-inline-start: 0 !important; }
-body:has(.hero) .page { border-inline: none !important; }
-body:has(.hero) .main-pane {
-  max-width: var(--home-max) !important;
-  width: 100% !important;
-  margin-inline: auto !important;
-}
-/* Let the content + footer fill the 1120 main-pane (Starlight caps .sl-container at 1080,
-   which otherwise narrows the footer columns vs the dev portal). */
-body:has(.hero) .sl-container { max-width: none !important; }
+/* Drop the interior sidebar offset and let the splash content fill its column — but KEEP
+   the interior .page cap (--docs-max) + its side rails (the docs-shell border-inline at
+   >=1390) so the home reads as the SAME bordered container as interior pages. */
+body:has(.home) .main-frame { padding-inline-start: 0 !important; }
+body:has(.home) .main-pane { max-width: none !important; width: 100% !important; }
+body:has(.home) .content-panel { padding: 0 !important; }
+body:has(.home) .sl-container { max-width: none !important; margin-inline: 0 !important; }
+body:has(.home) .sl-markdown-content { margin-top: 0 !important; padding-top: 0 !important; }
+body:has(.home) .main-frame main { padding-block: 0 !important; }
 
-/* Hero — left-aligned, inline-padded to the container edge; H1 starts ~96px below the 56px
-   header (collapse Starlight's tall empty hero band). */
-body:has(.hero) .hero {
-  padding: 4.5rem var(--home-pad) 0 !important;
-  text-align: start;
-  gap: var(--space-lg);
-}
-body:has(.hero) .hero > .sl-flex,
-body:has(.hero) .hero .stack { align-items: flex-start !important; text-align: start !important; }
-body:has(.hero) .hero .actions { justify-content: flex-start !important; }
-/* H1 — shared scale (Poppins 700, clamp 2.5→3.5rem), matching the dev portal hero. */
-body:has(.hero) .hero h1 {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-}
+/* Header — keep the shared header exactly as interior (cap + side rails + bottom hairline);
+   only hide the redundant search trigger on the home. */
+body:has(.home) header.header [data-open-modal] { display: none !important; }
 
-/* Hero buttons — match the dev portal's .btn system exactly: teal-filled primary, teal
-   ghost/outline secondary, 8px radius, same padding/height/weight/hover. (Starlight renders
-   hero actions as .sl-link-button.{primary,secondary}.) */
-body:has(.hero) .hero .sl-link-button {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.9375rem;
-  line-height: 1;
-  min-height: 44px;
-  padding: var(--space-sm) var(--space-lg) !important;
-  border-radius: var(--radius-button);
-  gap: var(--space-sm);
-  box-shadow: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-body:has(.hero) .hero .sl-link-button.primary {
-  background: var(--color-accent-1);
-  color: var(--color-light);
-  border: none;
-}
-body:has(.hero) .hero .sl-link-button.secondary {
-  background: transparent;
-  color: var(--color-accent-1);
-  border: 1px solid var(--color-accent-1);
-}
-body:has(.hero) .hero .sl-link-button.secondary:hover {
-  background: var(--color-accent-1);
-  color: var(--color-light);
-}
+/* Splash with no `hero` frontmatter still auto-renders the page title h1 (#_top) above the
+   content — suppress it; HomeHelp's hero owns the headline. */
+body:has(.home) h1#_top { display: none !important; }
 
-/* Inline-pad the markdown body (lockup, cards, quick links) to the same container edge. */
-body:has(.hero) .sl-markdown-content { padding-inline: var(--home-pad); }
+/* Request: remove the underline under the home section headings + the CTA heading. */
+body:has(.home) .home-sec-head { border-bottom: none !important; padding-bottom: 0 !important; }
+body:has(.home) .home-cta__copy h2 { border-bottom: none !important; }
+
+/* Mobile: tighten the home gutters to 20px via the token, so --home-pad and the full-bleed
+   separator margins stay in lockstep (otherwise the full-width rules overflow the viewport). */
+@media (max-width: 640px) { body:has(.home) { --home-pad: 20px; } }

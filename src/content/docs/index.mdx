@@ -2,65 +2,8 @@
 title: Welcome to JARAI Help
 description: Help centre for JARAI Studio — onboarding, troubleshooting, and FAQs for operators and customers.
 template: splash
-hero:
-  tagline: Help and documentation for everyone using JARAI Studio.
-  actions:
-    - text: For operators
-      link: /operators/
-      variant: primary
-    - text: For customers
-      link: /customers/
-      variant: secondary
-    - text: FAQ
-      link: /general/faq/
-      variant: secondary
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-import VideoHelper from '../../components/VideoHelper.astro';
-import BrandMark from '../../components/BrandMark.astro';
+import HomeHelp from '../../components/home/HomeHelp.astro';
 
-<VideoHelper src="overview.mp4" title="JARAI Studio in 45 seconds">
-
-JARAI Studio turns a short brief into finished, ready-to-publish media — automatically.
-
-1. **You describe what you want** — a project type (short-form video, podcast, article, book…) and a theme. Operators do this in the **Studio Console**; partners can do it via the **API**.
-2. **A 15-step AI pipeline runs** — it writes the brief and script, sources and generates images, produces voiceover and video, then packages platform-ready deliverables.
-3. **You review and approve** — operators check the result in the Console; customers approve (or reject) in the **Client Portal**, including per-platform rights review.
-4. **JARAI distributes and tracks** — approved content publishes to your connected channels, and engagement and revenue flow back in.
-
-Pick your path below depending on whether you produce content (operator), receive it (customer), administer the platform, or build on the API.
-
-</VideoHelper>
-
-## Find what you need
-
-<CardGrid stagger>
-  <Card title="Are you an operator?" icon="laptop">
-    You use the **Studio Console** to produce content, manage avatars, configure pipelines, and oversee deliveries. [Start here →](/operators/)
-  </Card>
-  <Card title="Are you a customer?" icon="user">
-    You use the **Client Portal** to review productions, approve or reject content, manage subscriptions, and exercise your privacy rights. [Start here →](/customers/)
-  </Card>
-  <Card title="Are you a platform administrator?" icon="setting">
-    You manage AI providers and models, languages and voices, finance and P&L, compliance, and operations across all accounts. [Start here →](/administrators/)
-  </Card>
-  <Card title="Looking for something general?" icon="open-book">
-    FAQs, glossary, status updates, takedown notices, legal information — [browse the general section →](/general/faq/)
-  </Card>
-  <Card title="Building on JARAI's API?" icon="setting">
-    For Partner API reference and developer integration, see the [Developer Portal](https://developer.jarai.studio).
-  </Card>
-</CardGrid>
-
-## Quick links
-
-- [What is JARAI Studio?](/getting-started/what-is-jarai/)
-- [First production walkthrough (operators)](/operators/first-production/)
-- [Onboarding to the Client Portal (customers)](/customers/onboarding/)
-- [Submit a takedown notice](/general/takedown-notice/)
-- [Contact support](/general/contact-support/)
-
-{/* ✦ Part 2.4 — centred JARAI STUDIO lockup as a closing brand band, at the SAME flow
-    position as the dev portal home (last section before the footer). */}
-<BrandMark />
+<HomeHelp />

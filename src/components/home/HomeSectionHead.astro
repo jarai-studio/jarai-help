@@ -1,0 +1,62 @@
+---
+// ✦ SHARED home component (keep byte-identical with jarai-developer-portal).
+// Section header. Two variants from one component:
+//   • Help: hairline underline + optional "All …→" link (no subtitle).
+//   • Dev:  a subtitle line, no underline.
+// Pass `subtitle` for the Dev variant; pass `allHref` for the Help "All →" link.
+interface Props {
+  title: string;
+  subtitle?: string;
+  allHref?: string;
+  allText?: string;
+}
+const { title, subtitle, allHref, allText = 'All →' } = Astro.props;
+const bordered = !subtitle;
+---
+<div class:list={['home-sec-head', { 'home-sec-head--bordered': bordered }]}>
+  <div class="home-sec-head__row">
+    <h2>{title}</h2>
+    {allHref && <a class="home-sec-head__all" href={allHref}>{allText}</a>}
+  </div>
+  {subtitle && <p class="home-sec-head__sub">{subtitle}</p>}
+</div>
+
+<style>
+  .home-sec-head { margin-bottom: 22px; }
+  .home-sec-head--bordered {
+    border-bottom: 1px solid var(--home-border);
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    /* full-bleed the underline to the container edge (side rails) so it matches the header line. */
+    margin-inline: calc(-1 * var(--home-pad));
+    padding-inline: var(--home-pad);
+  }
+  .home-sec-head__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .home-sec-head h2 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--home-fg-1);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .home-sec-head__all {
+    flex: 0 0 auto;
+    font-size: 14px;
+    color: var(--color-accent-1);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .home-sec-head__all:hover { text-decoration: underline; }
+  .home-sec-head__sub {
+    color: var(--home-fg-3);
+    font-size: 15px;
+    margin: 6px 0 0;
+  }
+</style>

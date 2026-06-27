@@ -1,160 +1,136 @@
 ---
-// ✦ §2.3 — rich 4-column home footer for the help centre, mirroring the Developer
-// Portal's footer (logo + tagline, then Docs / Resources / Legal / Contact, centred
-// copyright underneath). Used on the HOME route ONLY (gated in Footer.astro); interior
-// pages keep the thin Starlight footer + © line. Same design as the dev portal, with
-// help-appropriate internal links. Brand zone matches the header (aperture + wordmark).
+// ✦ SHARED home footer (keep byte-identical with the dev portal's Footer.astro). Rich
+// 4-column footer rendered on the HOME route only (route-split in Footer.astro); interior
+// pages keep the thin pager + © line. Matches mockup-{help,developers}-home.html exactly.
+// Styling uses brand tokens + the home --home-* role adapter (set on body:has(.home)).
+// Per-site DATA only: the DOCS column links + which cross-site link leads RESOURCES.
 import { SITE_LINKS } from './siteLinks';
 
-const developerUrl = SITE_LINKS.find((l) => l.key === 'developers')?.href ?? 'https://developer.jarai.studio';
+const developersUrl = SITE_LINKS.find((l) => l.key === 'developers')?.href ?? 'https://developers.jarai.studio';
 const marketingUrl = SITE_LINKS.find((l) => l.key === 'marketing')?.href ?? 'https://www.jarai.studio';
-const statusUrl = 'https://status.jarai.studio';
 const legalBase = `${marketingUrl}/en-gb`;
 const year = 2026;
 ---
 
 <footer class="site-footer">
-  <div class="site-footer__inner">
-    <div class="site-footer__col site-footer__col--brand">
-      <span class="site-footer__wordmark" aria-label="JARAI STUDIO">
-        <svg class="site-footer__mark" width="22" height="22" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <circle cx="50" cy="50" r="41" stroke="currentColor" stroke-width="2.6" opacity="0.5"></circle>
-          <g stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M50 31 L66.45 40.5 L66.45 59.5 L50 69 L33.55 59.5 L33.55 40.5 Z"></path>
-            <line x1="50" y1="31" x2="74.4" y2="20.9"></line>
-            <line x1="66.45" y1="40.5" x2="87.4" y2="56.6"></line>
-            <line x1="66.45" y1="59.5" x2="63" y2="85.7"></line>
-            <line x1="50" y1="69" x2="25.6" y2="79.1"></line>
-            <line x1="33.55" y1="59.5" x2="12.6" y2="43.4"></line>
-            <line x1="33.55" y1="40.5" x2="37" y2="14.3"></line>
-          </g>
-          <circle cx="50" cy="50" r="5.5" fill="var(--color-spark, #E0823F)"></circle>
-        </svg>
-        JARAI <span class="site-footer__wordmark-studio">STUDIO</span>
-      </span>
-      <p class="site-footer__tagline">The Autonomous Media Engine</p>
-    </div>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="foot-wm" aria-label="JARAI STUDIO">
+          <svg class="foot-mark" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="ring" cx="12" cy="12" r="10" stroke-width="1.6"></circle>
+            <circle class="dot" cx="12" cy="12" r="2"></circle>
+          </svg>
+          JARAI <span class="foot-wm__st">STUDIO</span>
+        </span>
+        <p class="foot-tag">The Autonomous Media Engine</p>
+      </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__heading">Docs</h2>
-      <ul class="site-footer__links">
-        <li><a href="/operators/">For operators</a></li>
-        <li><a href="/customers/">For customers</a></li>
-        <li><a href="/administrators/">For administrators</a></li>
-        <li><a href="/developers/">For developers</a></li>
-      </ul>
-    </div>
+      <div class="foot-col">
+        <h4>Docs</h4>
+        <a href="/operators/">For operators</a>
+        <a href="/customers/">For customers</a>
+        <a href="/administrators/">For administrators</a>
+      </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__heading">Resources</h2>
-      <ul class="site-footer__links">
-        <li><a href={developerUrl} target="_blank" rel="noopener">Developer portal</a></li>
-        <li><a href={marketingUrl} target="_blank" rel="noopener">Marketing site</a></li>
-        <li><a href={statusUrl} target="_blank" rel="noopener">API status</a></li>
-      </ul>
-    </div>
+      <div class="foot-col">
+        <h4>Resources</h4>
+        <a href={developersUrl} target="_blank" rel="noopener">JARAI Developers</a>
+        <a href={marketingUrl} target="_blank" rel="noopener">JARAI Studio</a>
+      </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__heading">Legal</h2>
-      <ul class="site-footer__links">
-        <li><a href={`${legalBase}/terms/`} target="_blank" rel="noopener">Terms of service</a></li>
-        <li><a href={`${legalBase}/privacy/`} target="_blank" rel="noopener">Privacy policy</a></li>
-        <li><a href={`${legalBase}/cookies/`} target="_blank" rel="noopener">Cookie policy</a></li>
-        <li><a href={`${legalBase}/acceptable-use/`} target="_blank" rel="noopener">Acceptable use</a></li>
-        <li><a href={`${legalBase}/ai-transparency/`} target="_blank" rel="noopener">AI transparency</a></li>
-        <li><a href="/general/takedown-notice/">Takedown notice</a></li>
-      </ul>
-    </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href={`${legalBase}/terms/`} target="_blank" rel="noopener">Terms of service</a>
+        <a href={`${legalBase}/privacy/`} target="_blank" rel="noopener">Privacy policy</a>
+        <a href={`${legalBase}/cookies/`} target="_blank" rel="noopener">Cookie policy</a>
+        <a href={`${legalBase}/acceptable-use/`} target="_blank" rel="noopener">Acceptable use</a>
+        <a href={`${legalBase}/ai-transparency/`} target="_blank" rel="noopener">AI transparency</a>
+        <a href="/general/takedown-notice/">Takedown notice</a>
+      </div>
 
-    <div class="site-footer__col">
-      <h2 class="site-footer__heading">Contact</h2>
-      <ul class="site-footer__links">
-        <li><a href="mailto:support@jarai.studio">support@jarai.studio</a></li>
-      </ul>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@jarai.studio">support@jarai.studio</a>
+      </div>
     </div>
-  </div>
-  <div class="site-footer__bottom">
-    <p>&copy; {year} JARAI STUDIO Ltd. All rights reserved.</p>
+    <div class="foot-copy">&copy; {year} JARAI STUDIO Ltd. All rights reserved.</div>
   </div>
 </footer>
 
 <style>
-  /* Cap+centre the whole footer to the shared home container (matches the dev portal),
-     so its top border, columns, and copyright share the home left/right edges. */
   .site-footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--home-border);
+    padding: 40px 0 28px;
+    background: var(--home-bg);
+  }
+  .site-footer .wrap {
     max-width: var(--home-max);
     margin-inline: auto;
-    background: var(--sl-color-bg);
-    color: var(--jarai-text-strong);
-    padding-block: var(--space-2xl, 3rem) var(--space-lg, 1.5rem);
-    border-top: 1px solid var(--docs-hairline);
-  }
-  .site-footer__inner {
     padding-inline: var(--home-pad);
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-lg, 1.5rem);
   }
-  .site-footer__wordmark {
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.2fr;
+    gap: 24px;
+  }
+  .foot-wm {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm, 0.5rem);
-    font-family: var(--font-heading), sans-serif;
-    font-weight: 700;
-    font-size: 1.125rem;
-    letter-spacing: 0.08em;
-    color: var(--jarai-text-strong);
-  }
-  .site-footer__mark { color: var(--sl-color-text-accent); flex: none; }
-  .site-footer__wordmark-studio { font-weight: 500; color: var(--sl-color-text-accent); }
-  .site-footer__tagline {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: var(--jarai-text-muted);
-    margin-block-start: var(--space-sm, 0.5rem);
-  }
-  .site-footer__heading {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--jarai-text-muted);
-    margin-block-end: var(--space-md, 1rem);
-    border: none;
-    padding: 0;
-  }
-  .site-footer__links {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm, 0.5rem);
-    margin: 0;
-    padding: 0;
-  }
-  .site-footer__links a {
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    color: var(--jarai-text-strong);
-    text-decoration: none;
-  }
-  .site-footer__links a:hover { color: var(--sl-color-text-accent); }
-  .site-footer__bottom {
-    padding-inline: var(--home-pad);
-    margin-block-start: var(--space-xl, 2rem);
-    padding-block-start: var(--space-lg, 1.5rem);
-    border-top: 1px solid var(--docs-hairline);
-  }
-  .site-footer__bottom p {
+    gap: 8px;
     font-family: var(--font-heading);
-    font-size: 0.75rem;
-    color: var(--jarai-text-muted);
-    margin: 0;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--home-fg-1);
   }
-  @media (min-width: 768px) {
-    .site-footer__inner {
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-      gap: var(--space-xl, 2rem);
-    }
+  .foot-mark { flex: none; }
+  .foot-mark .ring { stroke: var(--color-accent-1); }
+  .foot-mark .dot { fill: var(--color-spark); }
+  .foot-wm__st { color: var(--color-accent-1); }
+  .foot-tag {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--home-fg-3);
+    margin: 8px 0 0;
+  }
+  .foot-col h4 {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--home-fg-3);
+    margin: 0 0 14px;
+  }
+  .foot-col a {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--home-fg-2);
+    text-decoration: none;
+    padding: 5px 0;
+  }
+  .foot-col a:hover { color: var(--color-accent-1); text-decoration: none; }
+  .foot-copy {
+    margin-top: 32px;
+    /* full-bleed the divider to the container edge (the side rails), so it matches the
+       header line width like every other separator. */
+    margin-inline: calc(-1 * var(--home-pad));
+    padding-top: 18px;
+    padding-inline: var(--home-pad);
+    border-top: 1px solid var(--home-border);
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--home-fg-3);
+  }
+
+  @media (max-width: 900px) {
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+    .foot-brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    .site-footer .wrap { padding-inline: 20px; }
+    .foot-grid { grid-template-columns: 1fr; }
   }
 </style>

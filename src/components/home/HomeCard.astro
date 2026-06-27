@@ -1,0 +1,85 @@
+---
+// ✦ SHARED home component (keep byte-identical with jarai-developer-portal).
+// Equal-height card: icon + title + one-line description + single teal link. The icon is
+// a SLOT so callers pass a glyph (Help audience cards) or an SVG (Dev nav cards). `tone`
+// (optional) wraps the icon in a coloured tile (Help); without it the icon renders plain
+// teal (Dev). The card shell, type, hover, and link are identical on both sites.
+interface Props {
+  title: string;
+  desc: string;
+  href: string;
+  linkText: string;
+  tone?: 'op' | 'cu' | 'ad' | 'de' | 'ge';
+  external?: boolean;
+}
+const { title, desc, href, linkText, tone, external = false } = Astro.props;
+const rel = external ? 'noopener' : undefined;
+const target = external ? '_blank' : undefined;
+---
+<a class="home-card" href={href} rel={rel} target={target}>
+  <span class:list={['home-card__icon', tone ? ['home-card__icon--tile', `home-card__icon--${tone}`] : 'home-card__icon--plain']} aria-hidden="true">
+    <slot name="icon" />
+  </span>
+  <h3>{title}</h3>
+  <p>{desc}</p>
+  <span class="home-card__go">{linkText}</span>
+</a>
+
+<style>
+  .home-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+    background: var(--home-surface);
+    border: 1px solid var(--home-border);
+    border-radius: 10px;
+    padding: 22px;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .home-card:hover {
+    border-color: var(--color-accent-1);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .home-card__icon { margin-bottom: 14px; }
+  /* tile variant (Help audience cards) — glyph in a coloured rounded tile */
+  .home-card__icon--tile {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 17px;
+  }
+  /* plain variant (Dev nav cards) — teal-stroked SVG, no tile */
+  .home-card__icon--plain { display: inline-flex; color: var(--color-accent-1); }
+  .home-card h3 {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--home-fg-1);
+    margin: 0 0 8px;
+  }
+  .home-card p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--home-fg-2);
+    margin: 0 0 16px;
+  }
+  .home-card__go {
+    margin-top: auto;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-accent-1);
+  }
+  /* tile tones — teal/ember/sage/steel map to brand tokens; purple/pink are decorative
+     literals (no brand token). Translucent fills work on the dark + light surface. */
+  .home-card__icon--op { background: rgba(236, 161, 94, 0.16); color: var(--color-spark); }
+  .home-card__icon--cu { background: rgba(142, 108, 177, 0.18); color: #b89ad6; }
+  .home-card__icon--ad { background: rgba(154, 172, 130, 0.18); color: var(--color-accent-3); }
+  .home-card__icon--de { background: rgba(143, 180, 216, 0.18); color: var(--color-accent-2); }
+  .home-card__icon--ge { background: rgba(201, 138, 166, 0.18); color: #d6a3bd; }
+</style>
