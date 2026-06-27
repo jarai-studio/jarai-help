@@ -13,7 +13,7 @@ import { SITE_LINKS } from '../siteLinks';
 const developersUrl = SITE_LINKS.find((l) => l.key === 'developers')?.href ?? 'https://developers.jarai.studio';
 
 // Audience cards (5, uniform). de → cross-site Developers.
-const cards = [
+const cards: { tone: 'op' | 'cu' | 'ad' | 'de' | 'ge'; icon: string; title: string; desc: string; href: string; linkText: string; external?: boolean }[] = [
   { tone: 'op', icon: '▣', title: 'Are you an operator?', desc: 'Use the Studio Console to produce content, manage avatars, configure pipelines, and oversee deliveries.', href: '/operators/', linkText: 'Start here →' },
   { tone: 'cu', icon: '◈', title: 'Are you a customer?', desc: 'Use the Client Portal to review productions, approve or reject content, and exercise your privacy rights.', href: '/customers/', linkText: 'Start here →' },
   { tone: 'ad', icon: '⬡', title: 'Platform administrator?', desc: 'Manage AI providers and models, languages and voices, finance, compliance, and operations.', href: '/administrators/', linkText: 'Start here →' },
