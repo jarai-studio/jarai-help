@@ -1,0 +1,129 @@
+---
+// ✦ BL-816n-fe (2026-06-27) — anonymous self-service "track my request" landing.
+//
+// The destination of the signed tracking link in the BL-816k acknowledgement email:
+//   https://help.jarai.studio/general/track/?ref=JAR-…&token=<signed>
+// Reads ref + token from the URL and calls the anonymous, stateless Gateway endpoint
+//   GET /v1/contact/cases/{ref}?token=<signed>   (BL-816n — HMAC-signed, no DB token store).
+// No Turnstile here (the signed token IS the credential). The Gateway base URL is the same
+// build-configurable PUBLIC_GATEWAY_URL used by ContactForm.astro (default: the DEV Gateway).
+
+const GATEWAY_BASE = import.meta.env.PUBLIC_GATEWAY_URL
+  ?? 'https://func-jarai-dev-gateway.azurewebsites.net/api';
+---
+
+<section class="track-case" aria-labelledby="track-heading">
+  <h2 id="track-heading" class="track-case__heading">Request status</h2>
+
+  <div id="track-status" class="track-case__status" role="status" aria-live="polite">
+    <p class="track-case__muted">Checking your request…</p>
+  </div>
+
+  <!-- Shown when there's no signed link in the URL (someone landed here directly). -->
+  <div id="track-nolink" class="track-case__nolink" hidden>
+    <p>
+      To check a request, open the <strong>tracking link in your acknowledgement email</strong>
+      (the one we sent when you contacted us — it contains a secure link).
+    </p>
+    <p class="track-case__muted">
+      Can't find it? Email <a href="mailto:hello@jarai.studio">hello@jarai.studio</a> with your
+      reference (it looks like <code>JAR-7K3Q9F2M</code>) and we'll help.
+    </p>
+  </div>
+</section>
+
+<script define:vars={{ GATEWAY_BASE }}>
+  (function () {
+    const statusEl = document.getElementById('track-status');
+    const noLinkEl = document.getElementById('track-nolink');
+
+    const params = new URLSearchParams(window.location.search);
+    const ref = (params.get('ref') || '').trim();
+    const token = (params.get('token') || '').trim();
+
+    function fmt(iso) {
+      if (!iso) return '—';
+      try { return new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }); }
+      catch { return iso; }
+    }
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function showMessage(html, kind) {
+      statusEl.className = 'track-case__status' + (kind ? ' track-case__status--' + kind : '');
+      statusEl.innerHTML = html;
+    }
+
+    // No signed link → guide the user to their email instead of a dead end.
+    if (!ref || !token) {
+      statusEl.hidden = true;
+      noLinkEl.hidden = false;
+      return;
+    }
+
+    async function load() {
+      showMessage('<p class="track-case__muted">Checking your request…</p>');
+      let res;
+      try {
+        res = await fetch(
+          `${GATEWAY_BASE}/v1/contact/cases/${encodeURIComponent(ref)}?token=${encodeURIComponent(token)}`,
+          { method: 'GET', headers: { Accept: 'application/json' } },
+        );
+      } catch {
+        showMessage('<p>We couldn’t reach the status service just now. Please try again in a moment.</p>', 'error');
+        return;
+      }
+
+      if (res.status === 404) {
+        showMessage(
+          '<p>We couldn’t find that request. The link may have <strong>expired</strong> ' +
+          '(tracking links are time-limited), or the address may be incomplete.</p>' +
+          '<p class="track-case__muted">Email <a href="mailto:hello@jarai.studio">hello@jarai.studio</a> ' +
+          'with your reference and we’ll bring you up to date.</p>', 'error');
+        return;
+      }
+      if (res.status === 429) {
+        showMessage('<p>Too many checks in a short time. Please wait a little and try again.</p>', 'error');
+        return;
+      }
+      if (!res.ok) {
+        showMessage('<p>The status service is temporarily unavailable. Please try again shortly.</p>', 'error');
+        return;
+      }
+
+      let d;
+      try { d = await res.json(); } catch {
+        showMessage('<p>We received an unexpected response. Please try again shortly.</p>', 'error');
+        return;
+      }
+
+      showMessage(
+        '<dl class="track-case__card">' +
+          '<div><dt>Reference</dt><dd><code>' + esc(d.caseReference) + '</code></dd></div>' +
+          '<div><dt>Status</dt><dd><strong>' + esc(d.status) + '</strong></dd></div>' +
+          (d.nextActions ? '<div><dt>What happens next</dt><dd>' + esc(d.nextActions) + '</dd></div>' : '') +
+          '<div><dt>Submitted</dt><dd>' + esc(fmt(d.createdOn)) + '</dd></div>' +
+          '<div><dt>Last update</dt><dd>' + esc(fmt(d.lastUpdate)) + '</dd></div>' +
+        '</dl>', 'ok');
+    }
+
+    load();
+  })();
+</script>
+
+<style>
+  .track-case { margin: 1.5rem 0; }
+  .track-case__heading { margin-top: 0; }
+  .track-case__status--error { color: var(--sl-color-red-high, #d33); }
+  .track-case__muted { color: var(--sl-color-gray-3, #888); font-size: 0.9em; }
+  .track-case__card { display: grid; gap: 0.75rem; margin: 0; padding: 1rem 1.25rem;
+    border: 1px solid var(--sl-color-gray-5, #ccc); border-radius: 0.5rem;
+    background: var(--sl-color-gray-6, #f6f6f6); }
+  .track-case__card > div { display: grid; grid-template-columns: 11rem 1fr; gap: 0.5rem; }
+  .track-case__card dt { font-weight: 600; color: var(--sl-color-gray-2, #555); margin: 0; }
+  .track-case__card dd { margin: 0; }
+  @media (max-width: 30rem) { .track-case__card > div { grid-template-columns: 1fr; gap: 0.1rem; } }
+</style>
