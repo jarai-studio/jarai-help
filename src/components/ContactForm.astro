@@ -1,0 +1,190 @@
+---
+/**
+ * ✦ BL-816c — Unified "Contact us" form for the JARAI Help site.
+ *
+ * Posts to the unified intake `POST /v1/contact` (BL-816b) with a Cloudflare Turnstile
+ * token. Anonymous-capable — no login. The Gateway triages the case (BL-816e), notifies an
+ * operator (BL-816g), and emails the requester an acknowledgment with their case reference
+ * (BL-816k). Every JARAI property funnels into this one endpoint.
+ *
+ * The Gateway base URL is build-configurable via PUBLIC_GATEWAY_URL (default: the DEV Gateway,
+ * the only provisioned environment). CORS for `help.jarai.studio` + localhost is allowed on the
+ * Gateway side (BL-816b). No CSP change needed — the site ships no Content-Security-Policy.
+ */
+const GATEWAY_BASE = import.meta.env.PUBLIC_GATEWAY_URL
+  ?? 'https://func-jarai-dev-gateway.azurewebsites.net/api';
+const TURNSTILE_SITE_KEY = '0x4AAAAAADromMOR4S1s4Iwd'; // help.jarai.studio public site key (BL-816b)
+
+// User-facing categories — these mirror the user-selectable ContactLanePolicy labels (BL-816a);
+// AI triage re-classifies server-side, so this is a hint, not a binding choice.
+const categories = [
+  'General support & how-to',
+  'Report a bug',
+  'Billing & subscription',
+  'Account access & security',
+  'Data & privacy request (GDPR)',
+  'Copyright / content takedown',
+  'Abuse / safety report',
+  'Feature request & feedback',
+  'Enterprise & sales',
+  'Press & media',
+];
+---
+
+<form id="contact-form" class="contact-form">
+  <div class="cf-field">
+    <label for="cf-category">What's this about?</label>
+    <select id="cf-category" name="category" required>
+      {categories.map((c) => <option value={c}>{c}</option>)}
+    </select>
+  </div>
+
+  <div class="cf-field">
+    <label for="cf-name">Your name</label>
+    <input id="cf-name" type="text" autocomplete="name" maxlength="200" />
+  </div>
+
+  <div class="cf-field">
+    <label for="cf-email">Your email <span class="cf-req" aria-hidden="true">*</span></label>
+    <input id="cf-email" type="email" autocomplete="email" required maxlength="254" />
+    <small>We'll send your case reference and any reply here.</small>
+  </div>
+
+  <div class="cf-field">
+    <label for="cf-subject">Subject <span class="cf-req" aria-hidden="true">*</span></label>
+    <input id="cf-subject" type="text" required maxlength="300" />
+  </div>
+
+  <div class="cf-field" id="cf-url-field" hidden>
+    <label for="cf-content-url">Link to the content</label>
+    <input id="cf-content-url" type="url" maxlength="2000" placeholder="https://…" />
+    <small>For takedown / abuse reports — the URL of the content you're reporting.</small>
+  </div>
+
+  <div class="cf-field">
+    <label for="cf-body">How can we help? <span class="cf-req" aria-hidden="true">*</span></label>
+    <textarea id="cf-body" rows="6" required maxlength="10000"></textarea>
+  </div>
+
+  <div class="cf-turnstile cf-field" data-sitekey={TURNSTILE_SITE_KEY}></div>
+
+  <button type="submit" id="cf-submit">Send message</button>
+  <p id="cf-status" class="cf-status" role="status" aria-live="polite"></p>
+</form>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script define:vars={{ GATEWAY_BASE }}>
+  const form = document.getElementById('contact-form');
+  const statusEl = document.getElementById('cf-status');
+  const submitBtn = document.getElementById('cf-submit');
+  const categoryEl = document.getElementById('cf-category');
+  const urlField = document.getElementById('cf-url-field');
+  const $ = (id) => document.getElementById(id);
+
+  // Reveal the content-URL field for the lanes that need it.
+  const updateUrlField = () => {
+    const c = categoryEl.value.toLowerCase();
+    urlField.hidden = !(c.includes('takedown') || c.includes('copyright') || c.includes('abuse'));
+  };
+  categoryEl.addEventListener('change', updateUrlField);
+  updateUrlField();
+
+  const setStatus = (kind, html) => {
+    statusEl.className = 'cf-status' + (kind ? ' cf-' + kind : '');
+    statusEl.innerHTML = html;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const token = (window.turnstile && window.turnstile.getResponse)
+      ? window.turnstile.getResponse() : '';
+    if (!token) {
+      setStatus('error', '⚠ Please complete the verification challenge before sending.');
+      return;
+    }
+
+    const payload = {
+      category: categoryEl.value,
+      name: $('cf-name').value.trim() || undefined,
+      email: $('cf-email').value.trim(),
+      subject: $('cf-subject').value.trim(),
+      body: $('cf-body').value.trim(),
+      contentUrl: (!urlField.hidden && $('cf-content-url').value.trim()) || undefined,
+      channel: 'HelpSite',
+      turnstileToken: token,
+    };
+
+    submitBtn.disabled = true;
+    setStatus('', 'Sending…');
+
+    try {
+      const res = await fetch(`${GATEWAY_BASE}/v1/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (res.status === 202) {
+        form.hidden = true;
+        setStatus(
+          'success',
+          `✓ Thanks — we've received your message. Your reference is <strong>${data.caseReference || ''}</strong>. ` +
+          `We'll be in touch by email; quote your reference if you contact us again.`,
+        );
+        return;
+      }
+      if (res.status === 422) {
+        setStatus('error', '⚠ Please check the form — some details are missing or invalid.');
+      } else if (res.status === 429) {
+        setStatus('error', "⚠ You've sent a few messages recently. Please wait a little while and try again.");
+      } else if (res.status === 400 || res.status === 403) {
+        setStatus('error', '⚠ Verification failed. Please complete the challenge again.');
+        if (window.turnstile) window.turnstile.reset();
+      } else {
+        throw new Error('unexpected ' + res.status);
+      }
+    } catch {
+      setStatus('error', '⚠ Sorry — something went wrong. Please try again, or email <a href="mailto:hello@jarai.studio">hello@jarai.studio</a>.');
+      if (window.turnstile) window.turnstile.reset();
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .contact-form { display: flex; flex-direction: column; gap: 1.1rem; max-width: 42rem; }
+  .cf-field { display: flex; flex-direction: column; gap: 0.35rem; }
+  .contact-form label { font-weight: 600; }
+  .contact-form small { color: var(--sl-color-gray-3); font-size: 0.85em; }
+  .cf-req { color: var(--sl-color-red, #b91c1c); }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    font: inherit;
+    width: 100%;
+  }
+  .contact-form button[type='submit'] {
+    align-self: flex-start;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 0.4rem;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px; /* WCAG 2.5.5 touch target */
+  }
+  .contact-form button[type='submit']:disabled { opacity: 0.6; cursor: progress; }
+  .cf-status { margin: 0; font-weight: 600; }
+  .cf-status.cf-success { color: var(--sl-color-green, #15803d); }
+  .cf-status.cf-error { color: var(--sl-color-red, #b91c1c); }
+</style>
