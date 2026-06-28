@@ -138,6 +138,7 @@ export default defineConfig({
             { label: 'Release notes', link: '/general/release-notes/' },
             { label: 'Data & security overview', link: '/general/data-security/' },
             { label: 'Accessibility statement', link: '/general/accessibility/' },
+            { label: 'Contact us', link: '/general/contact/' },
             { label: 'Contact support', link: '/general/contact-support/' },
             { label: 'Takedown notice', link: '/general/takedown-notice/' },
             { label: 'Legal', link: '/general/legal/' },
