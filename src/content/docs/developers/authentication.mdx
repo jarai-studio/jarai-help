@@ -1,6 +1,6 @@
 ---
 title: Authentication & API keys
-description: How JARAI's Partner API authenticates requests, and how to create, use, rotate and protect your API keys.
+description: How JARAI's Partner API authenticates requests; how to create, use, rotate and protect your API keys; test keys and the sandbox; and rate-limit tiers.
 ---
 
 import { Steps, Aside } from '@astrojs/starlight/components';
@@ -61,3 +61,36 @@ Auth failures return a structured error (an authentication error code + message)
 Handle `401`/auth errors by checking the key is present, current, and sent in the
 correct header — see the reference for the exact codes.
 </Aside>
+
+## Test keys & the sandbox
+
+Keys you create yourself in the Developer Portal are **test keys** (prefixed
+`jarai_test_`). They're scoped to your own **sandbox accounts** — the place to build
+and validate your integration without touching live distribution or spending beyond
+your account's allowance.
+
+When you're ready to go live, contact JARAI for a **production key** (`jarai_live_`).
+A production key carries the scopes you select but operates against your live accounts.
+
+<Aside type="tip">
+Keep test and live keys in separate environments and separate secret stores. A
+request made with a `jarai_test_` key only ever affects sandbox data.
+</Aside>
+
+## Rate limits & tiers
+
+Every key shares a per-partner request budget set by your tier. The limits are
+returned on each response in the `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and
+`X-RateLimit-Reset` headers; exceeding them returns `429 Too Many Requests`.
+
+| Tier | Requests/min | Requests/day | Daily productions per account |
+|---|---|---|---|
+| Free | 10 | 100 | 3 |
+| Standard | 60 | 2,000 | 20 |
+| Enterprise | 300 | Unlimited | Unlimited |
+
+Self-provisioned keys start on the **Free** tier. The budget is shared across all of
+a customer's keys, so creating more keys doesn't raise the limit. Read the live
+`X-RateLimit-*` headers and back off as `X-RateLimit-Remaining` approaches zero — the
+**[Developer Portal reference](https://developers.jarai.studio)** carries the
+authoritative limits.
