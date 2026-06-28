@@ -6,27 +6,37 @@ description: How JARAI's Partner API authenticates requests; how to create, use,
 import { Steps, Aside } from '@astrojs/starlight/components';
 import VideoHelper from '../../../components/VideoHelper.astro';
 
-The Partner API authenticates every request with an **API key** you create in the
-**[Developer Portal](https://developers.jarai.studio)**. The key identifies your
+The Partner API authenticates every request with an **API key** you create yourself in the
+**Studio Console**, under **Settings → API Keys** — there's no registration form and no waiting
+for approval. You sign in with your **JARAI account** (Microsoft, Google, or email — the same
+account you use for the Console) and mint a scoped key in seconds. The key identifies your
 integration and scopes it to your account's data.
 
 <VideoHelper src="dev-auth.mp4" title="Create and use an API key">
 
-1. Sign in to the Developer Portal.
-2. Create an API key (name it for the integration that will use it).
+1. Sign in to the Studio Console and open **Settings → API Keys**.
+2. Create an API key (name it for the integration that will use it) and choose its scopes.
 3. Copy it **once** — store it in your own secret manager; JARAI shows it only at creation.
 4. Send it on every request in the authentication header (exact header name + format are in the Developer Portal reference).
 5. Rotate it periodically; revoke immediately if it leaks.
 
 </VideoHelper>
 
+## Before you start
+
+Getting a key is **identity-first and self-serve** — there's no separate API registration:
+
+- **You sign in to the Studio Console with your JARAI account** — Microsoft, Google, or email. If your organisation already uses JARAI you're ready; there's nothing extra to register, and your keys live alongside the rest of your account settings.
+- **You need the _Customer administrator_ role.** Creating and revoking keys is available to customer administrators on your account. If you can sign in but can't create a key, ask whoever administers your JARAI account to grant the role, or to create the key for you.
+- **No approval queue.** Keys are issued instantly, the moment you create them. The keys you make yourself are sandbox **test keys** — see [Test keys & the sandbox](#test-keys--the-sandbox) for going live.
+
 ## Creating a key
 
 <Steps>
 
-1. **Open the Developer Portal** and sign in.
+1. **Open the [Studio Console](https://console.jarai.studio), sign in, and go to Settings → API Keys.** Sign in with your JARAI account — Microsoft, Google, or email.
 
-2. **Create a key** and give it a descriptive name (e.g. `prod-ingest-service`) so you can tell keys apart later.
+2. **Create a key**, give it a descriptive name (e.g. `prod-ingest-service`) so you can tell keys apart later, and choose its **scopes** — least-privilege by default; add write scopes only if your integration needs them.
 
 3. **Copy the secret once.** It's shown only at creation time. Store it in your own secret manager — never in source control, client-side code, or a shared doc.
 
@@ -64,7 +74,7 @@ correct header — see the reference for the exact codes.
 
 ## Test keys & the sandbox
 
-Keys you create yourself in the Developer Portal are **test keys** (prefixed
+Keys you create yourself in the Studio Console are **test keys** (prefixed
 `jarai_test_`). They're scoped to your own **sandbox accounts** — the place to build
 and validate your integration without touching live distribution or spending beyond
 your account's allowance.
