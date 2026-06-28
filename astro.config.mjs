@@ -139,6 +139,7 @@ export default defineConfig({
             { label: 'Data & security overview', link: '/general/data-security/' },
             { label: 'Accessibility statement', link: '/general/accessibility/' },
             { label: 'Contact us', link: '/general/contact/' },
+            { label: 'Track a request', link: '/general/track/' },
             { label: 'Contact support', link: '/general/contact-support/' },
             { label: 'Takedown notice', link: '/general/takedown-notice/' },
             { label: 'Legal', link: '/general/legal/' },
