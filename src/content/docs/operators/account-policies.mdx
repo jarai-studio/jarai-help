@@ -1,0 +1,98 @@
+---
+title: Account policies
+description: The per-account policies that govern how JARAI sources media, discloses AI, handles compliance, engages audiences and promotes content.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Each account carries a set of **policies** that tell the pipeline how to behave for that
+account — how to source images and video, when to require captions, whether to label AI
+content, how to engage with audiences, and how to run promotion. You edit them from the
+account page; each policy opens as its own form. Operators and platform admins can edit;
+customer roles see them **read-only**.
+
+<VideoHelper title="Set an account policy">
+
+1. Open the account, then pick a **policy card** (Accessibility, Image acquisition, …).
+2. Adjust the settings — each policy has a **Policy active** switch plus its own fields.
+3. **Save.** The change applies to the account's *next* productions.
+
+</VideoHelper>
+
+## The policies at a glance
+
+Eight policies always apply; two more appear only for accounts using the relevant theme.
+
+| Policy | Governs | Key controls |
+|---|---|---|
+| **Accessibility** | WCAG conformance of deliverables | Standard (WCAG 2.1 AA/AAA, 508, EN 301 549), require captions / audio-description / transcript, minimum caption accuracy |
+| **Image acquisition** | How images are sourced | Strategy (Stock / AI / Operator / Hybrid), stock library priority, safety + alignment thresholds, copyright-risk auto-reject |
+| **Video acquisition** | How footage is sourced | Strategy (Stock / AI text-to-video / image-to-video / Broadcast feed / Hybrid), library priority, avatar animation |
+| **Content risk** | Brand-safety guardrails | Flag public figures / logos / mature content, allow identifiable real people (adds a consent gate) |
+| **Content disclosure** | AI-authorship labelling | Require disclosure, text, position (intro / outro / overlay), format (text card / spoken / both), what it applies to |
+| **Financial services** | FCA compliance for regulated content | FCA audience classification, mandatory pre-publish review, financial-content guardrail |
+| **Promotion** | Loop 5 paid + organic promotion | Enable paid campaigns, budget caps, promotion window, monetisation metric, platform scope |
+| **Engagement** | Loop 3 audience interaction | Which interaction types to answer, tone, auto-post vs review, daily limits, AI-reply disclosure |
+| **Talks production** *(Talks accounts)* | The look + rules of Talks debates | Speaker balance, composition style (split-screen / alternating / reaction), consistency + coherence scores, caption format |
+| **Historical image animation** *(Time-Travel accounts)* | Animating archival imagery | Image source (AI / Wikimedia), colourisation, motion effect, animation focus |
+
+## What each policy does
+
+### Accessibility
+Sets the **accessibility standard** to target and whether deliverables must include
+**captions**, **audio descriptions** and **transcripts** — each toggle activates the
+matching pipeline step. You also set a **minimum caption accuracy** (default 0.98) and can
+require **human review** of audio descriptions before the production clears its gate. See
+the platform [Accessibility statement](/general/accessibility/).
+
+### Image acquisition & Video acquisition
+Choose the **sourcing strategy** — stock libraries, AI generation, operator-supplied, or a
+hybrid — and the **priority order** of stock libraries. Acquisition enforces a minimum
+**content-safety** and **prompt-alignment** score, can **auto-reject high copyright-risk**
+images, and falls back to AI generation when allowed. Video acquisition adds clip-length
+and cost caps and an **avatar animation** option.
+
+### Content risk
+Brand-safety guardrails: flag **identifiable public figures**, **brand logos** and **mature
+content**. Allowing **identifiable real people** is off by default and, when enabled, adds a
+consent/approval gate before publish.
+
+### Content disclosure
+Controls whether productions carry an **AI-authorship disclosure**, and if so the **text**,
+**position** (intro, outro, or persistent overlay) and **format** (on-screen card, spoken,
+or both) — relevant to FTC guidance and EU AI Act Article 50.
+
+### Financial services
+For regulated finance content, set the **FCA audience classification**. When it's anything
+other than *Not applicable*, you can require a **mandatory compliance review** before
+distribution and keep the **financial-content guardrail** on (strongly recommended).
+
+### Promotion
+Governs **Loop 5**. With paid promotion off, JARAI promotes organically only. Turn it on to
+set a **budget cap per production**, a **promotion window**, the **monetisation metric**
+(views, watch-time, streams, revenue), and an optional **platform scope** and per-platform
+budget overrides.
+
+### Engagement
+Governs **Loop 3**. Pick which **interaction types** to respond to, the **tone**, and whether
+replies **auto-post** or wait for operator review. Daily caps on responses and sentiment
+analyses keep spend bounded, and you can append an **AI-reply disclosure**.
+
+### Talks production & Historical image animation
+These appear only when the account uses the matching theme. **Talks production** sets speaker
+balance, the **composition style** (split-screen, alternating, reaction shots), quality
+thresholds and caption format — see [Talks queue](/operators/talks-queue/). **Historical
+image animation** sets the archival-image source (AI or Wikimedia, which requires
+attribution), colourisation, and the motion style.
+
+<Aside type="note">
+Every policy has a **Policy active** switch. Turn a policy off and JARAI falls back to safe
+platform defaults (e.g. all content-risk flags on, real-person content disallowed). Policy
+changes apply to the account's **next** productions, not ones already running.
+</Aside>
+
+<Aside type="tip">
+Customer roles (CustomerAdministrator, CustomerViewer) can **see** policies but not change
+them — they're set by the operator or platform admin who runs the account.
+</Aside>

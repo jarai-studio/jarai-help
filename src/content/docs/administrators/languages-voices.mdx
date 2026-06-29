@@ -72,6 +72,12 @@ samples, and proposes candidates for the catalogue. A licence-classification ste
 reads each voice's licence text and assigns a licence class, which supports
 auto-approval of clearly-permissive voices and flags restrictive ones for review.
 
+<Aside type="note" title="What to harvest next">
+The **Accent demand** [dashboard](/operators/dashboards/) ranks the most-requested accents
+that don't have a voice yet — driven by the "no voice for this accent — request one" prompts
+operators hit in the voice picker. Use it to prioritise which voices to harvest or clone next.
+</Aside>
+
 <Aside type="caution">
 Adding a brand-new enum ordinal anywhere in this area (e.g. a new support level or
 licence class) requires the matching `CK_*` CHECK-constraint bump in the same EF

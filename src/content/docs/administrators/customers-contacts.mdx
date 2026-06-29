@@ -1,0 +1,85 @@
+---
+title: Customers, contacts & access
+description: Create and manage customers and their contacts, and assign which operators and administrators can reach which accounts and customers.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Platform administrators own the **customer → account → contact** hierarchy. A **customer**
+is the billing entity; it has one or more **accounts** (the brands/channels JARAI produces
+for) and one or more **contacts** (the people, with roles). This page covers creating and
+managing those records, and assigning who can reach what.
+
+<Aside type="note" title="Two kinds of account settings">
+This is the operator/admin view of *managing customers*. If you're a customer looking after
+your own profile in the Client Portal, see [Account settings](/customers/account-settings/)
+and [Team & seats](/customers/team-and-seats/) instead.
+</Aside>
+
+## The hierarchy
+
+<Steps>
+
+1. **Customer** — the billing entity (name, billing email, currency, data-residency zone,
+   subscription plan).
+
+2. **Accounts** — each customer has one or more accounts. Configure these in
+   [Account settings](/operators/account-settings/).
+
+3. **Contacts** — the people attached to a customer, each with a role (e.g. administrator,
+   operator, viewer). One contact is the account's main contact.
+
+</Steps>
+
+## Creating & managing a customer
+
+<Steps>
+
+1. **Open Customers** (platform-admin only) and click **New customer**.
+
+2. **Fill the details** — name, **billing email**, **billing currency** (GBP / USD / EUR /
+   AUD / CAD / JPY), **data-residency zone** (UK / EU / US / Global) and a **subscription
+   plan**.
+
+3. **Open the customer** to manage it: billing/invoice details, **commercial** settings
+   (currency, residency, monthly AI budget, max concurrent productions — platform-admin only),
+   internal notes, and the customer's **risk score** (which ticks up on payment disputes and
+   can be reset).
+
+4. **Add accounts** to the customer with **New account**, and **add contacts** inline
+   (first name, last name, email, optional phone and role).
+
+</Steps>
+
+<Aside type="caution">
+**Commercial** fields (currency, residency, budgets) and the **risk score** are
+platform-admin-only. Customer administrators can manage contacts and see the customer, but
+not change commercial terms.
+</Aside>
+
+## Contacts
+
+Open a contact to edit their **name**, **email**, optional **phone** and **role/job title**,
+and to toggle them **active/inactive**. Roles drive what each person can do in the console and
+Client Portal — see the role table in the [Administrator overview](/administrators/).
+
+## Assigning access (operator assignments)
+
+**Settings → Operator assignments** controls who can reach which accounts and customers. It has
+two tabs:
+
+| Tab | What it assigns |
+|---|---|
+| **Account access** | Which **operators** (producers) can work in which **accounts**. Tick the accounts for an operator and save. |
+| **Customer access** | Which **customer administrators** can reach which **customers**. Tick the customers and save. |
+
+Each assignment list shows where access comes from: **explicit** (you assigned it here), **main
+contact** / **home customer** (implied by the record's relationships), or **both**. Search and
+paginate to find a person, then adjust their ticks.
+
+<Aside type="tip">
+A person can have access from being a **main contact / home customer** even before you assign
+anything explicitly. Use explicit assignment to *add* accounts/customers beyond their default,
+and the source labels to see why someone already has access.
+</Aside>

@@ -1,0 +1,68 @@
+---
+title: Prompt optimisation
+description: Review the AI-drafted improvements to your prompt templates and approve or reject them before they go live.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+JARAI watches how each account's productions perform and, when it spots a template that
+could do better, **drafts an improved version** for you to review. Nothing changes
+automatically — proposals wait on the **Prompt optimisation** page until you approve or
+reject them. Open it from the account page → **Prompt optimisation**.
+
+<VideoHelper title="Review a prompt proposal">
+
+1. Open the account, then **Prompt optimisation**.
+2. Browse proposals under **Pending review**.
+3. Open one to see the **current → proposed** prompt diff and the **rationale**.
+4. **Approve** to apply it as a new template version, or **Reject** to dismiss it.
+
+</VideoHelper>
+
+## Where proposals come from
+
+The **optimisation agent** (Loop 4) reviews settled performance and engagement data and
+drafts a candidate improvement when a template is **underperforming**, shows an
+**engagement regression**, or is simply a good **optimisation candidate**. Each proposal
+targets one prompt template and step, and bumps it from the current version to a proposed
+next version.
+
+## Reading a proposal
+
+Proposals are grouped by status — **Pending review**, **Applied**, **Rejected** and
+**Expired**. Open one to see:
+
+- the **version** change (current `v{N}` → proposed `v{N+1}`) and the **trigger reason**;
+- the **rationale** — why the agent thinks the new version is better;
+- a side-by-side **diff** of the prompt text (and the typed-field contract, if that changed);
+- the current template's **quality, structural and performance scores** and how many
+  productions it has run, for context.
+
+<Aside type="tip">
+Pair this with the **Production quality** and **Avatar performance**
+[dashboards](/operators/dashboards/) — they're the same signals the agent reacts to, so
+they help you judge whether a proposal is worth applying.
+</Aside>
+
+## Approving or rejecting
+
+<Steps>
+
+1. **Open a Pending proposal** and read the rationale + diff.
+
+2. **Approve** to apply it — JARAI creates a **new version** of the prompt template, which the
+   pipeline uses from the next production onward. You can add a review note first.
+
+3. **Reject** to dismiss it (archived for the record). Add a note explaining why, if useful.
+
+4. **Applied, Rejected and Expired** proposals are **view-only** — you can read them but not
+   act again.
+
+</Steps>
+
+<Aside type="note">
+Reviewing proposals needs at least a **CustomerAdministrator** role. Approving never edits the
+live template in place — it adds a new version, so you can compare and roll forward cleanly.
+See [Prompt templates](/operators/prompt-templates/) for editing templates directly.
+</Aside>

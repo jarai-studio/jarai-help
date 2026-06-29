@@ -1,0 +1,101 @@
+---
+title: Import existing content
+description: Bring content you already have into JARAI and distribute it to your connected channels — without running the full generation pipeline.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+Sometimes you already have finished content — a video your team cut, a set of
+platform-ready clips, a master you want resized per channel. **Import** brings that
+content into JARAI as a production and ships it to your [connected
+platforms](/operators/connected-platforms/), skipping the generation steps. Open it
+from **Productions → Import**.
+
+<VideoHelper title="Import existing content">
+
+1. Open **Productions → Import**.
+2. Fill in the basics — **title**, **project type**, **language**, **country**.
+3. Choose a mode: **Thin** (one platform-ready file per channel) or **Smart** (one master, resized for you).
+4. Upload your file(s) and add the per-channel post details.
+5. **Import** — JARAI registers the production and distributes (or just produces variants).
+
+</VideoHelper>
+
+## Before you start
+
+<Aside type="caution" title="Distribution must be on">
+Import feeds straight into **Distribution (Loop&nbsp;2)**. If Loop&nbsp;2 is turned off
+for the account you'll get *"Distribution (Loop 2) is off for this account. Enable it
+in Account Settings before importing."* Turn distribution on first (or use Smart mode's
+**produce-only** option, which works even when distribution is off).
+</Aside>
+
+You also need at least one **active connected channel** on the account, otherwise
+there's nowhere to publish (and, in Smart mode, no platform to resize for). Connect
+one under [Connected platforms](/operators/connected-platforms/) first.
+
+## Two import modes
+
+| Mode | You provide | JARAI does | Use when |
+|---|---|---|---|
+| **Thin — platform-ready files** | One finished file per channel, with the post title, description and tags | Registers each file and distributes it to its channel | Your files are already sized/cut for each platform |
+| **Smart — one master** | A single master video | Resizes the master into a per-channel variant, then distributes (or just hands you the variants) | You have one master and want JARAI to adapt it |
+
+<Aside type="note" title="Smart mode availability">
+Smart mode may report *"Smart import is not available yet — use platform-ready files."*
+on some deployments. When that happens, use Thin mode with files you've already sized.
+</Aside>
+
+## Thin mode — one file per channel
+
+<Steps>
+
+1. **Set the basics** — title, project type, language and country.
+
+2. **Add an item per channel.** For each one pick the **target channel**, upload the
+   **platform-ready file** (video, audio or image; up to 500&nbsp;MB), and enter the
+   **post title**, optional **description** and comma-separated **tags**.
+
+3. **Add as many items as you need** — one per channel you're posting to.
+
+4. **Import.** Each item is distributed to its channel; you land on the new
+   production's detail page to track it.
+
+</Steps>
+
+## Smart mode — one master, resized
+
+<Steps>
+
+1. **Set the basics**, then upload a single **master video** (up to 500&nbsp;MB).
+
+2. **Choose what happens next:**
+   - Leave it as-is to **resize and distribute** to every connected channel.
+   - Tick **Produce only — don't distribute** to have JARAI resize the master into
+     per-channel variants you download and post yourself. No SEO, packaging or
+     distribution runs, and it works even if the account has distribution turned off.
+
+3. **Import & produce variants.** You land on the production detail page; variants
+   appear in the [Media library](/operators/media-library/) when ready.
+
+</Steps>
+
+## If an import is rejected
+
+The form maps the common rejections to plain-English messages:
+
+| What you'll see | What it means |
+|---|---|
+| Distribution (Loop 2) is off for this account… | Enable distribution in [Account settings](/operators/account-settings/) first |
+| One of the selected channels is paused… | Reconnect the channel or pick another — see [Connected platforms](/operators/connected-platforms/) |
+| One of the selected channels no longer exists… | Refresh and pick again |
+| Select a valid project type. | The chosen project type isn't recognised — pick one from the list |
+| Your role does not permit content import. | You need an operator/admin role on the account |
+| Smart import is not available yet… | Use Thin mode with platform-ready files |
+
+<Aside type="tip">
+Importing **skips** the generation pipeline (Steps 1–15) — there's no brief, script,
+voiceover or image sourcing. If you want JARAI to *create* the content instead, use
+[New production](/operators/first-production/).
+</Aside>
