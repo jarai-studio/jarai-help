@@ -1,72 +1,120 @@
 name: Deploy help.jarai.studio
 
 # Triggers:
-# - push to main: builds + deploys to PRD SWA (https://help.jarai.studio)
-# - pull_request: builds + deploys a preview environment (closed when PR merges/closes)
-# - workflow_dispatch: manual rebuild
+# - push to main:        builds + deploys to the DEV help SWA (help-dev.jarai.studio) — steady-state docs updates.
+# - workflow_dispatch:   manual deploy to a chosen environment (dev / tst / prd).
+#                        prd → help.jarai.studio (swa-jarai-prd-help); tst → help-tst.jarai.studio (swa-jarai-tst-help).
+# - pull_request:        build check only (astro check + build) — no deploy.
 #
-# Runner policy (2026-06-04, rev 3): build_and_deploy runs on GitHub-hosted ubuntu-latest.
-# This is the correct steady state anyway — help.jarai.studio is a PRODUCTION SWA and the
-# org policy (JAR_Deploy.md) keeps PRD deploys on hosted so a release never depends on the
-# self-hosted runner being online. History: 2026-06-01 moved this to self-hosted → every
-# deploy queued + cancelled (PR #2 reverted to hosted). 2026-06-04 the operator granted the
-# org runner group access to jarai-help and we retried self-hosted (PR #3) — the job STILL
-# sat queued ~3 min on idle runners and never got picked up (runner offline, or the grant
-# landed on a different group than the one holding the runner — needs org-admin to confirm),
-# so reverted to hosted again. The @azure/static-web-apps-cli deploy step runs fine here.
-# close_pull_request was already ubuntu-latest.
+# Per-env SWA topology (DEPLOYMENT_RUNBOOK §2.6): dev=swa-jarai-dev-help, tst=swa-jarai-tst-help, prd=swa-jarai-prd-help.
+# The deployment token is the env-scoped secret SWA_TOKEN_HELP (different value in each GitHub environment).
+#
+# Runner policy (2026-06-04): GitHub-hosted ubuntu-latest. help.jarai.studio is a PRODUCTION SWA and org policy
+# (JAR_Deploy.md) keeps PRD deploys on hosted so a release never depends on the self-hosted runner being online.
+# History: self-hosted attempts (PR #2/#3) sat queued and never got picked up; hosted runs the SWA CLI fine.
 
 on:
   push:
     branches: [main]
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches: [main]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: dev
+        type: choice
+        options: [dev, tst, prd]
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
-  build_and_deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  build-check:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    name: Build and deploy
+    name: Build check (PR)
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: false
-          lfs: false
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build (astro check + astro build)
+      - run: npm ci
+      - name: Build (astro check + build)
         run: |
           npm run check
           npm run build
         env:
-          # ✦ Phase 0.3 header — per-env subdomains in the app-switcher (siteLinks.ts).
           PUBLIC_JARAI_ENV: dev
 
-      - name: Deploy to Azure Static Web Apps (SWA CLI — no Docker on self-hosted runner)
+  deploy-dev:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
+    runs-on: ubuntu-latest
+    name: Deploy dev (swa-jarai-dev-help)
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build (astro check + build)
+        run: |
+          npm run check
+          npm run build
+        env:
+          PUBLIC_JARAI_ENV: dev
+      - name: Deploy to Azure Static Web Apps (SWA CLI)
         run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
         env:
-          SWA_DEPLOYMENT_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
 
-  close_pull_request:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+  deploy-tst:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'tst'
     runs-on: ubuntu-latest
-    name: Close pull-request preview
+    name: Deploy tst (swa-jarai-tst-help)
+    environment: tst
     steps:
-      - name: Close PR preview environment
-        uses: Azure/static-web-apps-deploy@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          action: 'close'
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build (astro check + build)
+        run: |
+          npm run check
+          npm run build
+        env:
+          PUBLIC_JARAI_ENV: tst
+      - name: Deploy to Azure Static Web Apps (SWA CLI)
+        run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
+        env:
+          SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
+
+  deploy-prd:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prd'
+    runs-on: ubuntu-latest
+    name: Deploy prd (swa-jarai-prd-help → help.jarai.studio)
+    environment: prd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build (astro check + build)
+        run: |
+          npm run check
+          npm run build
+        env:
+          PUBLIC_JARAI_ENV: prd
+      - name: Deploy to Azure Static Web Apps (SWA CLI)
+        run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
+        env:
+          SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
