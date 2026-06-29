@@ -88,6 +88,25 @@ A quick tour of the full flow (each step is detailed below):
 | **Steps 11** | Platform variants (16:9 / 9:16 / 1:1) rendered | Preview each variant inline |
 | **Steps 12–14** | SEO metadata + attribution + final packaging | Approve to publish, or download for manual upload |
 
+## Controlling a running production
+
+How much you steer a production depends on the account's **execution mode** (set in
+[Account settings](/operators/account-settings/)):
+
+- **Autonomous** — runs end-to-end without stopping; you only step in if a step **fails** (use
+  the **retry** button) or it reaches a **gate**.
+- **Controlled** — pauses for your approval at each step before continuing.
+- **Step-through** — you advance every step manually; the most hands-on mode.
+
+From the production detail page you can **retry** a failed step, act on a **PendingReview**
+gate, and at the end **Approve to publish** or **Reject**. If the account has **client approval
+required**, finished productions wait for the customer's sign-off before publishing.
+
+<Aside type="tip">
+For recovering failed or stuck productions — retries, dead-letters, provider outages — see
+[Troubleshooting](/operators/troubleshooting/).
+</Aside>
+
 ## Where to learn more
 
 - [Production pipeline (Steps 1–15)](/operators/pipeline/) — full reference for what each step does

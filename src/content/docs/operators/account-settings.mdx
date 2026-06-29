@@ -1,0 +1,103 @@
+---
+title: Account settings
+description: Configure a production account — its identity, budget and concurrency, execution and trigger modes, pipeline loops, policies, and suspend/reactivate.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+An **account** is the unit JARAI produces for — a brand or channel with its own avatars,
+prompt templates, connected platforms and policies. The **account settings** page is where
+you configure all of that and control how the account runs. Open it by selecting the account
+from **Accounts** (or from its customer).
+
+<VideoHelper title="Configure an account">
+
+1. Open **Accounts** and pick the account.
+2. Set its **identity** (name, content niche, channel context) and **production archetype**.
+3. Tune **governance** — budget, concurrency, execution and trigger modes, auto-publish.
+4. Turn **pipeline loops** on/off and open the **policy** and **feature** cards.
+
+</VideoHelper>
+
+## Identity
+
+- **Name** — the account's display name.
+- **Slug** — a fixed, URL-safe identifier set at creation. It's shown read-only with a copy
+  button and **can't change** once the account has completed productions.
+- **Content niche** and **Channel context** — short descriptions of what the account is
+  about. Both have an **AI helper** that drafts suggestions, and both are read by other AI
+  helpers across the console to ground avatar and prompt suggestions.
+- **Production archetype** — *Composed*, *Collection*, *Asset* or *Manual*; sets the shape of
+  what the account produces.
+
+## Governance
+
+Budget and run-behaviour controls (editable by platform admins and customer admins):
+
+| Setting | What it does |
+|---|---|
+| **Monthly AI budget** | The account's AI spend cap for the month; "spent this month" shows alongside |
+| **Max concurrent productions** | How many productions can run at once (1–100) |
+| **Execution mode** | *Autonomous* (run to completion), *Controlled* (approve each step), or *Step-through* (manual every step) |
+| **Trigger mode** | *Autonomous* (scheduled sweep) or *Event-driven* |
+| **Auto-publish completed productions** | Publish without a manual approval step |
+| **Client approval required before publish** | Hold finished productions for customer sign-off |
+
+<Aside type="note" title="Live-test budget">
+Platform admins can also set a separate **daily cost cap** for prompt-template live tests.
+When it's hit, live tests pause until the next day rather than spending unbounded.
+</Aside>
+
+## Pipeline loops
+
+Each account runs some or all of the five loops, mirroring the platform-wide
+[platform controls](/administrators/platform-controls/):
+
+<Steps>
+
+1. **Loop 1 — Production** generates content end-to-end. Turn it **off** to *import* external
+   content instead (see [Import existing content](/operators/import-content/)).
+
+2. **Loop 2 — Distribution** publishes to connected platforms and is **required** for Loops 3,
+   4 and 5 — turning it off forces those off too.
+
+3. **Loops 3–5** (Engagement, Performance, Promotion) build on distribution. At least one loop
+   must stay enabled.
+
+</Steps>
+
+<Aside type="caution">
+An account can only run a loop that's enabled at **both** the platform and account level. If a
+loop seems off despite being ticked here, check [platform controls](/administrators/platform-controls/).
+</Aside>
+
+## Policies, avatars & related pages
+
+The account page links out to everything scoped to the account:
+
+- **[Account policies](/operators/account-policies/)** — accessibility, image/video acquisition, content risk + disclosure, finance, promotion, engagement (and Talks / Time-Travel where relevant).
+- **[Avatars](/operators/avatars/)**, **[Prompt templates](/operators/prompt-templates/)**, **[Prompt optimisation](/operators/prompt-optimisation/)**, **[Connected platforms](/operators/connected-platforms/)**, **Onboarding**, and **[Talks queue](/operators/talks-queue/)** (Talks accounts).
+
+## Suspend & reactivate
+
+<Steps>
+
+1. **Suspend account** blocks new productions while preserving everything. The button shows the
+   account isn't already suspended and asks you to confirm.
+
+2. **Reactivate account** returns it to its previous status so it can produce again.
+
+</Steps>
+
+## Your personal settings
+
+Account settings are about the *production account*. Your **own** preferences live under your
+user menu → **My account** (`/me`): profile and picture, **appearance** (light/dark theme and
+reduced motion), and your **preferred interface language**. These only affect your view of the
+console, not what any account produces.
+
+<Aside type="tip">
+Renaming, archetype and loop changes take effect on the account's **next** productions —
+in-flight productions keep the configuration they started with.
+</Aside>

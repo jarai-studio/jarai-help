@@ -1,0 +1,65 @@
+---
+title: Platforms & distributors
+description: The admin registry of distribution platforms — encoding specs, API connectivity, quotas and health — and how it differs from an operator connecting a channel.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+The **Platforms** registry (Settings → Platforms, platform-admin only) defines *what each
+distribution destination is* — YouTube, TikTok, a podcast feed, a stock marketplace — and how
+JARAI talks to it. This is the platform-wide **definition**, distinct from an operator
+connecting *their own account* to a channel.
+
+<Aside type="note" title="Registry vs connection">
+**This page** defines the platform (its encoding rules, API endpoints, quotas). An **operator**
+separately authorises *their account's* channel via OAuth on
+[Connected platforms](/operators/connected-platforms/). One is the platform definition; the
+other is one account's link to it.
+</Aside>
+
+<VideoHelper title="Configure a distribution platform">
+
+1. Open **Settings → Platforms** and pick a platform.
+2. Review its **identity & status** — name, asset type, adapter, active flag.
+3. Check the **encoding specs**, **API connectivity** and **quota/health** settings.
+4. Save changes — they apply platform-wide to every account that publishes there.
+
+</VideoHelper>
+
+## What a platform record holds
+
+| Group | Examples |
+|---|---|
+| **Identity & status** | Name, **adapter key** (immutable code identifier), whether the **adapter is implemented**, **active** flag, asset type, distribution method |
+| **Encoding specs** | Max duration & file size, default + supported aspect ratios, video/audio codecs, frame rate, caption burn-in / sidecar format |
+| **Connectivity & auth** | Publish/upload/status endpoints, API version headers, auth scheme, token endpoint, whether PKCE is required |
+| **Quota & health** | Rate-limit window + limit, max publications/day, outage threshold, poll interval, async-upload flag |
+| **Market intelligence** | Monthly active users, last-verified date, docs URL, an assessment note |
+| **Health (read-only)** | Current health status, last successful publication, last failure + code, quota used/reset |
+
+## The adapter-pairing rule
+
+Every platform is backed by a code **adapter** identified by its **adapter key**. A platform
+must not be set **active** until its adapter is implemented and live — publishing to a platform
+with no live adapter fails. Keep `adapter implemented` and `active` honest: enable a platform
+only once its adapter ships.
+
+<Aside type="caution">
+The **adapter key** is immutable and the pairing matters: an active platform with a missing or
+mismatched adapter produces "adapter not found" failures on the first publish attempt.
+</Aside>
+
+## Platforms vs distributors
+
+- A **platform** is a single destination (YouTube, TikTok, a podcast directory) with its own
+  encoding and API rules.
+- A **distributor** is a third party that delivers to *several* platforms on JARAI's behalf. A
+  platform record can point at a distributor when that partner manages it.
+
+## Where it shows up
+
+What you configure here drives how the [Distribution](/operators/distribution/) loop encodes
+and publishes, and feeds the **Distribution** and **Alert operations**
+[dashboards](/operators/dashboards/) and provider-health views in
+[Operations & reliability](/administrators/operations-reliability/).

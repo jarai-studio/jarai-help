@@ -1,0 +1,90 @@
+---
+title: Platform controls
+description: The platform-wide operational switches — production loops, feature flags, platform mode, infrastructure tier and customer markup — for platform administrators.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+**Platform controls** is the master switchboard for the whole platform. From here a
+`PlatformAdministrator` turns the five production **loops** on or off, toggles
+cost-bearing **features**, sets the global **platform mode**, and reads recent AI spend
+per loop. Open it from **Settings → Platform controls**.
+
+<Aside type="caution" title="Platform-wide, every account">
+These switches affect **every account**, not one. Disabling a loop stops that activity
+across the platform; in-flight productions finish, but no new work of that kind starts.
+Read the tooltips in the page before flipping anything.
+</Aside>
+
+<VideoHelper title="Platform controls tour">
+
+1. Open **Settings → Platform controls**.
+2. Toggle **loops 1–5** and the **feature flags** — each shows its cost note and dependencies.
+3. Use **platform mode → Idle** for a maintenance window or emergency stop.
+4. Check the **cost summary** to see recent AI spend per loop.
+
+</VideoHelper>
+
+## The five loops
+
+| Loop | What it does | Cost | Needs |
+|---|---|---|---|
+| **Loop 1 — Production** | Runs the ContentInventoryAgent (~every 30 min) to start new productions | AI cost per production (text, image, audio, video) | — |
+| **Loop 2 — Distribution** | Publishes finished productions to connected channels | AI cost for text assembly + captions | — |
+| **Loop 3 — Engagement** | Polls channels for comments/likes/interactions | Ongoing AI cost even with no new content | Loop 2 |
+| **Loop 4 — Performance** | Computes settled performance scores + optimisation insights | AI cost for optimisation generation | — (best with Loop 3) |
+| **Loop 5 — Promotion** | Evaluates and submits paid promotion campaigns | AI cost for campaign planning | Loop 2 |
+
+<Aside type="note">
+The same loop switches exist **per account** in [Account settings](/operators/account-settings/).
+Platform controls is the global master; an account can only run a loop that's on at both levels.
+</Aside>
+
+## Feature flags
+
+| Flag | What it does | Cost | Needs |
+|---|---|---|---|
+| **Engagement sentiment analysis** | Classifies the sentiment of each incoming interaction | Per interaction | Loop 3 |
+| **Engagement auto-response** | Generates and posts AI replies to interactions | Per reply | Loop 3 + sentiment |
+| **Market intelligence** | Weekly scans of market feeds to propose content angles | No direct AI cost (structured feeds) | Loop 4 |
+| **Optimisation agent** | Weekly content-optimisation recommendations from performance data | Per optimisation run | Loop 4 |
+| **Benchmarking** | Live AI calls to benchmark model response quality | AI cost — enable only for deliberate evaluation | — |
+
+## Platform mode
+
+The **platform mode** toggle switches between **Active** and **Idle**:
+
+<Steps>
+
+1. **Active** — normal operation; loops and features run as configured.
+
+2. **Idle** — overrides *all* loop switches and feature flags; only always-on functions
+   run. Switching to Idle asks you to confirm — *"This will pause all production pipeline
+   processing. Active productions will be held until the platform is reactivated."* Use it
+   for maintenance windows or an emergency stop.
+
+</Steps>
+
+## Infrastructure tier & markup
+
+- **Infrastructure tier** (POC / Small / Standard / Production) is an **informational
+  signal** that records the declared Azure resource tier — it doesn't provision Azure
+  resources itself (those are set in infrastructure-as-code). The platform uses it to
+  detect tier mismatches.
+- **Customer markup %** (0–1000) is the percentage added to JARAI's underlying AI cost to
+  produce the customer-facing cost. It's applied per AI call and **snapshotted at the time
+  of the charge** — changing it never rewrites historical charges. See
+  [Finance & P&L](/administrators/finance-pl/) for how markup flows into margin.
+
+## Reading the cost summary
+
+The page shows recent **AI spend per loop** (last several days, all accounts) plus
+per-feature call counts, so you can see what a loop or feature is actually costing before
+you leave it on. It also records **who changed the config last and when**.
+
+<Aside type="tip">
+For "is anything broken?" use [Operations & reliability](/administrators/operations-reliability/)
+and the **Alert operations** / **Production quality** [dashboards](/operators/dashboards/).
+Platform controls is for *steering cost and capacity*, not diagnosing failures.
+</Aside>

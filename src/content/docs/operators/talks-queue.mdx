@@ -1,0 +1,65 @@
+---
+title: Talks queue
+description: Queue debate-style "Talks" productions — two avatars discussing a subject — and let JARAI produce them in priority order.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+A **Talks** production is a debate-format piece: two avatars — **Character&nbsp;1** (the
+opener) and **Character&nbsp;2** (the responder) — discuss a subject. For accounts in
+Talks mode, you line up topics in the **Talks queue** and JARAI produces them in
+priority order. Open it from an account's page → **Talks queue**.
+
+<VideoHelper title="Queue a Talks production">
+
+1. Open the account, then **Talks queue**.
+2. Click **Add entry** and pick **Character 1** and **Character 2** (two different avatars).
+3. Optionally set a **subject** and **notes** — or leave the subject blank to let JARAI choose.
+4. Set a **priority**, then **Save**. The entry feeds the pipeline when the account next produces.
+
+</VideoHelper>
+
+## What's in a queue entry
+
+| Field | What it does |
+|---|---|
+| **Character 1 / Character 2** | The two avatars in the debate — must be different. Character 1 opens; Character 2 responds. |
+| **Subject** | The topic (up to 500 characters). Leave it blank and JARAI picks a subject for you. |
+| **Notes** | Optional research context or editorial guidance that steers the script. |
+| **Priority** | 1–999, where **lower runs first**. Use it to order the queue. |
+| **Status** | `Pending` → `Scheduled` → `Produced`, or `Skipped` if you set it aside. |
+
+<Aside type="tip" title="Let the AI help">
+Once you've picked both characters, the **AI helper** can suggest a **subject** and draft
+**notes** for you — handy when you want a steady stream of topics without writing each one.
+</Aside>
+
+## Managing the queue
+
+<Steps>
+
+1. **Add** an entry — pick the two avatars, optional subject/notes, and a priority.
+
+2. **Edit** any entry to change the pairing, subject, notes or priority.
+
+3. **Skip / un-skip** to park an entry without deleting it (flips between `Pending` and
+   `Skipped`). Skipped entries stay in the list but aren't produced.
+
+4. **Delete** an entry you no longer want (asks you to confirm).
+
+5. **Filter** by status — All, Pending, Scheduled, Produced, Skipped — to find entries quickly.
+
+</Steps>
+
+## How the queue produces
+
+When the account runs, JARAI takes the highest-priority `Pending` entry, generates the
+debate, and composes the video with the two avatars. The look and rules of that video —
+how the screen is split, how balanced the two speakers must be, caption style — come from
+the account's **Talks Production policy** (see [Account policies](/operators/account-policies/)).
+
+<Aside type="note">
+The Talks queue only appears for accounts set up for the Talks theme. If you don't see it,
+the account isn't in Talks mode — check its [account settings](/operators/account-settings/).
+</Aside>

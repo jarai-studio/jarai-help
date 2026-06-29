@@ -1,0 +1,89 @@
+---
+title: Mobile app
+description: Install JARAI on your phone, get push alerts, and act on productions, approvals and platform controls on the go — including offline.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+import VideoHelper from '../../../components/VideoHelper.astro';
+
+JARAI Studio Console is also a **mobile app** — a progressive web app (PWA) you can install on
+your phone for quick, on-the-go access to alerts, approvals, budgets and platform controls. The
+mobile experience lives under `/m` and adapts to your role.
+
+<VideoHelper title="Install and use the mobile app">
+
+1. Open the console on your phone and tap **Install** when the banner appears.
+2. Allow **notifications** so you're alerted when something needs you.
+3. Use the bottom tabs — alerts, productions/actions, budgets — sized for one hand.
+4. It keeps working **offline**, syncing your actions when you reconnect.
+
+</VideoHelper>
+
+## Install to your home screen
+
+When you open the console on a supported mobile browser, a banner offers **"Install JARAI for
+quick access."**
+
+<Steps>
+
+1. **Tap Install** — your browser shows its native add-to-home-screen prompt; confirm it.
+
+2. **Or tap Later** to dismiss for now (it'll offer again next session).
+
+3. **Launch from your home screen** — it opens full-screen like a native app. On iOS, use
+   **Share → Add to Home Screen** if no banner appears.
+
+</Steps>
+
+## Push notifications
+
+Turn on notifications so alerts reach you without opening the app.
+
+<Steps>
+
+1. **Allow notifications** when prompted (or from **Notifications** in the app).
+
+2. **Choose which severities** you want — Critical, High, Warning, Info. The default sends
+   **Critical** and **High** only, so you're not buzzed for noise.
+
+3. **If they're blocked**, the app tells you — re-enable notifications for the site in your
+   browser/OS settings.
+
+</Steps>
+
+<Aside type="note">
+Notification preferences are per device. Set them on each phone you use, and adjust severities
+any time from the **Notifications** screen.
+</Aside>
+
+## What you can do on mobile
+
+The bottom tabs follow your role:
+
+| Role | Tabs |
+|---|---|
+| **Platform administrator** | **Alerts**, **System health** (loops + provider health + KPIs), **Loop controls** (platform mode + loop/feature switches), **Budget** (platform costs) |
+| **Operator / Customer admin** | **Alerts**, **Productions**, **Actions** (start a production, work the approvals queue), **Budget** (account P&L) |
+| **Customer viewer / Finance** | **Account P&L**, **Portfolio**, **Distribution** |
+
+Handy gestures: **swipe** an alert to acknowledge or resolve it, and **pull down** to refresh.
+Destructive platform controls (like disabling a loop) ask you to re-confirm — and, where your
+device supports it, re-authenticate.
+
+## Working offline
+
+The app keeps working when you lose signal:
+
+- A banner shows **"Offline — showing cached data"** so you know you're looking at the last
+  synced view.
+- **Write actions you take are queued** and replay automatically when you reconnect (on browsers
+  that support background sync, or the next time the app is online).
+- Some actions are **paused** while offline rather than queued — you'll see *"You're offline —
+  changes are paused until you reconnect."* Retry once you're back online.
+
+<Aside type="tip">
+The mobile app mirrors the desktop console — **Loop controls** maps to
+[platform controls](/administrators/platform-controls/), **Alerts** to the alerts feed, and the
+**P&L / Distribution** tabs to the matching [dashboards](/operators/dashboards/). Use the desktop
+console for deep configuration; use mobile to stay on top of alerts and approvals.
+</Aside>
