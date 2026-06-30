@@ -69,7 +69,17 @@ jobs:
         env:
           PUBLIC_JARAI_ENV: dev
       - name: Deploy to Azure Static Web Apps (SWA CLI)
-        run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
+        run: |
+          # Retry the SWA CLI deploy 3×: the CLI fetches its StaticSitesClient binary from a
+          # remote CDN each run, and that fetch intermittently fails on the self-hosted runner
+          # ("Could not load StaticSitesClient metadata from remote"). Retrying clears it.
+          for attempt in 1 2 3; do
+            if npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production; then
+              echo "✓ SWA deploy succeeded on attempt $attempt"; exit 0
+            fi
+            echo "✗ SWA deploy attempt $attempt failed"; [ "$attempt" -lt 3 ] && sleep $((attempt * 20))
+          done
+          echo "SWA deploy failed after 3 attempts"; exit 1
         env:
           SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
 
@@ -92,7 +102,17 @@ jobs:
         env:
           PUBLIC_JARAI_ENV: tst
       - name: Deploy to Azure Static Web Apps (SWA CLI)
-        run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
+        run: |
+          # Retry the SWA CLI deploy 3×: the CLI fetches its StaticSitesClient binary from a
+          # remote CDN each run, and that fetch intermittently fails on the self-hosted runner
+          # ("Could not load StaticSitesClient metadata from remote"). Retrying clears it.
+          for attempt in 1 2 3; do
+            if npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production; then
+              echo "✓ SWA deploy succeeded on attempt $attempt"; exit 0
+            fi
+            echo "✗ SWA deploy attempt $attempt failed"; [ "$attempt" -lt 3 ] && sleep $((attempt * 20))
+          done
+          echo "SWA deploy failed after 3 attempts"; exit 1
         env:
           SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
 
@@ -115,6 +135,16 @@ jobs:
         env:
           PUBLIC_JARAI_ENV: prd
       - name: Deploy to Azure Static Web Apps (SWA CLI)
-        run: npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production
+        run: |
+          # Retry the SWA CLI deploy 3×: the CLI fetches its StaticSitesClient binary from a
+          # remote CDN each run, and that fetch intermittently fails on the self-hosted runner
+          # ("Could not load StaticSitesClient metadata from remote"). Retrying clears it.
+          for attempt in 1 2 3; do
+            if npx --yes @azure/static-web-apps-cli@2 deploy ./dist --deployment-token "$SWA_DEPLOYMENT_TOKEN" --env production; then
+              echo "✓ SWA deploy succeeded on attempt $attempt"; exit 0
+            fi
+            echo "✗ SWA deploy attempt $attempt failed"; [ "$attempt" -lt 3 ] && sleep $((attempt * 20))
+          done
+          echo "SWA deploy failed after 3 attempts"; exit 1
         env:
           SWA_DEPLOYMENT_TOKEN: ${{ secrets.SWA_TOKEN_HELP }}
