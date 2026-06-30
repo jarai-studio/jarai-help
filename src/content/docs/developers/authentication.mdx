@@ -82,6 +82,19 @@ your account's allowance.
 When you're ready to go live, contact JARAI for a **production key** (`jarai_live_`).
 A production key carries the scopes you select but operates against your live accounts.
 
+### How the sandbox behaves
+
+There's **no separate sandbox host** — you call the same `/v1` endpoints with the same
+base URL. The behaviour is decided by your key:
+
+- A **`jarai_test_` key returns synthetic responses** flagged `"sandbox": true`. Triggering
+  a production, listing accounts, fetching performance — all return realistic shapes, but
+  **nothing runs the real pipeline, publishes, or costs anything**. It's safe to script
+  against in CI.
+- A **`jarai_live_` key** can still take a one-off sandbox response by sending the
+  **`X-JARAI-Test: true`** header (when your account has test mode enabled) — handy for a
+  smoke test against production without side effects.
+
 <Aside type="tip">
 Keep test and live keys in separate environments and separate secret stores. A
 request made with a `jarai_test_` key only ever affects sandbox data.
