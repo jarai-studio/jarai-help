@@ -1,0 +1,93 @@
+---
+// ✦ SHARED home component (keep byte-identical with jarai-developer-portal).
+// Closing CTA band: bordered dark-surface card, copy on the left, primary +
+// ghost buttons on the right. Used as the Help "Still need a hand?" band and the
+// Developers "Ready to build?" band so the two homes feel like a set.
+interface Props {
+  title: string;
+  text: string;
+  primaryText: string;
+  primaryHref: string;
+  ghostText: string;
+  ghostHref: string;
+}
+const { title, text, primaryText, primaryHref, ghostText, ghostHref } = Astro.props;
+---
+<div class="home-cta">
+  <div class="home-cta__copy">
+    <h2>{title}</h2>
+    <p>{text}</p>
+  </div>
+  <div class="home-cta__actions">
+    <a class="home-cta__btn home-cta__btn--pri" href={primaryHref}>{primaryText}</a>
+    <a class="home-cta__btn home-cta__btn--ghost" href={ghostHref}>{ghostText}</a>
+  </div>
+</div>
+
+<style>
+  .home-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    background: var(--home-surface);
+    border: 1px solid var(--home-border);
+    border-radius: 14px;
+    padding: 40px 44px;
+  }
+  .home-cta__copy h2 {
+    font-family: var(--font-heading);
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--home-fg-1);
+    margin: 0;
+  }
+  .home-cta__copy p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--home-fg-2);
+    margin: 8px 0 0;
+    max-width: 460px;
+  }
+  .home-cta__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .home-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .home-cta__btn--pri {
+    background: var(--color-accent-1);
+    color: var(--color-dark);
+  }
+  .home-cta__btn--pri:hover {
+    background: var(--color-accent-1-hover);
+    text-decoration: none;
+  }
+  /* ghost = teal outline + teal text (matches the dev portal hero's "View API Reference"). */
+  .home-cta__btn--ghost {
+    background: transparent;
+    border-color: var(--color-accent-1);
+    color: var(--color-accent-1);
+  }
+  .home-cta__btn--ghost:hover {
+    background: color-mix(in srgb, var(--color-accent-1) 8%, transparent);
+    border-color: var(--color-accent-1);
+    color: var(--color-accent-1);
+    text-decoration: none;
+  }
+</style>

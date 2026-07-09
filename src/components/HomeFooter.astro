@@ -1,0 +1,136 @@
+---
+// ✦ SHARED home footer (keep byte-identical with the dev portal's Footer.astro). Rich
+// 4-column footer rendered on the HOME route only (route-split in Footer.astro); interior
+// pages keep the thin pager + © line. Matches mockup-{help,developers}-home.html exactly.
+// Styling uses brand tokens + the home --home-* role adapter (set on body:has(.home)).
+// Per-site DATA only: the DOCS column links + which cross-site link leads RESOURCES.
+import { SITE_LINKS } from './siteLinks';
+
+const developersUrl = SITE_LINKS.find((l) => l.key === 'developers')?.href ?? 'https://developers.jarai.studio';
+const marketingUrl = SITE_LINKS.find((l) => l.key === 'marketing')?.href ?? 'https://www.jarai.studio';
+const legalBase = `${marketingUrl}/en-gb`;
+const year = 2026;
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="foot-wm" aria-label="JARAI STUDIO">
+          <svg class="foot-mark" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="ring" cx="12" cy="12" r="10" stroke-width="1.6"></circle>
+            <circle class="dot" cx="12" cy="12" r="2"></circle>
+          </svg>
+          JARAI <span class="foot-wm__st">STUDIO</span>
+        </span>
+        <p class="foot-tag">The Autonomous Media Engine</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Docs</h4>
+        <a href="/operators/">For operators</a>
+        <a href="/customers/">For customers</a>
+        <a href="/administrators/">For administrators</a>
+      </div>
+
+      <div class="foot-col">
+        <h4>Resources</h4>
+        <a href={developersUrl} target="_blank" rel="noopener">JARAI Developers</a>
+        <a href={marketingUrl} target="_blank" rel="noopener">JARAI Studio</a>
+      </div>
+
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href={`${legalBase}/terms/`} target="_blank" rel="noopener">Terms of service</a>
+        <a href={`${legalBase}/privacy/`} target="_blank" rel="noopener">Privacy policy</a>
+        <a href={`${legalBase}/cookies/`} target="_blank" rel="noopener">Cookie policy</a>
+        <a href={`${legalBase}/acceptable-use/`} target="_blank" rel="noopener">Acceptable use</a>
+        <a href={`${legalBase}/ai-transparency/`} target="_blank" rel="noopener">AI transparency</a>
+        <a href="/general/takedown-notice/">Takedown notice</a>
+      </div>
+
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <a href="/general/contact/">Contact us</a>
+      </div>
+    </div>
+    <div class="foot-copy">&copy; {year} JARAI STUDIO Ltd. All rights reserved.</div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--home-border);
+    padding: 40px 0 28px;
+    background: var(--home-bg);
+  }
+  .site-footer .wrap {
+    max-width: var(--home-max);
+    margin-inline: auto;
+    padding-inline: var(--home-pad);
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1.2fr;
+    gap: 24px;
+  }
+  .foot-wm {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--home-fg-1);
+  }
+  .foot-mark { flex: none; }
+  .foot-mark .ring { stroke: var(--color-accent-1); }
+  .foot-mark .dot { fill: var(--color-spark); }
+  .foot-wm__st { color: var(--color-accent-1); }
+  .foot-tag {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--home-fg-3);
+    margin: 8px 0 0;
+  }
+  .foot-col h4 {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--home-fg-3);
+    margin: 0 0 14px;
+  }
+  .foot-col a {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--home-fg-2);
+    text-decoration: none;
+    padding: 5px 0;
+  }
+  .foot-col a:hover { color: var(--color-accent-1); text-decoration: none; }
+  .foot-copy {
+    margin-top: 32px;
+    /* full-bleed the divider to the container edge (the side rails), so it matches the
+       header line width like every other separator. */
+    margin-inline: calc(-1 * var(--home-pad));
+    padding-top: 18px;
+    padding-inline: var(--home-pad);
+    border-top: 1px solid var(--home-border);
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--home-fg-3);
+  }
+
+  @media (max-width: 900px) {
+    .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+    .foot-brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    .site-footer .wrap { padding-inline: 20px; }
+    .foot-grid { grid-template-columns: 1fr; }
+  }
+</style>
