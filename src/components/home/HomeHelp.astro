@@ -1,0 +1,238 @@
+---
+// ✦ Help home composition (per-site). Defines the home --home-* role adapter on the
+// .home root (the ONLY per-repo bit — maps shared role tokens to Help's Starlight/--jarai
+// theme tokens, so the shared home-* components below stay byte-identical with the dev
+// portal). Order matches mockup-help-home.html: hero+search · audience cards · popular
+// articles · 45s tour · support CTA. Footer is the shared route-split Footer.astro.
+import VideoHelper from '../VideoHelper.astro';
+import HomeSectionHead from './HomeSectionHead.astro';
+import HomeCard from './HomeCard.astro';
+import HomeCtaBand from './HomeCtaBand.astro';
+import { SITE_LINKS } from '../siteLinks';
+
+const developersUrl = SITE_LINKS.find((l) => l.key === 'developers')?.href ?? 'https://developers.jarai.studio';
+
+// Audience cards (5, uniform). de → cross-site Developers.
+const cards: { tone: 'op' | 'cu' | 'ad' | 'de' | 'ge'; icon: string; title: string; desc: string; href: string; linkText: string; external?: boolean }[] = [
+  { tone: 'op', icon: '▣', title: 'Are you an operator?', desc: 'Use the Studio Console to produce content, manage avatars, configure pipelines, and oversee deliveries.', href: '/operators/', linkText: 'Start here →' },
+  { tone: 'cu', icon: '◈', title: 'Are you a customer?', desc: 'Use the Client Portal to review productions, approve or reject content, and exercise your privacy rights.', href: '/customers/', linkText: 'Start here →' },
+  { tone: 'ad', icon: '⬡', title: 'Platform administrator?', desc: 'Manage AI providers and models, languages and voices, finance, compliance, and operations.', href: '/administrators/', linkText: 'Start here →' },
+  { tone: 'de', icon: '⟨⟩', title: 'Building on the API?', desc: 'Partner API reference, authentication, and developer integration live on the Developer Portal.', href: developersUrl, linkText: 'Go to Developers →', external: true },
+  { tone: 'ge', icon: '◇', title: 'Something general?', desc: 'FAQs, glossary, takedown notices, and legal information — browse the general section.', href: '/general/faq/', linkText: 'Browse general →' },
+];
+
+// Popular articles (hand-curated, ordered by priority). TODO: confirm/realign slugs to
+// real pages; create placeholders for any that don't exist yet.
+const popular = [
+  { title: 'First production walkthrough', href: '/operators/first-production/' },
+  { title: 'Onboarding to the Client Portal', href: '/customers/onboarding/' },
+  { title: 'Approve or reject a production', href: '/customers/reviewing-productions/' },
+  { title: 'Configure a delivery pipeline', href: '/operators/pipeline/' },
+  { title: 'Submit a takedown notice', href: '/general/takedown-notice/' },
+  { title: 'Manage avatars & voices', href: '/operators/avatars/' },
+  { title: 'Exercise your privacy rights', href: '/customers/privacy-rights/' },
+  { title: 'What is JARAI Studio?', href: '/getting-started/what-is-jarai/' },
+];
+---
+<div class="home not-content">
+  <!-- Hero -->
+  <section class="home-hero">
+    <div class="wrap">
+      <h1>Welcome to JARAI Help</h1>
+      <p class="home-hero__lede">Help and documentation for everyone using JARAI Studio.</p>
+      <button class="home-hero__search" type="button" aria-label="Search guides, FAQs, and the glossary" aria-keyshortcuts="Control+K">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <span class="home-hero__search-ph">Search guides, FAQs, and the glossary…</span>
+        <span class="home-hero__kbds"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Find what you need -->
+  <section class="home-sec">
+    <div class="wrap">
+      <HomeSectionHead title="Find what you need" />
+      <div class="home-cards">
+        {cards.map((c) => (
+          <HomeCard tone={c.tone} title={c.title} desc={c.desc} href={c.href} linkText={c.linkText} external={c.external}>
+            <span slot="icon">{c.icon}</span>
+          </HomeCard>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular articles -->
+  <section class="home-sec">
+    <div class="wrap">
+      <HomeSectionHead title="Popular articles" />
+      <div class="home-pop">
+        {popular.map((a, i) => (
+          <a class="home-pop__row" href={a.href}>
+            <span class="home-pop__n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="home-pop__t">{a.title}</span>
+            <span class="home-pop__arr" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 45-second tour (demoted) -->
+  <section class="home-sec">
+    <div class="wrap">
+      <HomeSectionHead title="New here? Watch the 45-second tour" />
+      <VideoHelper src="overview.mp4" title="JARAI Studio in 45 seconds">
+        <p>JARAI Studio turns a short brief into finished, ready-to-publish media — automatically.</p>
+        <ol>
+          <li><strong>You describe what you want</strong> — a project type (short-form video, podcast, article, book…) and a theme. Operators do this in the <strong>Studio Console</strong>; partners can do it via the <strong>API</strong>.</li>
+          <li><strong>A 15-step AI pipeline runs</strong> — it writes the brief and script, sources and generates images, produces voiceover and video, then packages platform-ready deliverables.</li>
+          <li><strong>You review and approve</strong> — operators check the result in the Console; customers approve (or reject) in the <strong>Client Portal</strong>, including per-platform rights review.</li>
+          <li><strong>JARAI distributes and tracks</strong> — approved content publishes to your connected channels, and engagement and revenue flow back in.</li>
+        </ol>
+      </VideoHelper>
+    </div>
+  </section>
+
+  <!-- Support CTA -->
+  <section class="home-sec home-sec--cta">
+    <div class="wrap">
+      <HomeCtaBand
+        title="Still need a hand?"
+        text="Can't find what you're looking for? Our support team answers operator and customer questions directly."
+        primaryText="Contact support"
+        primaryHref="/general/contact/"
+        ghostText="Browse the FAQ"
+        ghostHref="/general/faq/"
+      />
+    </div>
+  </section>
+</div>
+
+<script is:inline>
+  // Wire the prominent body search to Starlight's existing search modal — click the shared
+  // header search button (kept in the DOM, just hidden on the home route). The shared search
+  // component is NEVER modified; we only forward a click to its existing trigger.
+  document.addEventListener('click', function (e) {
+    if (!(e.target instanceof Element)) return;
+    if (!e.target.closest('.home-hero__search')) return;
+    e.preventDefault();
+    var btn = document.querySelector('header [data-open-modal]') || document.querySelector('site-search button');
+    // Defer past this click so Starlight's modal backdrop-dismiss doesn't catch it.
+    setTimeout(function () {
+      if (btn) btn.click();
+      else document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, metaKey: true, bubbles: true }));
+    }, 0);
+  });
+</script>
+
+<style>
+  /* The --home-* role adapter is defined on body:has(.home) in starlight-overrides.css
+     (so the footer, which renders outside .home, inherits it too). */
+
+  /* shared container — same measure as the footer (--home-max 1200), 32px gutters */
+  .home .wrap {
+    max-width: var(--home-max);
+    margin-inline: auto;
+    padding-inline: var(--home-pad);
+  }
+  .home :where(h1, h2, h3, h4) {
+    font-family: var(--font-heading);
+    color: var(--home-fg-1);
+    line-height: 1.2;
+  }
+
+  /* ── Hero ── */
+  .home-hero { padding: 56px 0 12px; }
+  .home-hero h1 { font-size: 42px; font-weight: 700; margin: 0; text-wrap: balance; }
+  .home-hero__lede {
+    color: var(--home-fg-2);
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 14px 0 0;
+    max-width: 600px;
+  }
+  .home-hero__search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 640px;
+    margin-top: 28px;
+    padding: 16px 20px;
+    background: var(--home-surface);
+    border: 1.5px solid var(--home-border-strong);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    cursor: text;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+  }
+  .home-hero__search:hover { border-color: var(--color-accent-1); }
+  .home-hero__search svg { flex: 0 0 auto; color: var(--color-accent-1); }
+  .home-hero__search-ph { color: var(--home-fg-3); font-size: 16px; }
+  .home-hero__kbds { margin-left: auto; display: flex; gap: 5px; }
+  .home-hero__kbds kbd {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--home-fg-3);
+    background: var(--home-surface-alt);
+    border: 1px solid var(--home-border);
+    border-radius: 5px;
+    padding: 3px 8px;
+  }
+
+  /* ── Sections ── */
+  .home-sec { padding: 44px 0 0; }
+  .home-sec--cta { padding-top: 64px; }
+
+  /* audience cards */
+  .home-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  /* popular articles — 2-col numbered list */
+  .home-pop {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 48px;
+  }
+  .home-pop__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--home-border);
+    color: var(--home-fg-1);
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .home-pop__row:hover { color: var(--color-accent-1); text-decoration: none; }
+  .home-pop__n {
+    flex: 0 0 auto;
+    width: 22px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--home-fg-3);
+  }
+  .home-pop__t { flex: 1; }
+  .home-pop__arr { margin-left: auto; color: var(--home-fg-3); }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .home-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .home .wrap { padding-inline: 20px; }
+    .home-hero { padding-top: 32px; }
+    .home-hero h1 { font-size: 32px; }
+    .home-cards { grid-template-columns: 1fr; }
+    .home-pop { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>
