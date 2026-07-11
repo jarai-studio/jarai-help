@@ -166,9 +166,16 @@ export default defineConfig({
       // and add the default share image (Starlight emits no og:image by default).
       head: [
         // ✦ BL-843 SEO — indexability (single switch) + brand structured data.
-        ...(SITE_INDEXABLE
-          ? []
-          : [{ tag: 'meta', attrs: { name: 'robots', content: 'noindex, nofollow' } }]),
+        // Always emit a robots meta; the single SITE_INDEXABLE switch decides its value.
+        // (A direct array element narrows `tag` to the literal; a conditional spread would
+        // widen the whole head array's element type and fail `astro check`.)
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'robots',
+            content: SITE_INDEXABLE ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
+          },
+        },
         {
           tag: 'script',
           attrs: { type: 'application/ld+json' },
