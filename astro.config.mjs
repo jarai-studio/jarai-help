@@ -261,6 +261,17 @@ export default defineConfig({
           tag: 'meta',
           attrs: { name: 'twitter:card', content: 'summary_large_image' },
         },
+        // ✦ BL-845 — Cloudflare Web Analytics (cookieless, no consent banner).
+        // One beacon token per property; dev/tst/prd separated by the dashboard
+        // hostname filter. Matches the marketing site + dev portal + console.
+        {
+          tag: 'script',
+          attrs: {
+            defer: true,
+            src: 'https://static.cloudflareinsights.com/beacon.min.js',
+            'data-cf-beacon': '{"token": "465c2d7888ba4bbb864a99595d3c3cd6"}',
+          },
+        },
       ],
     }),
   ],
