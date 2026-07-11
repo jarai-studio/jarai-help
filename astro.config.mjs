@@ -2,6 +2,11 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+// ✦ BL-843 SEO — single indexability switch, read from the deploy env at build time.
+// Flip PUBLIC_SITE_INDEXABLE=true at go-live (see src/config/site.ts for the full
+// contract; the robots.txt endpoint reads the same variable via import.meta.env).
+const SITE_INDEXABLE = process.env.PUBLIC_SITE_INDEXABLE === 'true';
+
 // JARAI Studio help centre.
 // Combined audience: operators (Studio Console users) + customers (Client Portal
 // users) + shared general/FAQ content.
@@ -160,6 +165,44 @@ export default defineConfig({
       // twitter:card; we override site_name → "JARAI STUDIO", set og:type=website,
       // and add the default share image (Starlight emits no og:image by default).
       head: [
+        // ✦ BL-843 SEO — indexability (single switch) + brand structured data.
+        // Always emit a robots meta; the single SITE_INDEXABLE switch decides its value.
+        // (A direct array element narrows `tag` to the literal; a conditional spread would
+        // widen the whole head array's element type and fail `astro check`.)
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'robots',
+            content: SITE_INDEXABLE ? 'index, follow, max-image-preview:large' : 'noindex, nofollow',
+          },
+        },
+        {
+          tag: 'script',
+          attrs: { type: 'application/ld+json' },
+          content: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'JARAI STUDIO',
+            legalName: 'JARAI STUDIO LTD',
+            url: 'https://www.jarai.studio',
+            logo: 'https://www.jarai.studio/icon-512.png',
+          }),
+        },
+        {
+          tag: 'script',
+          attrs: { type: 'application/ld+json' },
+          content: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'JARAI Help',
+            url: 'https://help.jarai.studio',
+            publisher: {
+              '@type': 'Organization',
+              name: 'JARAI STUDIO',
+              url: 'https://www.jarai.studio',
+            },
+          }),
+        },
         // ✦ Design System Phase 0.5 — bridge Starlight's theme to the shared,
         // cross-subdomain `jarai-theme` cookie so the choice carries across the
         // app surfaces (console / dev portal / help). Runs early in <head>:

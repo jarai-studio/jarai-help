@@ -27,8 +27,12 @@ interface Props {
   title?: string;
   /** Video URL — a filename (uploaded to Blob Storage), self-hosted /public file (.mp4/.webm), OR a YouTube/Loom/Vimeo embed URL. Omit to render the "coming soon" placeholder. */
   src?: string;
-  /** Poster image shown before playback (self-hosted videos only). */
+  /** Poster image shown before playback (self-hosted videos only). Also used as the VideoObject thumbnail. */
   poster?: string;
+  /** One-line description for VideoObject structured data (defaults to the title). */
+  description?: string;
+  /** ISO date used as VideoObject.uploadDate (defaults to a stable site date). */
+  uploadDate?: string;
   /** Label for the transcript disclosure. */
   transcriptTitle?: string;
 }
@@ -37,6 +41,8 @@ const {
   title = 'Video walkthrough',
   src,
   poster,
+  description,
+  uploadDate = '2026-07-01',
   transcriptTitle = 'Prefer to read? Open the step-by-step transcript',
 } = Astro.props;
 
@@ -50,9 +56,27 @@ if (src && !src.includes('://')) {
 
 const isEmbed = !!finalSrc && /(youtube\.com|youtu\.be|loom\.com|vimeo\.com|player\.)/.test(finalSrc);
 const isFile = !!finalSrc && !isEmbed;
+
+// ✦ BL-843 SEO — emit VideoObject structured data for every embedded help video so
+// they are eligible for video rich results. Thumbnail falls back to the brand share
+// card until per-video posters are generated (video-SEO follow-up).
+const videoThumbnail = poster ?? 'https://help.jarai.studio/og-default-1200x630.png';
+const videoObjectJsonLd =
+  isFile || isEmbed
+    ? JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'VideoObject',
+        name: title,
+        description: description ?? `${title} — a short walkthrough from the JARAI Studio help centre.`,
+        thumbnailUrl: videoThumbnail,
+        uploadDate,
+        ...(isFile ? { contentUrl: finalSrc } : { embedUrl: finalSrc }),
+      })
+    : null;
 ---
 
 <figure class="video-helper not-content">
+  {videoObjectJsonLd && <script type="application/ld+json" set:html={videoObjectJsonLd} />}
   <figcaption class="video-helper__caption">
     <span class="video-helper__icon" aria-hidden="true">🎬</span>
     <span class="video-helper__title">{title}</span>

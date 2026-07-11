@@ -1,0 +1,71 @@
+---
+/**
+ * FaqSchema — emits FAQPage structured data for the help-centre FAQ page.
+ *
+ * The questions/answers mirror the visible Q&A in general/faq.mdx (Google requires
+ * the schema to match on-page content). Keep this in sync when the FAQ copy changes.
+ * Rendered as JSON-LD in the page body, which Google reads the same as in <head>.
+ */
+const faqs = [
+  {
+    q: 'What does JARAI Studio do, exactly?',
+    a: 'JARAI Studio is an autonomous content production pipeline. You give it a topic and an avatar, and it produces a finished video, podcast, book, or image set by chaining about 15 pipeline steps that each call AI providers such as OpenAI, Anthropic, and ElevenLabs.',
+  },
+  {
+    q: 'Is the content JARAI produces unique?',
+    a: 'Yes. Every production is generated fresh — JARAI does not republish or remix existing content. Two operators triggering the same topic get different outputs: different scene structures, image picks, and voiceover performances.',
+  },
+  {
+    q: 'Is JARAI used for deepfakes?',
+    a: 'No. JARAI can clone voices with explicit speaker-consent attestation and generate AI imagery, but it does not produce deepfake video impersonations of real people without consent. The Acceptable Use Policy prohibits CSAM, NCII, terrorist content, and the targeting of specific real children.',
+  },
+  {
+    q: 'How long does a production take end-to-end?',
+    a: 'Typically 15 to 30 minutes for a short-form video, depending on length and how many AI calls are needed. Long-form content — 15+ minute videos, podcast episodes, book chapters — takes 1 to 3 hours.',
+  },
+  {
+    q: 'What happens if an AI provider goes down mid-production?',
+    a: 'Each pipeline step retries on transient failures such as 5xx errors and timeouts. If retries exhaust, the step dead-letters and shows a Failed badge with an error code. Most steps have a fallback chain — for example, voiceover falls through six TTS providers.',
+  },
+  {
+    q: 'Can I edit the script before voiceover?',
+    a: 'Yes. Productions pause at editable boundaries if you have enabled review gates. Otherwise you can retry a step with an override.',
+  },
+  {
+    q: 'Why does JARAI show me warnings about copyright, safety, or attribution?',
+    a: 'JARAI’s analysis flags potential risks for your awareness but does not block you. You, as publisher, decide whether to proceed.',
+  },
+  {
+    q: 'Can I refuse a production?',
+    a: 'Yes. Click Reject on any production you do not want published and it will never go to any platform. You can also request a different topic, avatar, or platform mix via your operator.',
+  },
+  {
+    q: 'What about my data — is JARAI GDPR compliant?',
+    a: 'Yes. See Your privacy rights for the eight data-subject rights and how to exercise them.',
+  },
+  {
+    q: 'How is usage billed?',
+    a: 'By a token allowance per month based on your subscription tier. Each AI call — image generation, text-to-speech, video composition — consumes a budgeted number of tokens. Operators can buy top-ups when allowance runs low.',
+  },
+  {
+    q: 'What happens at end of billing cycle?',
+    a: 'Unused allowance does not roll over by default. Top-up packs, which are one-time purchases, do roll over.',
+  },
+  {
+    q: 'Can I cancel mid-cycle?',
+    a: 'Yes. Cancellation takes effect at the next renewal — you keep service for the remainder of the paid period.',
+  },
+];
+
+const faqJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+
+<script type="application/ld+json" set:html={faqJsonLd} />
