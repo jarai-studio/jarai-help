@@ -1,0 +1,4 @@
+# Pre-launch — keep out of search engines until go-live (BL-842).
+# Primary control is the X-Robots-Tag: noindex header in staticwebapp.config.json.
+User-agent: *
+Disallow: /
