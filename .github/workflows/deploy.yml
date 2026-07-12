@@ -134,6 +134,8 @@ jobs:
           npm run build
         env:
           PUBLIC_JARAI_ENV: prd
+          # ✦ BL-854 — live in search ONLY on prd (fail-closed: default build is noindexed).
+          PUBLIC_SITE_INDEXABLE: 'true'
       - name: Deploy to Azure Static Web Apps (SWA CLI)
         run: |
           # Retry the SWA CLI deploy 3×: the CLI fetches its StaticSitesClient binary from a

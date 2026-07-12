@@ -2,10 +2,10 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-// ✦ BL-854 SEO go-live — indexable by default; set PUBLIC_SITE_INDEXABLE=false to
-// re-hide. Read here (process.env) for the <meta robots>; src/config/site.ts reads
-// the same variable (import.meta.env) for the robots.txt endpoint.
-const SITE_INDEXABLE = process.env.PUBLIC_SITE_INDEXABLE !== 'false';
+// ✦ BL-854 SEO — fail-closed: noindexed unless PUBLIC_SITE_INDEXABLE=true, which is
+// set ONLY in the deploy-prd job. Read here (process.env) for the <meta robots>;
+// src/config/site.ts reads the same var (import.meta.env) for the robots.txt endpoint.
+const SITE_INDEXABLE = process.env.PUBLIC_SITE_INDEXABLE === 'true';
 
 // JARAI Studio help centre.
 // Combined audience: operators (Studio Console users) + customers (Client Portal
