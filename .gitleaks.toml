@@ -1,0 +1,13 @@
+# .gitleaks.toml — extends gitleaks' default ruleset and allowlists one VERIFIED-BENIGN
+# committed value so the weekly full-history sweep stays green. Reviewed 2026-07-12.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Verified-benign committed values"
+regexes = [
+  # Long-lived read+list SAS on the PUBLIC help-videos container (stjaraimediadev).
+  # Bounded (read/list on public marketing videos), already browser-shipped by design.
+  # Tracked for operator key-rotation (SEC-LOW-06). Remove once the SAS is rotated.
+  '''sig=UDdB33Nc6cLu9iOzeO4Aiq5CMiMR0mJu93QnRT8vXpU%3D''',
+]

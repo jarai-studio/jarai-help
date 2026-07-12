@@ -1,0 +1,35 @@
+# .github/dependabot.yml
+#
+# Continuous dependency-vulnerability management. Dependabot runs on GitHub's own
+# infrastructure (no Actions minutes), opening PRs for security patches and weekly
+# version bumps. Grouped non-major updates keep PR volume low.
+#
+# Repo-level "Dependabot alerts" + "Dependabot security updates" must also be ON
+# (GitHub → Settings → Code security — operator, one-time).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security"]
+    commit-message:
+      prefix: "deps"
+    groups:
+      npm-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "ci"]
+    commit-message:
+      prefix: "deps(actions)"
+    groups:
+      actions-all:
+        patterns: ["*"]
