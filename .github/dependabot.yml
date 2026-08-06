@@ -20,6 +20,13 @@ updates:
     groups:
       npm-minor-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # typescript 7.x (native/Go-ported compiler) isn't supported yet by @astrojs/check@0.9.10,
+      # whose peerDependencies caps at "^5.0.0 || ^6.0.0" (checked 2026-08-06, latest @astrojs/check
+      # release). Closing PR #56 alone doesn't stop this — each new 7.x patch is a distinct version
+      # Dependabot will re-propose. Remove once @astrojs/check/@volar/kit add TS7 support.
+      - dependency-name: "typescript"
+        versions: ["7.x"]
 
   - package-ecosystem: github-actions
     directory: "/"
