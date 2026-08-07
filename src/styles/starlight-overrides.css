@@ -20,15 +20,13 @@
   --sl-color-accent: #1F8274;
   --sl-color-accent-high: #0F766E;
 
-  /* Greyscale tied to JARAI foundation palette (cool) */
-  --sl-color-white: var(--color-light);    /* #FBFCFD */
-  --sl-color-gray-1: #EAEFEE;
-  --sl-color-gray-2: #D5DCDB;
-  --sl-color-gray-3: var(--color-subtle);  /* #E7ECEC */
-  --sl-color-gray-4: var(--color-mid);     /* #A6B2AF */
-  --sl-color-gray-5: #5B6B68;
-  --sl-color-gray-6: #2A3331;
-  --sl-color-black: var(--color-dark);     /* #0E1B19 */
+  /* ✦ NOTE: --sl-color-white/gray-1..6/black are intentionally NOT set here. Starlight
+   * defines them inside `@layer starlight.base`, and unlayered CSS (this file, loaded via
+   * Astro's customCss) always wins over layered CSS regardless of selector specificity — so
+   * setting them here would beat even Starlight's :root[data-theme='light'] override and
+   * make headings/the site-title wordmark render near-white-on-white in light mode. Leave
+   * them to Starlight in light mode; :root[data-theme='dark'] below fully redefines them
+   * for dark mode, so nothing is lost there either. */
 
   /* Background + text */
   --sl-color-bg: var(--color-light);
