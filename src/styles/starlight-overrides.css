@@ -163,9 +163,12 @@
 
 /* ✦ Header search — centre the box and match the dev portal's width so the two headers
    read identically: brand left · search centred · controls right. The grid lives on the
-   INNER <div class="header sl-flex"> (Header.astro), not the outer <header class="header">
-   (PageFrame) — so target .header.sl-flex. 1fr auto 1fr truly centres the middle (search)
-   cell; the button gets a fixed width shared with the dev portal's .topbar-search (360px). */
+   INNER <div class="header"> (Header.astro), not the outer <header class="header">
+   (PageFrame) — so target the direct-child pair `header.header > .header`. (Starlight
+   0.30.6 also put `sl-flex` on the inner div; 0.41.5 does not, so the old
+   `.header.sl-flex` selector silently stopped matching — do not reintroduce it.)
+   1fr auto 1fr truly centres the middle (search) cell; the button gets a fixed width
+   shared with the dev portal's .topbar-search (360px). */
 /* Header bottom border — Starlight's dark hairline-shade (#1C2524) is nearly invisible on
    the page bg; use the dev portal's border colour (--docs-hairline == its --border) so the
    header closes with a visible horizontal line. */
@@ -177,11 +180,14 @@ header.header {
   /* Keep the header at 56px (Starlight bumps --sl-nav-height to 4rem on desktop). */
   :root { --sl-nav-height: 3.5rem; }
 
-  .header.sl-flex {
+  header.header > .header {
     grid-template-columns: 1fr auto 1fr !important;
   }
-  .header.sl-flex > .title-wrapper { justify-self: start; }
-  .header.sl-flex > .right-group { justify-self: end; }
+  header.header > .header > .title-wrapper { justify-self: start; }
+  header.header > .header > .right-group { justify-self: end; }
+  /* The middle cell is the unclassed <div class="sl-flex print:hidden"> wrapping <Search>;
+     centre the 360px button inside its `auto` track. */
+  header.header > .header > :not(.title-wrapper):not(.right-group) { justify-self: center; }
 
   /* Search trigger — replicate the dev portal's <Search> button 1:1: surface bg, subtle
      border, muted text + magnifier, 8px radius, teal border on hover. */
@@ -564,7 +570,7 @@ mobile-starlight-toc .dropdown a > span { padding: 0; }
      together on the right (search just left of the theme toggle), with the brand as the
      left group. 8px gap between items + a right padding that leaves an 8px gap to the
      fixed menu button — so all three icons are equidistant, like the dev portal. */
-  .header.sl-flex { gap: 0.5rem !important; }   /* inner flex container; beat Starlight's gap: var(--sl-nav-gap) (16px) */
+  header.header > .header { gap: 0.5rem !important; }   /* inner flex container; beat Starlight's gap: var(--sl-nav-gap) (16px) */
   :root[data-has-sidebar] header.header {
     padding-inline-end: calc(var(--sl-nav-pad-x) + 30px + 0.5rem) !important;
   }
